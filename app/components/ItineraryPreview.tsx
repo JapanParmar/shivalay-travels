@@ -30,17 +30,17 @@ export default function ItineraryPreview() {
           {/* Left — header + itinerary */}
           <div>
             <div className="badge badge-dark" style={{ marginBottom: 16 }}>Sample Itinerary</div>
-            <h2 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(26px,3.2vw,40px)', color: 'var(--color-obsidian)', lineHeight: 1.2, marginBottom: 12 }}>
+            <h2 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(26px,3.2vw,40px)', color: '#fff', lineHeight: 1.2, marginBottom: 12 }}>
               A taste of what we handcraft<br />for every client.
             </h2>
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, marginBottom: 32, maxWidth: 480 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, marginBottom: 32, maxWidth: 480 }}>
               Here is an actual luxury Ladakh itinerary designed recently. Your customized schedule will be built completely around your group.
             </p>
 
             {/* Meta tags */}
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
               {[SAMPLE_ITINERARY.destination, SAMPLE_ITINERARY.duration, SAMPLE_ITINERARY.style].map(m => (
-                <span key={m} className="badge" style={{ background: 'var(--color-fog)', color: 'var(--color-graphite)', fontSize: 13, padding: '6px 14px' }}>{m}</span>
+                <span key={m} className="badge" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-steel)', fontSize: 13, padding: '6px 14px' }}>{m}</span>
               ))}
             </div>
 
@@ -55,21 +55,21 @@ export default function ItineraryPreview() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 22px' }}>
                     {/* Day number */}
                     <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-                      background: expandedDay === day.day ? 'var(--color-obsidian)' : 'var(--color-mist)',
+                      background: expandedDay === day.day ? 'var(--color-ember)' : 'rgba(255,255,255,0.05)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s ease' }}>
-                      <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 700,
-                        color: expandedDay === day.day ? '#fff' : 'var(--color-obsidian)' }}>
+                      <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 700,
+                        color: '#fff' }}>
                         {String(day.day).padStart(2, '0')}
                       </span>
                     </div>
 
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 15,
-                          color: 'var(--color-obsidian)', lineHeight: 1.3 }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15,
+                          color: '#fff', lineHeight: 1.3 }}>
                           {day.title}
                         </p>
-                        <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 500,
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 500,
                           color: 'var(--color-ash)', whiteSpace: 'nowrap', flexShrink: 0 }}>
                           {day.location}
                         </span>
@@ -84,7 +84,7 @@ export default function ItineraryPreview() {
 
                   {expandedDay === day.day && (
                     <div style={{ padding: '0 22px 18px 74px', animation: 'revealUp 0.3s ease both' }}>
-                      <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 14,
+                      <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 14,
                         color: 'var(--color-steel)', lineHeight: 1.7 }}>
                         {day.desc}
                       </p>
@@ -99,8 +99,8 @@ export default function ItineraryPreview() {
                   {SAMPLE_ITINERARY.days.slice(6).map(day => (
                     <div key={day.day} className="card-white" style={{ padding: '16px 22px', marginBottom: 6 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-mist)', flexShrink: 0 }} />
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 15, color: 'var(--color-obsidian)' }}>{day.title}</p>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', flexShrink: 0 }} />
+                        <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15, color: '#fff' }}>{day.title}</p>
                       </div>
                     </div>
                   ))}
@@ -124,15 +124,15 @@ export default function ItineraryPreview() {
               </div>
 
               <div>
-                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600,
+                <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600,
                   color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 8 }}>
                   Complimentary Consultation
                 </p>
-                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 22,
+                <h3 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 22,
                   color: '#fff', lineHeight: 1.25, marginBottom: 8 }}>
                   Want a customized adventure?
                 </h3>
-                <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 13,
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 13,
                   color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
                   Submit a query to co-create a perfect Himalayan or backwater itinerary with our experts.
                 </p>
@@ -146,7 +146,7 @@ export default function ItineraryPreview() {
                       <circle cx="7" cy="7" r="6" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
                       <path d="M4 7l2 2 4-4" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 400,
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 400,
                       color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
                       {item}
                     </span>
@@ -156,15 +156,15 @@ export default function ItineraryPreview() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <button className="btn-primary"
-                  style={{ background: '#fff', color: 'var(--color-obsidian)', boxShadow: 'none', width: '100%', justifyContent: 'center' }}
+                  style={{ background: '#fff', color: '#141419', boxShadow: 'none', width: '100%', justifyContent: 'center' }}
                   onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
                   Design My Plan — Free
                 </button>
-                <a href="https://wa.me/+1234567890" target="_blank" rel="noopener noreferrer"
+                <a href="https://wa.me/919340994628?text=Hello%20Shivalay%20Travels%2C%20I%20would%20like%20to%20consult%20about%20a%20customized%20itinerary." target="_blank" rel="noopener noreferrer"
                   style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                     padding: '12px 20px', borderRadius: 'var(--radius-pill)',
                     border: '1px solid rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.6)',
-                    fontFamily: 'var(--font-cosmica)', fontSize: 14, fontWeight: 500,
+                    fontFamily: 'var(--font-body)', fontSize: 14, fontWeight: 500,
                     textDecoration: 'none', transition: 'color 0.2s ease' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
                   onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}>
@@ -172,7 +172,7 @@ export default function ItineraryPreview() {
                 </a>
               </div>
 
-              <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, color: 'rgba(255,255,255,0.25)', textAlign: 'center' }}>
                 Complimentary Consultation · No hidden costs
               </p>
             </div>

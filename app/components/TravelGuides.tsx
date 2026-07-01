@@ -18,17 +18,17 @@ export default function TravelGuides() {
   const filtered = cat === 'All' ? GUIDES : GUIDES.filter(g => g.category === cat);
 
   return (
-    <section id="guides" style={{ background: 'var(--color-snow)', padding: '80px 0', borderTop: '1px solid var(--color-fog)' }}>
+    <section id="guides" style={{ background: 'var(--surface-canvas)', padding: '80px 0', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="container">
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="badge badge-dark reveal" style={{ marginBottom: 16 }}>Travel Intelligence</div>
-            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(26px,3vw,38px)', color: 'var(--color-obsidian)', lineHeight: 1.2 }}>
-              Expert Intelligence for India's Remote Frontiers.
+            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(26px,3vw,38px)', color: '#fff', lineHeight: 1.2 }}>
+              Expert Travel Tips & Yatra Guidance.
             </h2>
             <p className="reveal reveal-d2" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.6, marginTop: 10, maxWidth: 420 }}>
-              Practical tips, mountain safety protocols, packing sheets, and cultural context written by our field advisors.
+              Practical packing tips, yatra safety guidelines, and destination itineraries written by our local coordinators.
             </p>
           </div>
         </div>
@@ -40,10 +40,10 @@ export default function TravelGuides() {
               padding: '7px 16px', borderRadius: 'var(--radius-pill)', cursor: 'pointer',
               fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 500,
               transition: 'all 0.22s var(--ease-out)',
-              background: cat === c ? 'var(--color-obsidian)' : 'var(--color-mist)',
-              color: cat === c ? '#fff' : 'var(--color-graphite)',
-              border: `1px solid ${cat === c ? 'var(--color-obsidian)' : 'var(--color-fog)'}`,
-              boxShadow: cat === c ? 'var(--shadow-btn-primary)' : 'none',
+              background: cat === c ? 'var(--color-ember)' : 'rgba(255,255,255,0.03)',
+              color: '#fff',
+              border: `1px solid ${cat === c ? 'var(--color-ember)' : 'rgba(255,255,255,0.08)'}`,
+              boxShadow: cat === c ? 'var(--shadow-glow-ember)' : 'none',
               transform: cat === c ? 'scale(1.03)' : 'scale(1)',
             }}>
               {c}
@@ -79,7 +79,7 @@ export default function TravelGuides() {
 
               {/* Content */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '18px 20px', flex: 1 }}>
-                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 15, color: 'var(--color-obsidian)', lineHeight: 1.45, flex: 1 }}>
+                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 15, color: '#fff', lineHeight: 1.45, flex: 1 }}>
                   {g.title}
                 </h3>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -87,7 +87,7 @@ export default function TravelGuides() {
                   <div style={{
                     display: 'flex', alignItems: 'center', gap: 4,
                     fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600,
-                    color: hoveredIdx === i ? 'var(--color-obsidian)' : 'var(--color-ash)',
+                    color: hoveredIdx === i ? 'var(--color-ember)' : 'var(--color-ash)',
                     transition: 'color 0.2s ease',
                   }}>
                     Read guide

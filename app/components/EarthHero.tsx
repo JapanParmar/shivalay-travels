@@ -1,13 +1,13 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 
-const CYCLING_WORDS = ['transformative', 'breathtaking', 'luxurious', 'custom-tailored', 'unforgettable'];
+const CYCLING_WORDS = ['fast', 'lowest-fare', 'reliable', 'hassle-free', 'secured'];
 
 const FLOATING_TAGS = [
-  { text: '🏔️ Ladakh', delay: '0s', x: '5%', y: '15%' },
-  { text: '🌿 Kerala', delay: '1.2s', x: '85%', y: '25%' },
-  { text: '🏯 Rajasthan', delay: '0.6s', x: '10%', y: '72%' },
-  { text: '❄️ Kashmir', delay: '1.8s', x: '80%', y: '68%' },
+  { text: '✈️ Flight Booking', delay: '0s', x: '5%', y: '15%' },
+  { text: '🚆 Train Tickets', delay: '1.2s', x: '85%', y: '25%' },
+  { text: '🚌 Bus Booking', delay: '0.6s', x: '10%', y: '72%' },
+  { text: '🚢 Cruise Tours', delay: '1.8s', x: '80%', y: '68%' },
 ];
 
 export default function Hero() {
@@ -46,7 +46,7 @@ export default function Hero() {
       <div style={{
         position: 'absolute', top: -100, right: -100, width: 500, height: 500,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(254,69,226,0.06) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(195,0,16,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
         transform: `translate(${mousePos.x * 0.4}px, ${mousePos.y * 0.4}px)`,
         transition: 'transform 0.8s var(--ease-out)',
@@ -54,7 +54,7 @@ export default function Hero() {
       <div style={{
         position: 'absolute', bottom: -50, left: -80, width: 400, height: 400,
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(255,90,0,0.05) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(195,0,16,0.04) 0%, transparent 70%)',
         pointerEvents: 'none',
         transform: `translate(${mousePos.x * -0.3}px, ${mousePos.y * -0.3}px)`,
         transition: 'transform 0.8s var(--ease-out)',
@@ -64,14 +64,14 @@ export default function Hero() {
       {mounted && FLOATING_TAGS.map((tag) => (
         <div key={tag.text} style={{
           position: 'absolute', left: tag.x, top: tag.y,
-          background: 'rgba(255,255,255,0.85)',
+          background: 'rgba(20,20,25,0.85)',
           backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255,255,255,0.9)',
+          border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 'var(--radius-pill)',
           padding: '6px 14px',
           fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600,
-          color: 'var(--color-obsidian)',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+          color: '#fff',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
           animation: `floatSlow 5s ease-in-out ${tag.delay} infinite`,
           pointerEvents: 'none',
           zIndex: 1,
@@ -86,13 +86,13 @@ export default function Hero() {
           display: 'flex', justifyContent: 'center', marginBottom: 40,
           opacity: mounted ? 1 : 0, transition: 'opacity 0.6s ease 0.1s',
         }}>
-          <div className="announcement-banner">
+          <div className="announcement-banner" style={{ border: '1px solid rgba(195,0,16,0.3)', background: 'rgba(20,20,25,0.9)' }}>
             <span style={{
               display: 'inline-block', width: 6, height: 6, borderRadius: '50%',
-              background: '#22c55e', marginRight: 4,
+              background: 'var(--color-ember)', marginRight: 4,
               animation: 'pulse 2s ease-in-out infinite',
             }} />
-            <span style={{ fontSize: 12, fontWeight: 500, color: '#fff' }}>🇮🇳 India's Premier Private Travel Architect</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: '#fff' }}>🇮🇳 India's Trusted Pilgrimage & Tourism Partner</span>
             <span style={{ color: 'rgba(255,255,255,0.3)', margin: '0 8px' }}>·</span>
             <button
               onClick={() => document.getElementById('stories')?.scrollIntoView({ behavior: 'smooth' })}
@@ -118,55 +118,55 @@ export default function Hero() {
           {/* LEFT */}
           <div>
             <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-              <span className="badge badge-dark reveal reveal-d1" style={{ background: 'var(--color-obsidian)' }}>Indian Odysseys Only</span>
-              <span className="badge reveal reveal-d2" style={{ background: 'var(--color-fog)', color: 'var(--color-graphite)' }}>Est. 2010 · New Delhi</span>
+              <span className="badge badge-dark reveal reveal-d1" style={{ background: 'var(--color-ember)', color: '#fff', fontWeight: 600 }}>YOUR JOURNEY, OUR RESPONSIBILITY</span>
+              <span className="badge" style={{ background: 'rgba(195,0,16,0.15)', color: 'var(--color-orchid-flash)', border: '1px solid rgba(195,0,16,0.3)' }}>Indore, Madhya Pradesh</span>
             </div>
 
             <h1 className="reveal" style={{
               fontFamily: 'var(--font-cosmica)', fontSize: 'clamp(38px, 4.8vw, 58px)',
-              fontWeight: 700, lineHeight: 1.08, color: 'var(--color-obsidian)', marginBottom: 20,
+              fontWeight: 700, lineHeight: 1.08, color: '#fff', marginBottom: 20,
             }}>
-              Architecting<br />
-              <span
+              INSTANT TICKET BOOKINGS<br />
+              Made <span
                 key={wordIdx}
-                className="gradient-text"
+                className="gradient-text-gold"
                 style={{ display: 'inline-block', animation: 'revealUp 0.45s var(--ease-spring) both' }}
               >
                 {CYCLING_WORDS[wordIdx]}
-              </span>
-              <br />private Indian journeys.
+              </span><br />
+              & Sacred Temple Yatras
             </h1>
 
             <p className="reveal reveal-d2" style={{
-              fontFamily: 'var(--font-cosmica)', fontSize: 16, fontWeight: 400,
-              color: 'var(--color-steel)', lineHeight: 1.75, maxWidth: 500, marginBottom: 28,
+              fontFamily: 'var(--font-cosmica)', fontSize: 15, fontWeight: 400,
+              color: 'var(--color-steel)', lineHeight: 1.7, maxWidth: 500, marginBottom: 28,
             }}>
-              We do not sell pre-packaged tours. Lumière designs ultra-luxury, private expeditions across India's most majestic landscapes — from the heights of Ladakh to the tranquility of Kerala's backwaters.
+              Shivalay Travels is Indore's trusted agency for instant ticket bookings. Get the lowest prices on Flights, Trains, Buses, and Cruises with 24/7 on-ground assistance and customized tour planning.
             </p>
 
             {/* Destination chips */}
             <div className="reveal reveal-d3" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
-              {['Ladakh', 'Kashmir', 'Kerala', 'Meghalaya', 'Rajasthan', 'Goa', 'Hampi'].map((dest) => (
+              {['Kedarnath', 'Chardham Yatra', 'Varanasi', 'Kashmir', 'Goa', 'Kerala', 'Rajasthan'].map((dest) => (
                 <button
                   key={dest}
-                  onClick={() => document.getElementById('destinations')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => {
+                    const plannerEl = document.getElementById('planner');
+                    if (plannerEl) plannerEl.scrollIntoView({ behavior: 'smooth' });
+                  }}
                   style={{
                     padding: '7px 16px', borderRadius: 'var(--radius-pill)',
-                    border: '1px solid var(--color-pebble)', background: 'var(--color-snow)',
+                    border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.03)',
                     fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 600,
-                    color: 'var(--color-ink)', cursor: 'pointer', transition: 'all 0.25s var(--ease-out)',
-                    boxShadow: 'var(--shadow-card-inset)',
+                    color: '#fff', cursor: 'pointer', transition: 'all 0.25s var(--ease-out)',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'var(--color-obsidian)';
-                    e.currentTarget.style.background = 'var(--color-obsidian)';
-                    e.currentTarget.style.color = '#fff';
+                    e.currentTarget.style.borderColor = 'var(--color-ember)';
+                    e.currentTarget.style.background = 'var(--color-ember)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'var(--color-pebble)';
-                    e.currentTarget.style.background = 'var(--color-snow)';
-                    e.currentTarget.style.color = 'var(--color-ink)';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
@@ -175,21 +175,36 @@ export default function Hero() {
               ))}
             </div>
 
-            {/* Trust stats */}
+            {/* Trust Stats / Badges */}
             <div className="reveal reveal-d4" style={{
-              display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20,
-              borderTop: '1px solid var(--color-fog)', paddingTop: 24,
+              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12,
+              borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24,
             }}>
               {[
-                { num: '4,800+', label: 'Bespoke itineraries for discerning travellers' },
-                { num: '100%', label: 'Private — dedicated guides & chartered logistics' },
-              ].map((stat) => (
-                <div key={stat.num} style={{ transition: 'transform 0.25s ease' }}
-                  onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-2px)')}
-                  onMouseLeave={e => (e.currentTarget.style.transform = 'none')}
+                { icon: '₹', title: 'Best Prices Challenge', desc: 'Guaranteed Rates' },
+                { icon: '🎧', title: '24x7 Support', desc: 'Always Available' },
+                { icon: '🛡️', title: 'Safe & Secure Journey', desc: 'Verified Transit' },
+                { icon: '👥', title: 'Customer Satisfaction', desc: 'Highly Rated' },
+              ].map((badge) => (
+                <div key={badge.title} style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                  background: 'rgba(255,255,255,0.02)', padding: '12px 6px', borderRadius: '12px',
+                  border: '1px solid rgba(255,255,255,0.04)', transition: 'transform 0.25s ease',
+                }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-3px)';
+                    e.currentTarget.style.borderColor = 'var(--color-ember)';
+                    e.currentTarget.style.background = 'rgba(195,0,16,0.05)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)';
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                  }}
                 >
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 26, fontWeight: 700, color: 'var(--color-obsidian)', lineHeight: 1 }}>{stat.num}</p>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-steel)', marginTop: 6, lineHeight: 1.5 }}>{stat.label}</p>
+                  <span style={{ fontSize: 20, marginBottom: 6, color: 'var(--color-orchid-flash)' }}>{badge.icon}</span>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 700, color: '#fff', lineHeight: 1.2 }}>{badge.title}</p>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 9, color: 'var(--color-steel)', marginTop: 4 }}>{badge.desc}</p>
                 </div>
               ))}
             </div>
@@ -197,54 +212,68 @@ export default function Hero() {
 
           {/* RIGHT — visual stack */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Hero image card */}
+            {/* Hero image card - Kedarnath Special */}
             <div
               className="portfolio-tile reveal-scale"
               style={{
-                height: 330, width: '100%', position: 'relative',
-                boxShadow: '0 24px 64px rgba(0,0,0,0.16)',
+                height: 340, width: '100%', position: 'relative',
+                boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+                border: '1px solid rgba(255,255,255,0.08)',
                 transform: `perspective(1000px) rotateY(${mousePos.x * 0.015}deg) rotateX(${mousePos.y * -0.012}deg)`,
                 transition: 'transform 0.6s var(--ease-out)',
               }}
             >
-              <img className="tile-img" src="/images/kashmir.png" alt="Kashmir Dal Lake" />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.88) 0%, rgba(9,9,11,0.15) 60%, transparent 100%)' }} />
+              {/* Kedarnath Temple Image */}
+              <img className="tile-img" src="/images/kedarnath.png" alt="Kedarnath Yatra" />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.95) 0%, rgba(9,9,11,0.15) 60%, transparent 100%)' }} />
 
               <div style={{ position: 'absolute', top: 16, left: 16 }}>
-                <span className="badge badge-ember">FEATURED EXPERIENCE</span>
+                <span className="badge badge-ember" style={{ background: 'var(--color-ember)', color: '#fff' }}>TEMPLE YATRA SPECIAL</span>
               </div>
               <div style={{ position: 'absolute', top: 16, right: 16 }}>
-                <span className="badge glass" style={{ color: '#fff' }}>Kashmir</span>
+                <span className="badge glass" style={{ color: '#fff', borderColor: 'rgba(255,255,255,0.3)' }}>Kedarnath Yatra</span>
               </div>
-              <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16 }}>
-                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-orchid-flash)', textTransform: 'uppercase', letterSpacing: '1px' }}>Vistas of Srinagar</p>
-                <h4 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 19, fontWeight: 700, color: '#fff', marginTop: 2 }}>Dawn on Dal Lake via Private Shikara</h4>
+              <div style={{ position: 'absolute', bottom: 18, left: 18, right: 18 }}>
+                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: 'var(--color-ember)', textTransform: 'uppercase', letterSpacing: '1px' }}>Spiritual Journey • Divine Experience</p>
+                <h4 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 22, fontWeight: 800, color: '#fff', marginTop: 4 }}>Complete Pilgrimage Solutions</h4>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 12 }}>
+                  {['Comfortable Stay', 'Hygienic Food', 'VIP Darshan', 'Travel Assistance'].map((inc) => (
+                    <span key={inc} style={{ fontSize: 11, color: '#e4e4e7', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <span style={{ color: 'var(--color-ember)' }}>✦</span> {inc}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Email capture card */}
-            <div className="card-white reveal reveal-d3" style={{ padding: '22px 26px' }}>
-              <h3 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, fontWeight: 700, color: 'var(--color-obsidian)', marginBottom: 6 }}>
-                Plan your bespoke Indian escape
+            {/* Quick Consultation Card */}
+            <div className="card-white reveal reveal-d3" style={{ padding: '22px 26px', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <h3 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 6 }}>
+                Need instant booking assistance?
               </h3>
               <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-steel)', lineHeight: 1.5, marginBottom: 14 }}>
-                Enter your email to receive a complimentary custom itinerary outline.
+                Enter your phone number to get connected directly to our support desk on WhatsApp.
               </p>
               <form
-                onSubmit={e => { e.preventDefault(); document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' }); }}
+                onSubmit={e => {
+                  e.preventDefault();
+                  const target = e.currentTarget.elements.namedItem('phone') as HTMLInputElement;
+                  const val = target ? target.value : '';
+                  const encoded = encodeURIComponent(`Hello Shivalay Travels, I need instant booking support for my trip. Contact: ${val}`);
+                  window.open(`https://wa.me/919340994628?text=${encoded}`, '_blank');
+                }}
                 style={{ display: 'flex', gap: 8 }}
               >
                 <input
                   className="input-luxury"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  style={{ flex: 1 }}
+                  name="phone"
+                  type="tel"
+                  placeholder="Enter Phone Number"
+                  style={{ flex: 1, background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
                   required
                 />
-                <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '11px 16px' }}>
-                  Let's Begin
+                <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '11px 16px', background: 'var(--color-ember)' }}>
+                  Get Tickets
                 </button>
               </form>
             </div>

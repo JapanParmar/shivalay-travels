@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Lumière — Private Journeys, Extraordinary Experiences",
-  description: "Bespoke luxury travel crafted for those who seek transformation. Private journeys to Dubai, Bali, Switzerland, Maldives, and Japan.",
-  keywords: "luxury travel, private tours, bespoke journeys, exclusive experiences",
+  title: "Shivalay Travels — Instant Ticket Bookings & Sacred Temple Yatras",
+  description: "Book flights, trains, intercity buses, and cruises instantly with Shivalay Travels. We specialize in custom pilgrimage tours to Kedarnath, Chardham, Varanasi, Kashmir, and Goa.",
+  keywords: "Shivalay Travels, flight ticket booking, train ticket booking, intercity bus booking, Kedarnath yatra package, Chardham pilgrimage, Varanasi tour, travel agency Indore",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

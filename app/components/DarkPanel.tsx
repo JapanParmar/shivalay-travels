@@ -15,8 +15,8 @@ export default function DarkPanel() {
       <div className="container">
         <div className="card-dark reveal" style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', position: 'relative' }}>
           {/* Decorative gradient blobs */}
-          <div style={{ position: 'absolute', top: -80, right: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(254,69,226,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', bottom: -60, left: 200, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,90,0,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', top: -80, right: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', bottom: -60, left: 200, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
           <div style={{ padding: '48px 48px', display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr', gap: 40, alignItems: 'center', position: 'relative', zIndex: 1 }}>
             {/* Col 1: Intro */}
@@ -29,14 +29,14 @@ export default function DarkPanel() {
                 <span style={{ color: 'var(--color-ash)' }}>an assembly line.</span>
               </h2>
               <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 15, color: 'rgba(255,255,255,0.45)', lineHeight: 1.7, marginBottom: 28 }}>
-                Most agencies reuse identical templates for Leh, Srinagar, or Munnar. Lumière was built for those who seek authentic, luxury exploration without compromises.
+                Most agencies reuse identical templates for Leh, Srinagar, or Munnar. Shivalay Travels was built for those who seek authentic, reliable travel and pilgrimages without compromises.
               </p>
               <button
                 className="btn-primary"
                 onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}
-                style={{ background: '#fff', color: 'var(--color-obsidian)', boxShadow: 'none', transition: 'all 0.25s var(--ease-out)' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-fog)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                style={{ background: 'var(--color-ember)', color: '#fff', transition: 'all 0.25s var(--ease-out)' }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '0.85'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
                 Discover Our Method
               </button>
@@ -60,12 +60,12 @@ export default function DarkPanel() {
                 >
                   <div style={{
                     width: 20, height: 20, borderRadius: '50%', flexShrink: 0,
-                    background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)',
+                    background: 'rgba(195,0,16,0.12)', border: '1px solid rgba(195,0,16,0.3)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 2,
                     transition: 'background 0.2s ease',
                   }}>
                     <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
-                      <path d="M2 5L4 7L8 3" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M2 5L4 7L8 3" stroke="var(--color-ember)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, lineHeight: 1.5 }}>
@@ -81,7 +81,7 @@ export default function DarkPanel() {
               <img src="/images/meghalaya.png" alt="Meghalaya Living Root Bridge" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.82) 0%, transparent 100%)' }} />
               <div style={{ position: 'absolute', bottom: 16, left: 16, right: 16 }}>
-                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-orchid-flash)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 4 }}>Raw Ecotourism</p>
+                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ember)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 4 }}>Raw Ecotourism</p>
                 <h4 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 16, fontWeight: 700, color: '#fff' }}>Cherrapunji rainforest loops</h4>
               </div>
             </div>

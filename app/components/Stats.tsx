@@ -67,10 +67,10 @@ function CountUp({ end, duration = 1800 }: CountUpProps) {
 }
 
 const STATS = [
-  { num: '4,800+', label: 'Luxury Indian journeys crafted since 2010' },
-  { num: '98%', label: 'Return client & referral rate' },
-  { num: '8', label: 'Handpicked domestic regions' },
-  { num: '24/7', label: 'On-ground medical & concierge support' },
+  { num: '12,500+', label: 'Happy travellers served' },
+  { num: '99%', label: 'Customer satisfaction & return rate' },
+  { num: '50+', label: 'Pilgrimage and tourist routes' },
+  { num: '24/7', label: 'On-ground support & travel guidance' },
 ];
 
 export default function Stats() {
@@ -80,28 +80,31 @@ export default function Stats() {
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 2,
-          background: 'var(--color-fog)',
+          gap: 0,
+          background: 'var(--surface-card-white)',
           borderRadius: 'var(--radius-card)',
           overflow: 'hidden',
+          border: '1px solid rgba(255,255,255,0.06)',
         }}>
           {STATS.map((s, i) => (
             <div
               key={i}
               className="reveal"
               style={{
-                background: 'var(--surface-card-white)',
+                background: 'transparent',
                 padding: '40px 32px',
                 display: 'flex', flexDirection: 'column', gap: 8,
-                boxShadow: 'var(--shadow-card-inset)',
+                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none',
                 transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(195,0,16,0.04)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
             >
               <div style={{
                 fontFamily: 'var(--font-cosmica)',
                 fontSize: 'clamp(32px, 3vw, 48px)',
                 fontWeight: 700,
-                color: 'var(--color-obsidian)',
+                color: '#fff',
                 lineHeight: 1,
               }}>
                 <CountUp end={s.num} />

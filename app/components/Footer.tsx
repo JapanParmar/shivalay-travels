@@ -3,15 +3,15 @@
 const COLS = [
   {
     label: 'Destinations',
-    links: ['Ladakh', 'Kashmir', 'Kerala', 'Meghalaya', 'Rajasthan', 'All Indian Expeditions'],
+    links: ['Kedarnath', 'Chardham Yatra', 'Varanasi Yatra', 'Kashmir Valley', 'Goa Beaches', 'All Indian Tours'],
   },
   {
     label: 'Services',
-    links: ['Private journeys', 'Honeymoon planning', 'Corporate retreats', 'Family expeditions', 'Wellness escapes'],
+    links: ['Flight Booking', 'Bus Booking', 'Train Booking', 'Hotel Stays', 'Customised Tour Packages'],
   },
   {
-    label: 'Company',
-    links: ['Our story', 'Traveller stories', 'Press', 'Careers', 'Privacy policy'],
+    label: 'Contact Office',
+    links: ['Shop No. 2, Shivalay Travels', 'Indore, Madhya Pradesh', 'Nisha Chouhan: 9340994628', 'Manisha Mali: 9340994628'],
   },
 ];
 
@@ -26,30 +26,30 @@ export default function Footer() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%',
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.2)',
+                background: 'var(--color-ember)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff',
               }}>
-                <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
-                  <circle cx="7" cy="7" r="2.5" fill="white" />
-                  <path d="M7 1v2M7 11v2M1 7h2M11 7h2" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+                {/* Trident SVG logo */}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3v18M6 8v1c0 3 2 5.5 6 5.5s6-2.5 6-5.5V8M9 21h6" />
                 </svg>
               </div>
-              <span style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 18, color: '#fff' }}>Lumière</span>
+              <span style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 18, color: '#fff' }}>Shivalay Travels</span>
             </div>
             <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.65, maxWidth: 220 }}>
-              Private journeys for those who seek transformation, not tourism.
+              Complete travel solutions for all your pilgrimage and holiday needs.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 28 }}>
-              <a href="mailto:journeys@lumiere.travel" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
+              <a href="mailto:info@shivalaytravels.com" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}>
-                journeys@lumiere.travel
+                info@shivalaytravels.com
               </a>
-              <a href="https://wa.me/+1234567890" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
+              <a href="https://wa.me/919340994628" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}>
-                WhatsApp concierge
+                WhatsApp: +91 93409 94628
               </a>
             </div>
           </div>
@@ -63,19 +63,15 @@ export default function Footer() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {col.links.map(link => (
-                    <button
+                    <span
                       key={link}
                       style={{
-                        fontFamily: 'var(--font-cosmica)', fontSize: 14, fontWeight: 400,
-                        color: 'rgba(255,255,255,0.45)', background: 'none', border: 'none',
-                        cursor: 'pointer', textAlign: 'left', padding: 0,
-                        transition: 'color 0.2s ease',
+                        fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 400,
+                        color: 'rgba(255,255,255,0.45)', textAlign: 'left', padding: 0,
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.75)')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
                     >
                       {link}
-                    </button>
+                    </span>
                   ))}
                 </div>
               </div>
@@ -86,10 +82,10 @@ export default function Footer() {
         {/* Bottom bar */}
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.25)' }}>
-            © 2025 Lumière Private Travel. All rights reserved.
+            © 2026 Shivalay Travels. All rights reserved.
           </p>
           <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 300, color: 'rgba(255,255,255,0.2)' }}>
-            Crafting extraordinary Indian journeys since 2010.
+            Your Journey, Our Responsibility.
           </p>
         </div>
       </div>

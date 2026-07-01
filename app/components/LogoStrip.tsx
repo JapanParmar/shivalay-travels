@@ -11,9 +11,9 @@ export default function LogoStrip() {
 
   return (
     <section style={{
-      borderTop: '1px solid var(--color-fog)',
-      borderBottom: '1px solid var(--color-fog)',
-      background: 'var(--color-snow)',
+      borderTop: '1px solid rgba(255,255,255,0.06)',
+      borderBottom: '1px solid rgba(255,255,255,0.06)',
+      background: 'var(--surface-card-muted)',
       padding: '24px 0',
       overflow: 'hidden',
     }}>

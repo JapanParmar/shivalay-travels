@@ -18,9 +18,9 @@ const STEPS: Step[] = [
     label: '01 — Where',
     question: 'Where in India does your soul want to go?',
     subtext: 'Choose from our curated regions or describe your dream destination.',
-    options: ['Ladakh', 'Kashmir', 'Kerala', 'Meghalaya', 'Rajasthan', 'Goa', 'Hampi', 'Varanasi', 'Surprise me'],
+    options: ['Kedarnath', 'Chardham Yatra', 'Varanasi', 'Kashmir', 'Goa', 'Kerala', 'Rajasthan', 'Leh Ladakh', 'Surprise me'],
     inputType: 'text',
-    inputPlaceholder: 'e.g. Spiti Valley, Coorg, or a multi-destination circuit…',
+    inputPlaceholder: 'e.g. Kedarnath, Spiti Valley, Coorg, or a multi-city circuit…',
     icon: '🗺️',
   },
   {
@@ -77,10 +77,10 @@ const STEPS: Step[] = [
     id: 'accommodation',
     label: '07 — Stay',
     question: 'Any accommodation preferences?',
-    subtext: 'We partner with Taj, Oberoi, boutique camps, and private villas.',
-    options: ['Luxury 5-star hotels', 'Boutique heritage properties', 'Private villas', 'Luxury tented camps', 'Houseboats', 'Mix of experiences'],
+    subtext: 'We partner with premium hotels, guest houses, camps, and heritage resorts.',
+    options: ['Premium 3/4 Star Hotels', 'Comfortable Guest Houses', 'Boutique Resorts', 'Luxury Tented Camps', 'Houseboats', 'Mix of Stays'],
     inputType: 'text',
-    inputPlaceholder: 'e.g. Must have a pool, prefer eco-lodges, open to anything…',
+    inputPlaceholder: 'e.g. Near the temple shrine, pool required, family suite…',
     icon: '🏡',
   },
   {
@@ -142,8 +142,8 @@ export default function JourneyPlanner() {
   return (
     <section id="planner" style={{ background: 'var(--color-obsidian)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
       {/* Background decoration */}
-      <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(254,69,226,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,90,0,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 56, alignItems: 'start' }}>
@@ -151,10 +151,10 @@ export default function JourneyPlanner() {
           {/* Left sidebar */}
           <div className="reveal-right">
             <div className="badge" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 24 }}>Journey Planner</div>
-            <h2 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 26, color: '#fff', lineHeight: 1.25, marginBottom: 8 }}>
+            <h2 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 26, color: '#fff', lineHeight: 1.25, marginBottom: 8 }}>
               Build your perfect private escape.
             </h2>
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6, marginBottom: 32 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6, marginBottom: 32 }}>
               {STEPS.length} steps to your dream itinerary. Every field is fully customisable.
             </p>
 
@@ -187,17 +187,17 @@ export default function JourneyPlanner() {
                           <path d="M2 5L4 7L8 3" stroke="#09090b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       ) : (
-                        <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 9, fontWeight: 700, color: isActive ? '#fff' : 'rgba(255,255,255,0.28)' }}>{i + 1}</span>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 700, color: isActive ? '#fff' : 'rgba(255,255,255,0.28)' }}>{i + 1}</span>
                       )}
                     </div>
                     <span style={{
-                      fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 500,
+                      fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500,
                       color: isActive ? '#fff' : isDone ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)',
                       flex: 1,
                     }}>{s.label}</span>
                     {answers[s.id] && (
                       <span style={{
-                        fontFamily: 'var(--font-cosmica)', fontSize: 10, color: 'rgba(255,255,255,0.35)',
+                        fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(255,255,255,0.35)',
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 72,
                       }}>{answers[s.id]}</span>
                     )}
@@ -211,16 +211,17 @@ export default function JourneyPlanner() {
           <div className="reveal" style={{
             background: 'var(--surface-card-white)', borderRadius: 'var(--radius-card)',
             padding: '44px 48px', minHeight: 520, display: 'flex', flexDirection: 'column',
+            border: '1px solid rgba(255,255,255,0.06)',
           }}>
             {!submitted ? (
               <>
                 {/* Progress */}
                 <div style={{ marginBottom: 36 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, color: 'var(--color-ash)' }}>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-ash)' }}>
                       Step {step + 1} of {STEPS.length}
                     </span>
-                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 700, color: 'var(--color-obsidian)' }}>{progress}%</span>
+                    <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 700, color: '#fff' }}>{progress}%</span>
                   </div>
                   <div style={{ height: 5, background: 'var(--color-fog)', borderRadius: 5, overflow: 'hidden' }}>
                     <div style={{
@@ -236,14 +237,14 @@ export default function JourneyPlanner() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <span style={{ fontSize: 22 }}>{current.icon}</span>
                     <h3 style={{
-                      fontFamily: 'var(--font-cosmica)', fontWeight: 700,
-                      fontSize: 'clamp(20px, 2.8vw, 28px)', color: 'var(--color-obsidian)', lineHeight: 1.25,
+                      fontFamily: 'var(--font-body)', fontWeight: 700,
+                      fontSize: 'clamp(20px, 2.8vw, 28px)', color: '#fff', lineHeight: 1.25,
                     }}>
                       {current.question}
                     </h3>
                   </div>
                   {current.subtext && (
-                    <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-ash)', lineHeight: 1.55, marginBottom: 24, marginLeft: 32 }}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ash)', lineHeight: 1.55, marginBottom: 24, marginLeft: 32 }}>
                       {current.subtext}
                     </p>
                   )}
@@ -271,7 +272,7 @@ export default function JourneyPlanner() {
                       marginTop: current.options.length > 0 ? 4 : 0,
                     }}>
                       {current.options.length > 0 && (
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>
                           Or enter custom details:
                         </p>
                       )}
@@ -321,7 +322,7 @@ export default function JourneyPlanner() {
                           type="button"
                           onClick={() => { setAnswers(prev => ({ ...prev, notes: customInputs.notes || '' })); setStep(s => s + 1); }}
                           style={{
-                            marginTop: 10, fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-ash)',
+                            marginTop: 10, fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ash)',
                             background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline',
                           }}
                         >
@@ -340,20 +341,20 @@ export default function JourneyPlanner() {
                         { label: 'WhatsApp / Phone (optional)', val: phone, set: setPhone, placeholder: '+91 98765 43210', type: 'tel', required: false },
                       ].map(field => (
                         <div key={field.label}>
-                          <label style={{ display: 'block', fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{field.label}</label>
+                          <label style={{ display: 'block', fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', marginBottom: 7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{field.label}</label>
                           <input className="input-luxury" type={field.type} value={field.val} onChange={e => field.set(e.target.value)} placeholder={field.placeholder} required={field.required} />
                         </div>
                       ))}
 
                       {/* Summary */}
                       <div style={{ background: 'var(--color-mist)', borderRadius: 'var(--radius-card-compact)', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 700, color: 'var(--color-obsidian)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>Your journey summary</p>
+                        <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>Your journey summary</p>
                         {Object.entries(answers).filter(([, v]) => v).map(([k, v]) => {
                           const stepDef = STEPS.find(s => s.id === k);
                           return (
                             <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'flex-start' }}>
-                              <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, color: 'var(--color-ash)', textTransform: 'capitalize', flexShrink: 0 }}>{stepDef?.label?.replace(/^\d+ — /, '') || k}</span>
-                              <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600, color: 'var(--color-obsidian)', textAlign: 'right' }}>{v}</span>
+                              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'var(--color-ash)', textTransform: 'capitalize', flexShrink: 0 }}>{stepDef?.label?.replace(/^\d+ — /, '') || k}</span>
+                              <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 600, color: '#fff', textAlign: 'right' }}>{v}</span>
                             </div>
                           );
                         })}
@@ -372,7 +373,7 @@ export default function JourneyPlanner() {
                     onClick={() => setStep(s => s - 1)}
                     style={{
                       marginTop: 24, background: 'none', border: 'none', cursor: 'pointer',
-                      fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-ash)',
+                      fontFamily: 'var(--font-body)', fontSize: 13, color: 'var(--color-ash)',
                       display: 'flex', alignItems: 'center', gap: 6, transition: 'color 0.2s',
                     }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-steel)')}
@@ -389,7 +390,7 @@ export default function JourneyPlanner() {
                   width: 64, height: 64, borderRadius: '50%',
                   background: 'linear-gradient(135deg, var(--color-ember), var(--color-orchid-flash))',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 8px 32px rgba(255,90,0,0.3)',
+                  boxShadow: 'var(--shadow-glow-ember)',
                   animation: 'float 3s ease-in-out infinite',
                 }}>
                   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5">
@@ -397,18 +398,18 @@ export default function JourneyPlanner() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 28, color: 'var(--color-obsidian)', marginBottom: 10 }}>
+                  <h3 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 28, color: '#fff', marginBottom: 10 }}>
                     Your Indian Odyssey is Registered. 🎉
                   </h3>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, maxWidth: 400 }}>
-                    Our luxury travel planner will contact you within 2 hours with a personalised draft itinerary based on your selections.
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, maxWidth: 400 }}>
+                    Our travel specialist will contact you within 2 hours with a personalised draft itinerary based on your selections.
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
-                  <a href="https://wa.me/+1234567890" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none' }}>
+                  <a href="https://wa.me/919340994628" target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ textDecoration: 'none', background: 'var(--color-ember)' }}>
                     WhatsApp Planner Now
                   </a>
-                  <a href="mailto:journeys@lumiere.travel" className="btn-outline" style={{ textDecoration: 'none' }}>
+                  <a href="mailto:info@shivalaytravels.com" className="btn-outline" style={{ textDecoration: 'none' }}>
                     Send Email
                   </a>
                 </div>

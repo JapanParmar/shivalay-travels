@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 const PROCESS_STEPS = [
   { num: '01', title: 'Discovery call', duration: '30 min', body: 'Speak directly with our Indian travel specialists. We discuss your group preferences, pace of travel, dietary requirements, and dream destinations.', icon: '◎', color: 'var(--color-ember)' },
-  { num: '02', title: 'Bespoke design', duration: '24–48 hrs', body: 'We handcraft a complete itinerary with premium stays (Taj, Oberoi, or private mountain chalets), local guides, and private vehicle routing.', icon: '⊹', color: 'var(--color-orchid-flash)' },
-  { num: '03', title: 'Safety check', duration: 'Pre-departure', body: 'For high-altitude destinations like Ladakh and Spiti, we program rest days, secure inner line permits, and arrange medical backups.', icon: '◇', color: '#22d3ee' },
-  { num: '04', title: 'Seamless journey', duration: 'Travel dates', body: 'Your dedicated concierge is on standby 24/7. Ground transport, hotel check-ins, local guides, and special permits are managed invisibly.', icon: '✦', color: '#4ade80' },
+  { num: '02', title: 'Customised planning', duration: '24–48 hrs', body: 'We handcraft a complete itinerary with handpicked hotels, experienced drivers, local guides, and optimal road routing.', icon: '⊹', color: 'var(--color-orchid-flash)' },
+  { num: '03', title: 'Safety check', duration: 'Pre-departure', body: 'For high-altitude destinations like Ladakh and Spiti, we program rest days, secure inner line permits, and arrange medical backups.', icon: '◇', color: '#ff4d4d' },
+  { num: '04', title: 'Seamless journey', duration: 'Travel dates', body: 'Your dedicated concierge is on standby 24/7. Ground transport, hotel check-ins, local guides, and special permits are managed invisibly.', icon: '✦', color: '#b91c1c' },
 ];
 
 const FAQS = [
@@ -27,7 +27,7 @@ export default function Philosophy() {
         {/* Header */}
         <div style={{ marginBottom: 52 }}>
           <div className="badge badge-dark reveal" style={{ marginBottom: 16 }}>How we work</div>
-          <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: 'var(--color-obsidian)', lineHeight: 1.2, maxWidth: 480 }}>
+          <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: '#fff', lineHeight: 1.2, maxWidth: 480 }}>
             Tailoring Journeys Across the Subcontinent.
           </h2>
         </div>
@@ -63,7 +63,7 @@ export default function Philosophy() {
                 <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>
                   Step {s.num}
                 </p>
-                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 16, color: 'var(--color-obsidian)', marginBottom: 8, lineHeight: 1.3 }}>
+                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 16, color: '#fff', marginBottom: 8, lineHeight: 1.3 }}>
                   {s.title}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, color: 'var(--color-steel)', lineHeight: 1.65 }}>
@@ -84,10 +84,10 @@ export default function Philosophy() {
                 Our philosophy
               </p>
               <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 26, color: '#fff', lineHeight: 1.25, marginBottom: 18 }}>
-                Architecting luxury<br />expeditions with<br />uncompromising safety.
+                Curating divine<br />pilgrimages & tours with<br />absolute responsibility.
               </h3>
               <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 14.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75 }}>
-                Lumière brings global luxury execution standards to domestic Indian travel. We coordinate with local insiders, select verified properties, and maintain complete field support.
+                Shivalay Travels brings premium coordination standards to Indian domestic tourism. We coordinate directly with local teams, select verified hotels, and maintain round-the-clock support.
               </p>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 22, position: 'relative', zIndex: 1 }}>
@@ -143,7 +143,7 @@ export default function Philosophy() {
                     onMouseEnter={e => { if (openFaq !== i) e.currentTarget.style.background = 'var(--color-mist)'; }}
                     onMouseLeave={e => { if (openFaq !== i) e.currentTarget.style.background = 'none'; }}
                   >
-                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 600, color: 'var(--color-obsidian)', lineHeight: 1.45 }}>
+                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1.45 }}>
                       {faq.q}
                     </span>
                     <svg

@@ -94,7 +94,7 @@ export default function EarthOutro() {
                 color: '#fff', padding: '8px 12px',
               }}
             />
-            <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '10px 20px', background: 'var(--color-orchid-flash)' }}>
+            <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '10px 20px', background: 'var(--color-ember)' }}>
               Plan my journey
             </button>
           </form>
@@ -102,7 +102,7 @@ export default function EarthOutro() {
           {/* Secondary CTAs */}
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center', marginTop: 8 }}>
             <a
-              href="https://wa.me/+1234567890"
+              href="https://wa.me/919340994628"
               target="_blank" rel="noopener noreferrer"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -120,7 +120,7 @@ export default function EarthOutro() {
             </a>
             <span style={{ color: 'rgba(255,255,255,0.2)', lineHeight: 1 }}>·</span>
             <a
-              href="mailto:journeys@lumiere.travel"
+              href="mailto:info@shivalaytravels.com"
               style={{
                 fontFamily: 'var(--font-cosmica)', fontSize: 14, fontWeight: 500,
                 color: 'rgba(255,255,255,0.6)', textDecoration: 'none',
@@ -129,7 +129,7 @@ export default function EarthOutro() {
               onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
               onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
             >
-              Schedule a consultation
+              info@shivalaytravels.com
             </a>
           </div>
         </div>

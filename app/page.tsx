@@ -4,6 +4,7 @@ import LogoStrip from './components/LogoStrip';
 import Philosophy from './components/Philosophy';
 import DarkPanel from './components/DarkPanel';
 import Destinations from './components/Destinations';
+import TicketBooking from './components/TicketBooking';
 import ItineraryPreview from './components/ItineraryPreview';
 import Stats from './components/Stats';
 import TravelGuides from './components/TravelGuides';
@@ -19,20 +20,23 @@ export default function Home() {
       <ScrollReveal />
       <Navigation />
       <main>
-        {/* Hero — 2-col headline + email capture + trust signals */}
+        {/* Hero — 2-col headline + ticket capture + trust signals */}
         <Hero />
+
+        {/* Ticket Booking — direct flights, trains, buses, cruises */}
+        <TicketBooking />
 
         {/* Partner / media ticker */}
         <LogoStrip />
+
+        {/* Destinations — filter chips + horizontal scroll tiles + expandable details */}
+        <Destinations />
 
         {/* How we work (4-step process) + FAQ accordion + philosophy */}
         <Philosophy />
 
         {/* Dark problem panel — why generic travel fails */}
         <DarkPanel />
-
-        {/* Destinations — filter chips + horizontal scroll tiles + expandable details */}
-        <Destinations />
 
         {/* Sample itinerary — day-by-day accordion + sticky booking card */}
         <ItineraryPreview />

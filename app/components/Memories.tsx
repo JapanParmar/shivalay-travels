@@ -2,12 +2,12 @@
 import { useState } from 'react';
 
 const TESTIMONIALS = [
-  { quote: 'Our Kashmir honeymoon was beyond imagination. Every detail — the luxury carved houseboat, the private saffron farm walk, the helicopter transfer — felt tailored to our exact pace.', name: 'Priya & Arjun Mehta', location: 'Mumbai, India', destination: 'Kashmir', trip: 'Honeymoon · 8 nights', image: '/images/kashmir.png', rating: 5 },
-  { quote: "I've traveled for business my whole career. Lumière showed me what leisure travel actually feels like when seasoned mountaineers design it. The Ladakh expedition was a masterclass.", name: 'Vikram Sethi', location: 'New Delhi, India', destination: 'Ladakh', trip: 'Solo · 10 nights', image: '/images/ladakh.png', rating: 5 },
-  { quote: 'Exploring Meghalaya with two teenagers? Lumière made it feel like an Indiana Jones film. The root bridges and our Khasi guide who knew secret waterfalls was unforgettable.', name: 'The Iyer Family', location: 'Chennai, India', destination: 'Meghalaya', trip: 'Family · 7 nights', image: '/images/meghalaya.png', rating: 5 },
+  { quote: 'Our Kashmir honeymoon was beyond imagination. Every detail — the scenic houseboat, the private saffron farm walk, the taxi transfers — felt tailored to our exact pace.', name: 'Priya & Arjun Mehta', location: 'Mumbai, India', destination: 'Kashmir', trip: 'Honeymoon · 8 nights', image: '/images/kashmir.png', rating: 5 },
+  { quote: 'The Kedarnath yatra with Shivalay Travels was incredibly smooth. They managed all registrations and our helicopter tickets without any hassle. A truly divine experience.', name: 'Ramesh & Savita Joshi', location: 'Indore, India', destination: 'Kedarnath', trip: 'Pilgrim · 5 nights', image: '/images/kedarnath.png', rating: 5 },
+  { quote: 'Taking our elderly parents to Chardham was a big concern, but Shivalay Travels made it feel absolutely stress-free. The premium Tempo Traveller was extremely comfortable.', name: 'The Verma Family', location: 'Bhopal, India', destination: 'Chardham Yatra', trip: 'Family Yatra · 11 nights', image: '/images/chardham.png', rating: 5 },
   { quote: 'No transactional booking templates here. From our first call to our private houseboat cruise in Alleppey, we felt like honored guests. Already booking Jaisalmer for winter.', name: 'Dr. Ananya Nair', location: 'Kochi, India', destination: 'Kerala', trip: 'Solo · 9 nights', image: '/images/kerala.png', rating: 5 },
-  { quote: 'Lumière designed our corporate leadership retreat in a private Goa beach villa. The yacht sunset cruise and dinner at a Portuguese estate were absolutely spectacular.', name: 'Rahul Sharma', location: 'Bangalore, India', destination: 'Goa', trip: 'Corporate · 5 nights', image: '/images/goa.png', rating: 5 },
-  { quote: 'The sunrise coracle ride in Hampi, with our private archaeologist guide, brought history to life. An incredibly rich experience the whole family will never forget.', name: 'Kapoor Family', location: 'Kolkata, India', destination: 'Hampi', trip: 'Family · 6 nights', image: '/images/hampi.png', rating: 5 },
+  { quote: 'Shivalay Travels designed our corporate leadership retreat in a private Goa beach resort. The yacht sunset cruise and dinners were absolutely spectacular.', name: 'Rahul Sharma', location: 'Bangalore, India', destination: 'Goa', trip: 'Corporate · 5 nights', image: '/images/goa.png', rating: 5 },
+  { quote: 'Shivalay Travels showed me what Leh Ladakh actually feels like when seasoned road specialists design it. The logistics, permits and backup support were top notch.', name: 'Vikram Sethi', location: 'New Delhi, India', destination: 'Ladakh', trip: 'Adventure · 9 nights', image: '/images/ladakh.png', rating: 5 },
 ];
 
 const MEDIA_MENTIONS = ['Condé Nast Traveller India', 'Travel + Leisure India', 'National Geographic Traveller', 'Forbes India', 'Outlook Traveller', 'The Hindu Lifestyle'];
@@ -23,7 +23,7 @@ export default function Memories() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 48, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div className="badge badge-dark reveal" style={{ marginBottom: 16 }}>Traveller Stories</div>
-            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: 'var(--color-obsidian)', lineHeight: 1.2 }}>
+            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: '#fff', lineHeight: 1.2 }}>
               Real Journeys.<br />Real Transformations.
             </h2>
           </div>
@@ -35,7 +35,7 @@ export default function Memories() {
                 </svg>
               ))}
             </div>
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 500, color: 'var(--color-obsidian)' }}>4.97 / 5 from 860+ luxury inquiries</p>
+            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 500, color: '#fff' }}>4.97 / 5 from 860+ luxury inquiries</p>
           </div>
         </div>
 
@@ -75,13 +75,13 @@ export default function Memories() {
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: 12, borderTop: '1px solid var(--color-fog)', paddingTop: 12 }}>
                 <div>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 13, color: 'var(--color-obsidian)', marginBottom: 2 }}>{t.name}</p>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 13, color: '#fff', marginBottom: 2 }}>{t.name}</p>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, color: 'var(--color-steel)', marginBottom: 1 }}>{t.location}</p>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, color: 'var(--color-ash)' }}>{t.trip}</p>
                 </div>
                 <div style={{
                   width: 32, height: 32, borderRadius: '50%',
-                  background: hoveredIdx === i ? 'var(--color-obsidian)' : 'var(--color-fog)',
+                  background: hoveredIdx === i ? 'var(--color-ember)' : 'var(--color-fog)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   transition: 'background 0.25s ease, transform 0.25s ease',
                   transform: hoveredIdx === i ? 'scale(1.1)' : 'scale(1)',
@@ -120,8 +120,8 @@ export default function Memories() {
         {/* CTA */}
         <div className="reveal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 20, color: 'var(--color-obsidian)', marginBottom: 4 }}>Your story belongs here too.</p>
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 14, color: 'var(--color-steel)' }}>Join hundreds of luxury travellers who chose to experience the subcontinent differently.</p>
+            <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 20, color: '#fff', marginBottom: 4 }}>Your story belongs here too.</p>
+            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 14, color: 'var(--color-steel)' }}>Join thousands of happy travellers who choose to journey with Shivalay Travels.</p>
           </div>
           <button className="btn-primary" onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
             Start My Journey
