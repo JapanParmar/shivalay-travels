@@ -596,6 +596,136 @@ a { text-decoration: none; color: inherit; }
   .mobile-menu-btn { display: block !important; }
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   COMPREHENSIVE RESPONSIVE SYSTEM
+   Handles: 1024px (tablet-lg), 768px (tablet), 600px (mobile-lg),
+            480px (mobile), 380px (mobile-sm)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── TABLET LARGE (≤1024px) ─────────────────────────────────── */
+@media (max-width: 1024px) {
+  /* Hero */
+  .hero-main-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+
+  /* DarkPanel */
+  .dark-panel-grid { grid-template-columns: 1fr 1fr !important; padding: 36px !important; }
+  .dark-panel-grid > div:last-child { display: none !important; }
+
+  /* ItineraryPreview */
+  .itinerary-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .itinerary-cta-wrap { position: static !important; }
+}
+
+/* ── TABLET (≤768px) ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Global section padding */
+  section { padding-top: 56px !important; padding-bottom: 56px !important; }
+
+  /* Hero section */
+  .hero-main-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .hero-badges-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Booking widget */
+  .booking-tabs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .booking-form-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .booking-form-grid > div { grid-column: span 1 !important; }
+
+  /* Stats */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stats-grid > div {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  }
+  .stats-grid > div:nth-child(3),
+  .stats-grid > div:nth-child(4) { border-bottom: none !important; }
+
+  /* Philosophy */
+  .process-steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .philosophy-faq-grid { grid-template-columns: 1fr !important; }
+
+  /* Testimonials / Memories */
+  .testimonials-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Travel Guides */
+  .guides-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* Destination detail panel */
+  .destination-detail-grid { grid-template-columns: 1fr !important; }
+
+  /* DarkPanel */
+  .dark-panel-grid { grid-template-columns: 1fr !important; gap: 24px !important; padding: 28px !important; }
+  .dark-panel-grid > div:last-child { display: none !important; }
+
+  /* Footer */
+  .footer-top-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .footer-links-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* JourneyPlanner */
+  #planner .container > div { grid-template-columns: 1fr !important; gap: 32px !important; }
+
+  /* ItineraryPreview */
+  .itinerary-grid { grid-template-columns: 1fr !important; }
+  .itinerary-cta-wrap { position: static !important; }
+
+  /* Card padding reduction */
+  .card-white, .card-dark, .card-muted { padding: 20px !important; }
+
+  /* Prevent overflow on form containers */
+  #tickets > .container { padding: 0 16px !important; }
+}
+
+/* ── MOBILE (≤600px) ────────────────────────────────────────── */
+@media (max-width: 600px) {
+  /* Hero */
+  .hero-badges-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Philosophy */
+  .process-steps-grid { grid-template-columns: 1fr !important; }
+
+  /* Testimonials */
+  .testimonials-grid { grid-template-columns: 1fr !important; }
+
+  /* Guides */
+  .guides-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── SMALL MOBILE (≤480px) ──────────────────────────────────── */
+@media (max-width: 480px) {
+  /* Container tighter edge padding */
+  .container { padding: 0 14px !important; }
+
+  /* Global section spacing */
+  section { padding-top: 48px !important; padding-bottom: 48px !important; }
+
+  /* Booking tabs to single column */
+  .booking-tabs-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Stats to single column */
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .stats-grid > div { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important; }
+  .stats-grid > div:last-child { border-bottom: none !important; }
+
+  /* Footer links single column */
+  .footer-links-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
+
+  /* Hero badges single column */
+  .hero-badges-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Announcement banner wraps */
+  .announcement-banner { flex-wrap: wrap; text-align: center; justify-content: center; }
+
+  /* Card padding tight */
+  .card-white, .card-dark, .card-muted { padding: 16px !important; border-radius: 20px !important; }
+
+  /* Buttons full-width in forms */
+  #tickets .booking-form-grid button[type="submit"],
+  #planner .btn-primary { width: 100%; justify-content: center; }
+
+  /* Section headings scale */
+  h1 { font-size: clamp(28px, 8vw, 48px) !important; }
+  h2 { font-size: clamp(22px, 6vw, 36px) !important; }
+}
+
 /* ─── ACCESSIBILITY ───────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -604,3 +734,4 @@ a { text-decoration: none; color: inherit; }
     transition-duration: 0.01ms !important;
   }
 }
+

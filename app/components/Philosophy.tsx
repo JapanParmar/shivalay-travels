@@ -33,7 +33,7 @@ export default function Philosophy() {
         </div>
 
         {/* Process steps */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 64 }}>
+        <div className="process-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 64 }}>
           {PROCESS_STEPS.map((s, i) => (
             <div
               key={s.num}
@@ -75,7 +75,7 @@ export default function Philosophy() {
         </div>
 
         {/* Philosophy + FAQ */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+        <div className="philosophy-faq-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
           {/* Philosophy */}
           <div className="card-dark reveal-right" style={{ display: 'flex', flexDirection: 'column', gap: 28, height: '100%', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(254,69,226,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -171,11 +171,11 @@ export default function Philosophy() {
 
       <style>{`
         @media (max-width: 900px) {
-          #how-it-works .container > div:first-child > div:last-child { grid-template-columns: repeat(2,1fr) !important; }
-          #how-it-works .container > div:last-child { grid-template-columns: 1fr !important; }
+          .process-steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .philosophy-faq-grid { grid-template-columns: 1fr !important; }
         }
         @media (max-width: 600px) {
-          #how-it-works .container > div:first-child > div:last-child { grid-template-columns: 1fr !important; }
+          .process-steps-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

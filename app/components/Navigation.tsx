@@ -2,8 +2,8 @@
 import { useEffect, useState, useRef } from 'react';
 
 const NAV_LINKS = [
-  { label: 'Destinations', id: 'destinations' },
   { label: 'Ticket Booking', id: 'tickets' },
+  { label: 'Destinations', id: 'destinations' },
   { label: 'Temple Yatras', id: 'itinerary-preview' },
   { label: 'How it works', id: 'how-it-works' },
   { label: 'Stories', id: 'stories' },

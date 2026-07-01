@@ -3,24 +3,52 @@
 const COLS = [
   {
     label: 'Destinations',
-    links: ['Kedarnath', 'Chardham Yatra', 'Varanasi Yatra', 'Kashmir Valley', 'Goa Beaches', 'All Indian Tours'],
+    links: [
+      { name: 'Kedarnath', href: '#destinations' },
+      { name: 'Chardham Yatra', href: '#destinations' },
+      { name: 'Varanasi Yatra', href: '#destinations' },
+      { name: 'Kashmir Valley', href: '#destinations' },
+      { name: 'Goa Beaches', href: '#destinations' },
+      { name: 'All Indian Tours', href: '#destinations' },
+    ],
   },
   {
     label: 'Services',
-    links: ['Flight Booking', 'Bus Booking', 'Train Booking', 'Hotel Stays', 'Customised Tour Packages'],
+    links: [
+      { name: 'Flight Booking', href: '#tickets' },
+      { name: 'Bus Booking', href: '#tickets' },
+      { name: 'Train Booking', href: '#tickets' },
+      { name: 'Hotel Stays', href: '#planner' },
+      { name: 'Customised Tour Packages', href: '#planner' },
+    ],
   },
   {
     label: 'Contact Office',
-    links: ['Shop No. 2, Shivalay Travels', 'Indore, Madhya Pradesh', 'Nisha Chouhan: 9340994628', 'Manisha Mali: 9340994628'],
+    links: [
+      { name: 'Shop No. 2, Shivalay Travels', href: 'https://maps.google.com/?q=Shop+No.+2,+Shivalay+Travels,+Indore,+Madhya+Pradesh', external: true },
+      { name: 'Indore, Madhya Pradesh', href: 'https://maps.google.com/?q=Shop+No.+2,+Shivalay+Travels,+Indore,+Madhya+Pradesh', external: true },
+      { name: 'Nisha Chouhan: 9340994628', href: 'tel:+919340994628' },
+      { name: 'Manisha Mali: 9340994628', href: 'tel:+919340994628' },
+    ],
   },
 ];
 
 export default function Footer() {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, external?: boolean) => {
+    if (!external && href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.getElementById(href.substring(1));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <footer style={{ background: 'var(--color-obsidian)', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '64px 0 40px' }}>
       <div className="container">
         {/* Top */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, marginBottom: 64 }}>
+        <div className="footer-top-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, marginBottom: 64 }}>
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
@@ -55,7 +83,7 @@ export default function Footer() {
           </div>
 
           {/* Link columns */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          <div className="footer-links-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
             {COLS.map(col => (
               <div key={col.label}>
                 <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 20 }}>
@@ -63,15 +91,22 @@ export default function Footer() {
                 </p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {col.links.map(link => (
-                    <span
-                      key={link}
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                      onClick={(e) => handleLinkClick(e, link.href, link.external)}
                       style={{
                         fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 400,
                         color: 'rgba(255,255,255,0.45)', textAlign: 'left', padding: 0,
+                        textDecoration: 'none', transition: 'color 0.2s ease', cursor: 'pointer'
                       }}
+                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
                     >
-                      {link}
-                    </span>
+                      {link.name}
+                    </a>
                   ))}
                 </div>
               </div>
@@ -92,12 +127,18 @@ export default function Footer() {
 
       <style>{`
         @media (max-width: 768px) {
-          footer .container > div:first-child {
+          .footer-top-grid {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
           }
-          footer .container > div:first-child > div:last-child {
+          .footer-links-grid {
             grid-template-columns: 1fr 1fr !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .footer-links-grid {
+            grid-template-columns: 1fr !important;
+            gap: 24px !important;
           }
         }
       `}</style>

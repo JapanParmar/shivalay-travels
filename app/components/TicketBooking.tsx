@@ -152,10 +152,10 @@ export default function TicketBooking() {
         </div>
 
         {/* Booking Card Widget */}
-        <div style={{ maxWidth: 840, margin: '0 auto', background: 'rgba(20,20,25,0.7)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--radius-card)', overflow: 'hidden', backdropFilter: 'blur(20px)', boxShadow: '0 24px 64px rgba(0,0,0,0.5)' }}>
+        <div className="booking-widget" style={{ maxWidth: 840, margin: '0 auto', background: 'rgba(20,20,25,0.7)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--radius-card)', overflow: 'hidden', backdropFilter: 'blur(20px)', boxShadow: '0 24px 64px rgba(0,0,0,0.5)' }}>
           
           {/* Tabs header */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(10,10,12,0.5)' }}>
+          <div className="booking-tabs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(10,10,12,0.5)' }}>
             {tabs.map((tab) => {
               const isActive = activeTab === tab.type;
               return (
@@ -187,9 +187,9 @@ export default function TicketBooking() {
           </div>
 
           {/* Form body */}
-          <div style={{ padding: '36px 40px' }}>
+          <div className="booking-form-body" style={{ padding: '36px 40px' }}>
             {!isSubmitted ? (
-              <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr 1fr', gap: 20 }}>
+              <form className="booking-form-grid" onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr 1fr', gap: 20 }}>
                 {/* Popular Routes */}
                 <div style={{ gridColumn: 'span 4', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 4 }}>
                   <span style={{ fontSize: 11, color: 'var(--color-steel)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.5px' }}>Popular:</span>
@@ -393,16 +393,24 @@ export default function TicketBooking() {
       
       <style>{`
         @media (max-width: 768px) {
-          #tickets form {
+          .booking-form-grid {
             grid-template-columns: 1fr !important;
             gap: 16px !important;
           }
-          #tickets form > div {
+          .booking-form-grid > div {
             grid-column: span 1 !important;
           }
-          #tickets div[style*="grid-template-columns: repeat(4"] {
+          .booking-tabs-grid {
             grid-template-columns: repeat(2, 1fr) !important;
           }
+          .booking-form-body { padding: 24px 20px !important; }
+          .booking-widget { border-radius: 24px !important; }
+        }
+        @media (max-width: 480px) {
+          .booking-tabs-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .booking-form-body { padding: 20px 16px !important; }
         }
       `}</style>
     </section>

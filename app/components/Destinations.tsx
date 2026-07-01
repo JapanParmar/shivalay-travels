@@ -217,7 +217,7 @@ export default function Destinations() {
           const d = DESTINATIONS.find(x => x.id === expanded)!;
           return (
             <div className="card-white" key={expanded} style={{ marginTop: 24, animation: 'scaleIn 0.4s var(--ease-out) both' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 40 }}>
+              <div className="destination-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 40 }}>
                 <div>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
                     <span className="badge badge-dark">{d.region}</span>
@@ -274,7 +274,7 @@ export default function Destinations() {
 
       <style>{`
         @media (max-width: 768px) {
-          #destinations .card-white > div { grid-template-columns: 1fr !important; }
+          .destination-detail-grid { grid-template-columns: 1fr !important; }
         }
         .portfolio-tile:hover .tile-overlay { opacity: 1 !important; }
       `}</style>

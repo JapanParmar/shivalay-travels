@@ -18,7 +18,7 @@ export default function DarkPanel() {
           <div style={{ position: 'absolute', top: -80, right: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
           <div style={{ position: 'absolute', bottom: -60, left: 200, width: 220, height: 220, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-          <div style={{ padding: '48px 48px', display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr', gap: 40, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+          <div className="dark-panel-grid" style={{ padding: '48px 48px', display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr', gap: 40, alignItems: 'center', position: 'relative', zIndex: 1 }}>
             {/* Col 1: Intro */}
             <div>
               <div className="badge" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.12)', marginBottom: 20 }}>
@@ -91,11 +91,11 @@ export default function DarkPanel() {
 
       <style>{`
         @media (max-width: 992px) {
-          section .card-dark > div { grid-template-columns: 1fr 1fr !important; padding: 36px !important; }
-          section .card-dark > div > div:last-child { display: none !important; }
+          .dark-panel-grid { grid-template-columns: 1fr 1fr !important; padding: 36px !important; }
+          .dark-panel-grid > div:last-child { display: none !important; }
         }
         @media (max-width: 768px) {
-          section .card-dark > div { grid-template-columns: 1fr !important; gap: 24px !important; }
+          .dark-panel-grid { grid-template-columns: 1fr !important; gap: 24px !important; }
         }
       `}</style>
     </section>

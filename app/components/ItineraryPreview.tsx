@@ -25,7 +25,7 @@ export default function ItineraryPreview() {
     <section id="itinerary-preview" style={{ background: 'var(--surface-canvas)', padding: '80px 0' }}>
       <div className="container">
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 440px', gap: 48, alignItems: 'start' }}>
+        <div className="itinerary-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 440px', gap: 48, alignItems: 'start' }}>
 
           {/* Left — header + itinerary */}
           <div>
@@ -113,7 +113,7 @@ export default function ItineraryPreview() {
           </div>
 
           {/* Right — CTA card */}
-          <div style={{ position: 'sticky', top: 80 }}>
+          <div className="itinerary-cta-wrap" style={{ position: 'sticky', top: 80 }}>
             <div className="card-dark" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               
               {/* Image Header on right card */}
@@ -182,8 +182,8 @@ export default function ItineraryPreview() {
 
       <style>{`
         @media (max-width: 900px) {
-          #itinerary-preview .container > div { grid-template-columns: 1fr !important; }
-          #itinerary-preview .container > div > div:last-child { position: static !important; }
+          .itinerary-grid { grid-template-columns: 1fr !important; }
+          .itinerary-cta-wrap { position: static !important; }
         }
       `}</style>
     </section>

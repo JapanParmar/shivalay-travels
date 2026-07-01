@@ -40,6 +40,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
+      className="hero-section"
       style={{ background: 'var(--surface-canvas)', paddingTop: 104, paddingBottom: 56, position: 'relative', overflow: 'hidden' }}
     >
       {/* Ambient background blobs */}
@@ -62,7 +63,7 @@ export default function Hero() {
 
       {/* Floating destination tags */}
       {mounted && FLOATING_TAGS.map((tag) => (
-        <div key={tag.text} style={{
+        <div key={tag.text} className="floating-tag" style={{
           position: 'absolute', left: tag.x, top: tag.y,
           background: 'rgba(20,20,25,0.85)',
           backdropFilter: 'blur(12px)',
@@ -110,7 +111,7 @@ export default function Hero() {
         </div>
 
         {/* 2-col grid */}
-        <div style={{
+        <div className="hero-main-grid" style={{
           display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 48, alignItems: 'center',
           opacity: mounted ? 1 : 0, transform: mounted ? 'none' : 'translateY(24px)',
           transition: 'opacity 0.8s ease 0.25s, transform 0.8s var(--ease-out) 0.25s',
@@ -176,7 +177,7 @@ export default function Hero() {
             </div>
 
             {/* Trust Stats / Badges */}
-            <div className="reveal reveal-d4" style={{
+            <div className="reveal reveal-d4 hero-badges-grid" style={{
               display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12,
               borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 24,
             }}>
@@ -283,7 +284,15 @@ export default function Hero() {
 
       <style>{`
         @media (max-width: 900px) {
-          section > .container > div:nth-child(2) { grid-template-columns: 1fr !important; gap: 40px !important; }
+          .hero-main-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+        }
+        @media (max-width: 600px) {
+          .hero-badges-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .hero-section .floating-tag { display: none !important; }
+          .hero-section { padding-top: 80px !important; padding-bottom: 40px !important; }
+        }
+        @media (max-width: 400px) {
+          .hero-badges-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

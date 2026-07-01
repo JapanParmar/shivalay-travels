@@ -52,7 +52,7 @@ export default function TravelGuides() {
         </div>
 
         {/* Guide cards */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="guides-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
           {filtered.map((g, i) => (
             <div
               key={i}
@@ -111,10 +111,10 @@ export default function TravelGuides() {
 
       <style>{`
         @media (max-width: 900px) {
-          #guides .container > div:nth-child(4) { grid-template-columns: 1fr 1fr !important; }
+          .guides-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 560px) {
-          #guides .container > div:nth-child(4) { grid-template-columns: 1fr !important; }
+          .guides-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

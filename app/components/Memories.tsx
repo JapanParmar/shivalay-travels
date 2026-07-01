@@ -40,7 +40,7 @@ export default function Memories() {
         </div>
 
         {/* Testimonial grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 40 }}>
+        <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 40 }}>
           {TESTIMONIALS.map((t, i) => (
             <div
               key={i}
@@ -131,10 +131,10 @@ export default function Memories() {
 
       <style>{`
         @media (max-width: 900px) {
-          #stories .container > div:nth-child(3) { grid-template-columns: 1fr 1fr !important; }
+          .testimonials-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 600px) {
-          #stories .container > div:nth-child(3) { grid-template-columns: 1fr !important; }
+          .testimonials-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </section>

@@ -77,7 +77,7 @@ export default function Stats() {
   return (
     <section style={{ background: 'var(--surface-canvas)', padding: '40px 0' }}>
       <div className="container">
-        <div style={{
+        <div className="stats-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(4, 1fr)',
           gap: 0,
@@ -126,8 +126,31 @@ export default function Stats() {
 
       <style>{`
         @media (max-width: 768px) {
-          section div[style*="grid-template-columns: repeat(4"] {
+          .stats-grid {
             grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .stats-grid > div {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+          }
+          .stats-grid > div:nth-child(even) {
+            border-right: none !important;
+          }
+          .stats-grid > div:nth-child(3),
+          .stats-grid > div:nth-child(4) {
+            border-bottom: none !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .stats-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .stats-grid > div {
+            border-right: none !important;
+            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+          }
+          .stats-grid > div:last-child {
+            border-bottom: none !important;
           }
         }
       `}</style>
