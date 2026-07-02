@@ -62,17 +62,17 @@ export default function Navigation() {
       <header
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 200,
-          transition: 'background 0.4s ease, box-shadow 0.4s ease',
-          background: scrolled ? 'rgba(9,9,11,0.92)' : 'transparent',
+          transition: 'background 0.4s ease, border-bottom 0.4s ease',
+          background: scrolled ? 'rgba(9, 9, 11, 0.92)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          boxShadow: scrolled ? '0 1px 0 0 rgba(255,255,255,0.06)' : 'none',
+          borderBottom: scrolled ? '1px solid var(--color-pebble)' : '1px solid transparent',
         }}
       >
         {/* Scroll progress bar */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, height: 2,
           width: `${scrollProgress}%`,
-          background: 'linear-gradient(90deg, var(--color-ember), var(--color-orchid-flash))',
+          background: 'var(--color-ember)',
           transition: 'width 0.1s linear',
           zIndex: 201,
         }} />
@@ -96,11 +96,8 @@ export default function Navigation() {
               width: 34, height: 34, borderRadius: '50%',
               background: 'var(--color-ember)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'box-shadow 0.3s ease',
               color: '#fff',
             }}
-              onMouseEnter={e => (e.currentTarget.style.boxShadow = 'var(--shadow-glow-ember)')}
-              onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}
             >
               {/* Trident (Trishul) Icon */}
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -108,8 +105,8 @@ export default function Navigation() {
                 <path d="M12 6c1.5 0 2 1.5 2 1.5" />
               </svg>
             </div>
-            <span style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 800, fontSize: 19, color: '#fff', letterSpacing: '-0.3px' }}>
-              Shivalay <span style={{ color: 'var(--color-orchid-flash)', fontWeight: 500 }}>Travels</span>
+            <span style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 800, fontSize: 19, color: 'var(--color-obsidian)', letterSpacing: '-0.3px' }}>
+              Shivalay <span style={{ color: 'var(--color-steel)', fontWeight: 500 }}>Travels</span>
             </span>
           </button>
 
@@ -126,12 +123,12 @@ export default function Navigation() {
                   onMouseEnter={() => setHovered(link.id)}
                   onMouseLeave={() => setHovered(null)}
                   style={{
-                    background: isHovered ? 'rgba(255,255,255,0.08)' : 'transparent',
+                    background: isHovered ? 'var(--color-fog)' : 'transparent',
                     border: 'none',
                     cursor: 'pointer',
                     padding: '6px 14px',
                     borderRadius: 'var(--radius-pill)',
-                    color: isActive ? '#fff' : 'rgba(255,255,255,0.65)',
+                    color: isActive ? 'var(--color-obsidian)' : 'var(--color-steel)',
                     fontWeight: isActive ? 600 : 500,
                     transition: 'all 0.2s ease',
                   }}
@@ -161,23 +158,23 @@ export default function Navigation() {
                 transition: 'background 0.2s ease',
               }}
               aria-label="Menu"
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-fog)')}
               onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
             >
               <div style={{ width: 20, display: 'flex', flexDirection: 'column', gap: 4 }}>
                 <div style={{
-                  width: '100%', height: 2, background: '#fff', borderRadius: 2,
+                  width: '100%', height: 2, background: 'var(--color-obsidian)', borderRadius: 2,
                   transition: 'transform 0.3s ease, width 0.3s ease',
                   transform: mobileOpen ? 'rotate(45deg) translateY(6px)' : 'none',
                 }} />
                 <div style={{
-                  height: 2, background: '#fff', borderRadius: 2,
+                  height: 2, background: 'var(--color-obsidian)', borderRadius: 2,
                   transition: 'opacity 0.3s ease, width 0.3s ease',
                   opacity: mobileOpen ? 0 : 1,
                   width: mobileOpen ? 0 : '100%',
                 }} />
                 <div style={{
-                  height: 2, background: '#fff', borderRadius: 2,
+                  height: 2, background: 'var(--color-obsidian)', borderRadius: 2,
                   transition: 'transform 0.3s ease, width 0.3s ease',
                   transform: mobileOpen ? 'rotate(-45deg) translateY(-6px)' : 'none',
                   width: mobileOpen ? '100%' : '70%',
@@ -191,7 +188,7 @@ export default function Navigation() {
       {/* Mobile menu — full screen with slide-in */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 199,
-        background: 'rgba(9,9,11,0.98)',
+        background: 'rgba(0, 0, 0, 0.98)',
         backdropFilter: 'blur(24px)',
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -207,14 +204,14 @@ export default function Navigation() {
             onClick={() => scrollTo(link.id)}
             style={{
               fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 28,
-              color: '#fff', background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--color-obsidian)', background: 'none', border: 'none', cursor: 'pointer',
               padding: '12px 24px', borderRadius: 'var(--radius-card)',
               transition: 'all 0.2s ease',
               opacity: mobileOpen ? 1 : 0,
               transform: mobileOpen ? 'translateY(0)' : 'translateY(12px)',
               transitionDelay: mobileOpen ? `${i * 0.06}s` : '0s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-fog)'; }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
           >
             {link.label}

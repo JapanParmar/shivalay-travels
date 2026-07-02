@@ -132,18 +132,17 @@ export default function TicketBooking() {
   };
 
   return (
-    <section id="tickets" style={{ background: 'var(--color-obsidian)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
-      {/* Decorative Trident / Trishul watermark or radial red glow */}
-      <div style={{ position: 'absolute', top: '10%', left: '5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.06) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'absolute', bottom: '10%', right: '5%', width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.04) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+    <section id="tickets" style={{ background: 'var(--surface-canvas)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '10%', left: '5%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(9,9,11,0.02) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: '10%', right: '5%', width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(9,9,11,0.02) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: 48 }}>
-          <div className="badge badge-dark" style={{ border: '1px solid var(--color-ember)', color: 'var(--color-orchid-flash)', background: 'rgba(195,0,16,0.1)', marginBottom: 16 }}>
+          <div className="badge badge-dark" style={{ background: 'var(--color-graphite)', color: '#fafafa', marginBottom: 16 }}>
             Quick Transit Solutions
           </div>
-          <h2 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px, 3.5vw, 42px)', color: '#fff', lineHeight: 1.2 }}>
+          <h2 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px, 3.5vw, 42px)', color: 'var(--color-obsidian)', lineHeight: 1.2 }}>
             Instant Ticket Booking Service
           </h2>
           <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, color: 'var(--color-steel)', marginTop: 10, maxWidth: 580, marginInline: 'auto' }}>
@@ -152,10 +151,9 @@ export default function TicketBooking() {
         </div>
 
         {/* Booking Card Widget */}
-        <div className="booking-widget" style={{ maxWidth: 840, margin: '0 auto', background: 'rgba(20,20,25,0.7)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 'var(--radius-card)', overflow: 'hidden', backdropFilter: 'blur(20px)', boxShadow: '0 24px 64px rgba(0,0,0,0.5)' }}>
+        <div className="booking-widget" style={{ maxWidth: 840, margin: '0 auto', background: 'var(--surface-card-white)', border: '1px solid var(--color-pebble)', borderRadius: '36px', overflow: 'hidden', boxShadow: 'none' }}>
           
-          {/* Tabs header */}
-          <div className="booking-tabs-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(10,10,12,0.5)' }}>
+          <div className="booking-tabs-grid" style={{ borderBottom: '1px solid var(--color-pebble)', background: 'var(--color-fog)' }}>
             {tabs.map((tab) => {
               const isActive = activeTab === tab.type;
               return (
@@ -167,15 +165,15 @@ export default function TicketBooking() {
                   }}
                   style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, padding: '18px 12px',
-                    color: isActive ? 'var(--color-orchid-flash)' : 'var(--color-steel)',
-                    background: isActive ? 'rgba(195,0,16,0.05)' : 'transparent',
-                    border: 'none', borderBottom: `2.5px solid ${isActive ? 'var(--color-ember)' : 'transparent'}`,
+                    color: isActive ? 'var(--color-obsidian)' : 'var(--color-steel)',
+                    background: isActive ? 'var(--surface-card-white)' : 'transparent',
+                    border: 'none', borderBottom: `2.5px solid ${isActive ? 'var(--color-obsidian)' : 'transparent'}`,
                     transition: 'all 0.25s ease', cursor: 'pointer',
                   }}
-                  onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = '#fff'; }}
+                  onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = 'var(--color-obsidian)'; }}
                   onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = 'var(--color-steel)'; }}
                 >
-                  <span style={{ transform: isActive ? 'scale(1.1) translateY(-2px)' : 'scale(1)', transition: 'transform 0.2s ease', color: isActive ? 'var(--color-ember)' : 'inherit' }}>
+                  <span style={{ transform: isActive ? 'scale(1.1) translateY(-2px)' : 'scale(1)', transition: 'transform 0.2s ease', color: isActive ? 'var(--color-obsidian)' : 'inherit' }}>
                     {tab.icon}
                   </span>
                   <span style={{ fontSize: 13, fontWeight: isActive ? 600 : 500, fontFamily: 'var(--font-cosmica)', letterSpacing: '0.3px' }}>
@@ -189,7 +187,7 @@ export default function TicketBooking() {
           {/* Form body */}
           <div className="booking-form-body" style={{ padding: '36px 40px' }}>
             {!isSubmitted ? (
-              <form className="booking-form-grid" onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.2fr 1fr 1fr', gap: 20 }}>
+              <form className="booking-form-grid" onSubmit={handleSubmit}>
                 {/* Popular Routes */}
                 <div style={{ gridColumn: 'span 4', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 4 }}>
                   <span style={{ fontSize: 11, color: 'var(--color-steel)', textTransform: 'uppercase', fontWeight: 600, letterSpacing: '0.5px' }}>Popular:</span>
@@ -203,12 +201,12 @@ export default function TicketBooking() {
                       }}
                       style={{
                         padding: '4px 10px', borderRadius: 6,
-                        border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)',
+                        border: '1px solid var(--color-pebble)', background: 'var(--color-mist)',
                         fontSize: 11, color: 'var(--color-slate)', cursor: 'pointer', transition: 'all 0.2s',
                         fontFamily: 'var(--font-cosmica)', fontWeight: 500
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-ember)'; e.currentTarget.style.color = '#fff'; }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'var(--color-slate)'; }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-obsidian)'; e.currentTarget.style.color = 'var(--color-obsidian)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-pebble)'; e.currentTarget.style.color = 'var(--color-slate)'; }}
                     >
                       {route.from} ➔ {route.to}
                     </button>
@@ -226,7 +224,7 @@ export default function TicketBooking() {
                       value={formData.from}
                       onChange={(e) => handleInputChange('from', e.target.value)}
                       required
-                      style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
+                      style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)' }}
                     />
                   </div>
                 </div>
@@ -241,7 +239,7 @@ export default function TicketBooking() {
                     value={formData.to}
                     onChange={(e) => handleInputChange('to', e.target.value)}
                     required
-                    style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
+                    style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)' }}
                   />
                 </div>
 
@@ -254,7 +252,7 @@ export default function TicketBooking() {
                     value={formData.date}
                     onChange={(e) => handleInputChange('date', e.target.value)}
                     required
-                    style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
+                    style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)' }}
                   />
                 </div>
 
@@ -266,7 +264,7 @@ export default function TicketBooking() {
                     className="input-luxury"
                     value={formData.returnDate}
                     onChange={(e) => handleInputChange('returnDate', e.target.value)}
-                    style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
+                    style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)' }}
                   />
                 </div>
 
@@ -278,10 +276,10 @@ export default function TicketBooking() {
                       className="input-luxury"
                       value={formData.passengers}
                       onChange={(e) => handleInputChange('passengers', parseInt(e.target.value))}
-                      style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff', appearance: 'none', WebkitAppearance: 'none', paddingRight: '28px' }}
+                      style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)', appearance: 'none', WebkitAppearance: 'none', paddingRight: '28px' }}
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                        <option key={num} value={num} style={{ background: '#141419', color: '#fff' }}>
+                        <option key={num} value={num} style={{ background: 'var(--surface-card-white)', color: 'var(--color-obsidian)' }}>
                           {num} Passenger{num > 1 ? 's' : ''}
                         </option>
                       ))}
@@ -302,10 +300,10 @@ export default function TicketBooking() {
                       className="input-luxury"
                       value={formData.classType}
                       onChange={(e) => handleInputChange('classType', e.target.value)}
-                      style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff', appearance: 'none', WebkitAppearance: 'none', paddingRight: '28px' }}
+                      style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)', appearance: 'none', WebkitAppearance: 'none', paddingRight: '28px' }}
                     >
                       {classOptions[activeTab].map((cls) => (
-                        <option key={cls} value={cls} style={{ background: '#141419', color: '#fff' }}>
+                        <option key={cls} value={cls} style={{ background: 'var(--surface-card-white)', color: 'var(--color-obsidian)' }}>
                           {cls}
                         </option>
                       ))}
@@ -328,7 +326,7 @@ export default function TicketBooking() {
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     required
-                    style={{ background: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.08)', color: '#fff' }}
+                    style={{ background: 'var(--color-mist)', borderColor: 'transparent', color: 'var(--color-obsidian)' }}
                   />
                 </div>
 
@@ -337,7 +335,7 @@ export default function TicketBooking() {
                   <button
                     type="submit"
                     className="btn-primary"
-                    style={{ width: '100%', padding: '12px 24px', fontSize: 14, justifyContent: 'center', background: 'var(--color-ember)' }}
+                    style={{ width: '100%', padding: '12px 24px', fontSize: 14, justifyContent: 'center' }}
                   >
                     Inquire Rates & Book On WhatsApp →
                   </button>
@@ -348,16 +346,16 @@ export default function TicketBooking() {
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 20, padding: '24px 0', animation: 'scaleIn 0.5s ease both' }}>
                 <div style={{
                   width: 56, height: 56, borderRadius: '50%',
-                  background: 'rgba(195,0,16,0.1)', border: '2px solid var(--color-ember)',
+                  background: 'var(--color-fog)', border: '2px solid var(--color-obsidian)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--color-ember)', animation: 'pulse 1.8s infinite'
+                  color: 'var(--color-obsidian)', animation: 'pulse 1.8s infinite'
                 }}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
                 <div>
-                  <h4 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8 }}>
+                  <h4 style={{ fontFamily: 'var(--font-cosmica)', fontSize: 20, fontWeight: 700, color: 'var(--color-obsidian)', marginBottom: 8 }}>
                     Preparing WhatsApp Booking Request...
                   </h4>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 14, color: 'var(--color-steel)', maxWidth: 440, margin: '0 auto', lineHeight: 1.6 }}>
@@ -365,10 +363,10 @@ export default function TicketBooking() {
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
-                  <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ background: '#25D366', color: '#fff', border: 'none', boxShadow: 'none' }}>
+                  <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ border: 'none', boxShadow: 'none' }}>
                     Open WhatsApp Chat Now
                   </a>
-                  <button className="btn-outline" onClick={() => setIsSubmitted(false)}>
+                  <button className="btn-outline" style={{ background: 'transparent' }} onClick={() => setIsSubmitted(false)}>
                     Go Back
                   </button>
                 </div>
@@ -377,15 +375,15 @@ export default function TicketBooking() {
           </div>
 
           {/* Quick info footer */}
-          <div style={{ background: 'rgba(10,10,12,0.4)', padding: '16px 40px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ background: 'var(--color-mist)', padding: '16px 40px', borderTop: '1px solid var(--color-pebble)', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
             <span style={{ fontSize: 12, color: 'var(--color-steel)', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ color: 'var(--color-ember)' }}>★</span> Lowest Agent Commission Rates
+              <span style={{ color: 'var(--color-slate)' }}>★</span> Lowest Agent Commission Rates
             </span>
             <span style={{ fontSize: 12, color: 'var(--color-steel)', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ color: 'var(--color-ember)' }}>★</span> Instant PNR & Seat Selection Updates
+              <span style={{ color: 'var(--color-slate)' }}>★</span> Instant PNR & Seat Selection Updates
             </span>
             <span style={{ fontSize: 12, color: 'var(--color-steel)', display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ color: 'var(--color-ember)' }}>★</span> Easy Cancellations & Refunds
+              <span style={{ color: 'var(--color-slate)' }}>★</span> Easy Cancellations & Refunds
             </span>
           </div>
         </div>

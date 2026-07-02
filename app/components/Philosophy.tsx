@@ -26,44 +26,50 @@ export default function Philosophy() {
 
         {/* Header */}
         <div style={{ marginBottom: 52 }}>
-          <div className="badge badge-dark reveal" style={{ marginBottom: 16 }}>How we work</div>
-          <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: '#fff', lineHeight: 1.2, maxWidth: 480 }}>
+          <div className="badge badge-dark reveal" style={{ background: 'var(--color-graphite)', color: '#fafafa', borderRadius: '12px', marginBottom: 16 }}>How we work</div>
+          <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: 'var(--color-obsidian)', lineHeight: 1.2, maxWidth: 480 }}>
             Tailoring Journeys Across the Subcontinent.
           </h2>
         </div>
 
         {/* Process steps */}
-        <div className="process-steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 64 }}>
+        <div className="process-steps-grid">
           {PROCESS_STEPS.map((s, i) => (
             <div
               key={s.num}
               className={`card-white reveal reveal-d${i + 1}`}
-              style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 14 }}
+              style={{
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 14,
+                background: 'var(--surface-card-white)',
+                border: '1px solid var(--color-pebble)',
+                borderRadius: '36px',
+                padding: '24px',
+                boxShadow: 'none'
+              }}
             >
-              {/* Connector */}
-              {i < PROCESS_STEPS.length - 1 && (
-                <div style={{ position: 'absolute', top: 36, right: -8, width: 16, height: 1, background: 'var(--color-fog)', zIndex: 2 }} />
-              )}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{
                   width: 42, height: 42, borderRadius: 'var(--radius-icon)',
-                  background: `${s.color}15`,
-                  border: `1px solid ${s.color}30`,
+                  background: 'var(--color-fog)',
+                  border: '1px solid var(--color-pebble)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 17, color: s.color,
+                  fontSize: 17, color: 'var(--color-obsidian)',
                   transition: 'all 0.3s ease',
                 }}>
                   {s.icon}
                 </div>
-                <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 500, color: 'var(--color-ash)', background: 'var(--color-fog)', padding: '3px 10px', borderRadius: 8, marginLeft: 'auto' }}>
+                <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 500, color: 'var(--color-obsidian)', background: 'var(--color-fog)', padding: '3px 10px', borderRadius: '12px', marginLeft: 'auto' }}>
                   {s.duration}
                 </span>
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>
+                <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: 'var(--color-steel)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>
                   Step {s.num}
                 </p>
-                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 16, color: '#fff', marginBottom: 8, lineHeight: 1.3 }}>
+                <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 16, color: 'var(--color-obsidian)', marginBottom: 8, lineHeight: 1.3 }}>
                   {s.title}
                 </h3>
                 <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, color: 'var(--color-steel)', lineHeight: 1.65 }}>
@@ -75,10 +81,10 @@ export default function Philosophy() {
         </div>
 
         {/* Philosophy + FAQ */}
-        <div className="philosophy-faq-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+        <div className="philosophy-faq-grid">
           {/* Philosophy */}
-          <div className="card-dark reveal-right" style={{ display: 'flex', flexDirection: 'column', gap: 28, height: '100%', position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(254,69,226,0.1) 0%, transparent 70%)', pointerEvents: 'none' }} />
+          <div className="card-dark reveal-right" style={{ display: 'flex', flexDirection: 'column', gap: 28, height: '100%', position: 'relative', overflow: 'hidden', background: 'var(--surface-card-white)', border: '1px solid rgba(220,38,38,0.18)', borderRadius: '36px', padding: '32px' }}>
+            <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <div style={{ position: 'relative', zIndex: 1 }}>
               <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 18 }}>
                 Our philosophy
@@ -86,7 +92,7 @@ export default function Philosophy() {
               <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 26, color: '#fff', lineHeight: 1.25, marginBottom: 18 }}>
                 Curating divine<br />pilgrimages & tours with<br />absolute responsibility.
               </h3>
-              <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 14.5, color: 'rgba(255,255,255,0.45)', lineHeight: 1.75 }}>
+              <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 14.5, color: 'rgba(255,255,255,0.5)', lineHeight: 1.75 }}>
                 Shivalay Travels brings premium coordination standards to Indian domestic tourism. We coordinate directly with local teams, select verified hotels, and maintain round-the-clock support.
               </p>
             </div>
@@ -109,7 +115,7 @@ export default function Philosophy() {
                   </div>
                   <div>
                     <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 600, color: '#fff' }}>{p.label}</p>
-                    <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, color: 'rgba(255,255,255,0.38)' }}>{p.desc}</p>
+                    <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, color: 'rgba(255,255,255,0.45)' }}>{p.desc}</p>
                   </div>
                 </div>
               ))}
@@ -118,39 +124,42 @@ export default function Philosophy() {
 
           {/* FAQ */}
           <div className="reveal">
-            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 18 }}>
+            <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-steel)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 18 }}>
               Frequently asked
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {FAQS.map((faq, i) => (
                 <div
                   key={i}
                   className="card-white"
                   style={{
                     padding: 0, overflow: 'hidden',
-                    borderRadius: openFaq === i ? 'var(--radius-card-compact)' : '20px',
-                    transition: 'border-radius 0.3s ease',
+                    background: 'var(--surface-card-white)',
+                    border: '1px solid var(--color-pebble)',
+                    borderRadius: openFaq === i ? '24px' : '36px',
+                    transition: 'all 0.3s ease',
+                    boxShadow: 'none'
                   }}
                 >
                   <button
                     onClick={() => setOpenFaq(openFaq === i ? null : i)}
                     style={{
                       width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      padding: '16px 22px', background: openFaq === i ? 'var(--color-mist)' : 'none',
+                      padding: '16px 22px', background: openFaq === i ? 'var(--surface-card-muted)' : 'none',
                       border: 'none', cursor: 'pointer', textAlign: 'left', gap: 14,
                       transition: 'background 0.2s ease',
                     }}
-                    onMouseEnter={e => { if (openFaq !== i) e.currentTarget.style.background = 'var(--color-mist)'; }}
+                    onMouseEnter={e => { if (openFaq !== i) e.currentTarget.style.background = 'var(--surface-card-muted)'; }}
                     onMouseLeave={e => { if (openFaq !== i) e.currentTarget.style.background = 'none'; }}
                   >
-                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 600, color: '#fff', lineHeight: 1.45 }}>
+                    <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 600, color: 'var(--color-obsidian)', lineHeight: 1.45 }}>
                       {faq.q}
                     </span>
                     <svg
                       width="16" height="16" viewBox="0 0 16 16" fill="none"
                       style={{ flexShrink: 0, transform: openFaq === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.32s var(--ease-out)' }}
                     >
-                      <path d="M3 6l5 5 5-5" stroke="var(--color-ash)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M3 6l5 5 5-5" stroke="var(--color-steel)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                   <div style={{
@@ -158,7 +167,7 @@ export default function Philosophy() {
                     maxHeight: openFaq === i ? 200 : 0,
                     transition: 'max-height 0.38s var(--ease-out)',
                   }}>
-                    <p style={{ padding: '0 22px 16px', fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 300, color: 'var(--color-steel)', lineHeight: 1.72 }}>
+                    <p style={{ padding: '0 22px 16px', fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 400, color: 'var(--color-steel)', lineHeight: 1.72 }}>
                       {faq.a}
                     </p>
                   </div>
@@ -168,16 +177,6 @@ export default function Philosophy() {
           </div>
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 900px) {
-          .process-steps-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .philosophy-faq-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 600px) {
-          .process-steps-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   );
 }

@@ -78,13 +78,10 @@ export default function Stats() {
     <section style={{ background: 'var(--surface-canvas)', padding: '40px 0' }}>
       <div className="container">
         <div className="stats-grid" style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 0,
           background: 'var(--surface-card-white)',
-          borderRadius: 'var(--radius-card)',
+          borderRadius: '36px',
           overflow: 'hidden',
-          border: '1px solid rgba(255,255,255,0.06)',
+          border: '1px solid var(--color-pebble)',
         }}>
           {STATS.map((s, i) => (
             <div
@@ -94,17 +91,17 @@ export default function Stats() {
                 background: 'transparent',
                 padding: '40px 32px',
                 display: 'flex', flexDirection: 'column', gap: 8,
-                borderRight: i < 3 ? '1px solid rgba(255,255,255,0.06)' : 'none',
+                borderRight: i < 3 ? '1px solid var(--color-pebble)' : 'none',
                 transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(195,0,16,0.04)'; }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-fog)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
             >
               <div style={{
                 fontFamily: 'var(--font-cosmica)',
                 fontSize: 'clamp(32px, 3vw, 48px)',
                 fontWeight: 700,
-                color: '#fff',
+                color: 'var(--color-obsidian)',
                 lineHeight: 1,
               }}>
                 <CountUp end={s.num} />
@@ -131,7 +128,7 @@ export default function Stats() {
           }
           .stats-grid > div {
             border-right: none !important;
-            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            border-bottom: 1px solid var(--color-pebble) !important;
           }
           .stats-grid > div:nth-child(even) {
             border-right: none !important;
@@ -147,7 +144,7 @@ export default function Stats() {
           }
           .stats-grid > div {
             border-right: none !important;
-            border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            border-bottom: 1px solid var(--color-pebble) !important;
           }
           .stats-grid > div:last-child {
             border-bottom: none !important;

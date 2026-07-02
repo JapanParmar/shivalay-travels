@@ -11,9 +11,9 @@ export default function LogoStrip() {
 
   return (
     <section style={{
-      borderTop: '1px solid rgba(255,255,255,0.06)',
-      borderBottom: '1px solid rgba(255,255,255,0.06)',
-      background: 'var(--surface-card-muted)',
+      borderTop: '1px solid var(--color-pebble)',
+      borderBottom: '1px solid var(--color-pebble)',
+      background: 'var(--color-fog)',
       padding: '24px 0',
       overflow: 'hidden',
     }}>
@@ -26,12 +26,12 @@ export default function LogoStrip() {
             }}>
               <div style={{
                 width: 6, height: 6, borderRadius: '50%',
-                background: 'var(--color-pebble)', flexShrink: 0,
+                background: 'var(--color-ash)', flexShrink: 0,
               }} />
               <span style={{
                 fontFamily: 'var(--font-cosmica)',
                 fontSize: 14, fontWeight: 500,
-                color: 'var(--color-ash)',
+                color: 'var(--color-slate)',
                 whiteSpace: 'nowrap',
               }}>
                 {name}

@@ -140,25 +140,25 @@ export default function JourneyPlanner() {
   const isNotesStep = current.id === 'notes';
 
   return (
-    <section id="planner" style={{ background: 'var(--color-obsidian)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
+    <section id="planner" style={{ background: 'var(--surface-canvas)', padding: '80px 0', position: 'relative', overflow: 'hidden' }}>
       {/* Background decoration */}
-      <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(195,0,16,0.04) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(220,38,38,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -100, left: -100, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(220,38,38,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
       <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 56, alignItems: 'start' }}>
+        <div className="planner-grid">
 
           {/* Left sidebar */}
           <div className="reveal-right">
-            <div className="badge" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', border: '1px solid rgba(255,255,255,0.1)', marginBottom: 24 }}>Journey Planner</div>
+            <div className="badge" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(220,38,38,0.25)', marginBottom: 24 }}>Journey Planner</div>
             <h2 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 26, color: '#fff', lineHeight: 1.25, marginBottom: 8 }}>
               Build your perfect private escape.
             </h2>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6, marginBottom: 32 }}>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, marginBottom: 32 }}>
               {STEPS.length} steps to your dream itinerary. Every field is fully customisable.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               {STEPS.map((s, i) => {
                 const isActive = step === i;
                 const isDone = i < step;
@@ -168,8 +168,8 @@ export default function JourneyPlanner() {
                     onClick={() => i <= step && setStep(i)}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-                      background: isActive ? 'rgba(255,255,255,0.08)' : 'transparent',
-                      border: `1px solid ${isActive ? 'rgba(255,255,255,0.14)' : 'transparent'}`,
+                      background: isActive ? 'rgba(220,38,38,0.12)' : 'transparent',
+                      border: `1px solid ${isActive ? 'rgba(220,38,38,0.3)' : 'transparent'}`,
                       borderRadius: 10, cursor: i <= step ? 'pointer' : 'default',
                       textAlign: 'left', width: '100%', transition: 'all 0.22s ease',
                     }}
@@ -179,25 +179,25 @@ export default function JourneyPlanner() {
                     <div style={{
                       width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isDone ? '#fff' : isActive ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.06)',
+                      background: isDone ? 'var(--color-ember)' : isActive ? 'rgba(220,38,38,0.25)' : 'rgba(255,255,255,0.08)',
                       transition: 'background 0.2s ease',
                     }}>
                       {isDone ? (
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                          <path d="M2 5L4 7L8 3" stroke="#09090b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M2 5L4 7L8 3" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       ) : (
-                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 700, color: isActive ? '#fff' : 'rgba(255,255,255,0.28)' }}>{i + 1}</span>
+                        <span style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 700, color: isActive ? '#fff' : 'rgba(255,255,255,0.45)' }}>{i + 1}</span>
                       )}
                     </div>
                     <span style={{
                       fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 500,
-                      color: isActive ? '#fff' : isDone ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)',
+                      color: isActive ? '#fff' : isDone ? 'rgba(255,255,255,0.75)' : 'rgba(255,255,255,0.45)',
                       flex: 1,
                     }}>{s.label}</span>
                     {answers[s.id] && (
                       <span style={{
-                        fontFamily: 'var(--font-body)', fontSize: 10, color: 'rgba(255,255,255,0.35)',
+                        fontFamily: 'var(--font-body)', fontSize: 10, color: 'var(--color-ember)',
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 72,
                       }}>{answers[s.id]}</span>
                     )}
@@ -347,7 +347,7 @@ export default function JourneyPlanner() {
                       ))}
 
                       {/* Summary */}
-                      <div style={{ background: 'var(--color-mist)', borderRadius: 'var(--radius-card-compact)', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                      <div style={{ background: 'var(--surface-card-muted)', border: '1px solid rgba(220,38,38,0.18)', borderRadius: 'var(--radius-card-compact)', padding: '18px 22px', display: 'flex', flexDirection: 'column', gap: 8 }}>
                         <p style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 700, color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 6 }}>Your journey summary</p>
                         {Object.entries(answers).filter(([, v]) => v).map(([k, v]) => {
                           const stepDef = STEPS.find(s => s.id === k);

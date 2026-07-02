@@ -25,12 +25,12 @@ export default function ItineraryPreview() {
     <section id="itinerary-preview" style={{ background: 'var(--surface-canvas)', padding: '80px 0' }}>
       <div className="container">
 
-        <div className="itinerary-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 440px', gap: 48, alignItems: 'start' }}>
+        <div className="itinerary-grid" style={{ gap: 48 }}>
 
           {/* Left — header + itinerary */}
           <div>
-            <div className="badge badge-dark" style={{ marginBottom: 16 }}>Sample Itinerary</div>
-            <h2 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(26px,3.2vw,40px)', color: '#fff', lineHeight: 1.2, marginBottom: 12 }}>
+            <div className="badge badge-dark" style={{ background: 'var(--color-graphite)', color: '#fafafa', borderRadius: '12px', marginBottom: 16 }}>Sample Itinerary</div>
+            <h2 style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 'clamp(26px,3.2vw,40px)', color: 'var(--color-obsidian)', lineHeight: 1.2, marginBottom: 12 }}>
               A taste of what we handcraft<br />for every client.
             </h2>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, marginBottom: 32, maxWidth: 480 }}>
@@ -40,22 +40,22 @@ export default function ItineraryPreview() {
             {/* Meta tags */}
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
               {[SAMPLE_ITINERARY.destination, SAMPLE_ITINERARY.duration, SAMPLE_ITINERARY.style].map(m => (
-                <span key={m} className="badge" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', color: 'var(--color-steel)', fontSize: 13, padding: '6px 14px' }}>{m}</span>
+                <span key={m} className="badge" style={{ background: 'var(--surface-card-white)', border: '1px solid var(--color-pebble)', color: 'var(--color-steel)', fontSize: 13, padding: '6px 14px' }}>{m}</span>
               ))}
             </div>
 
             {/* Day-by-day */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {SAMPLE_ITINERARY.days.slice(0, 6).map(day => (
                 <div key={day.day}
                   className="card-white"
-                  style={{ padding: 0, overflow: 'hidden', cursor: 'pointer' }}
+                  style={{ padding: 0, overflow: 'hidden', cursor: 'pointer', background: 'var(--surface-card-white)', border: '1px solid var(--color-pebble)', borderRadius: '36px', boxShadow: 'none' }}
                   onClick={() => setExpandedDay(expandedDay === day.day ? null : day.day)}>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 22px' }}>
                     {/* Day number */}
                     <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-                      background: expandedDay === day.day ? 'var(--color-ember)' : 'rgba(255,255,255,0.05)',
+                      background: expandedDay === day.day ? 'var(--color-ember)' : 'var(--surface-card-muted)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.3s ease' }}>
                       <span style={{ fontFamily: 'var(--font-body)', fontSize: 12, fontWeight: 700,
                         color: '#fff' }}>
@@ -66,11 +66,11 @@ export default function ItineraryPreview() {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
                         <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15,
-                          color: '#fff', lineHeight: 1.3 }}>
+                          color: 'var(--color-obsidian)', lineHeight: 1.3 }}>
                           {day.title}
                         </p>
                         <span style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 500,
-                          color: 'var(--color-ash)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                          color: 'var(--color-steel)', whiteSpace: 'nowrap', flexShrink: 0 }}>
                           {day.location}
                         </span>
                       </div>
@@ -78,13 +78,13 @@ export default function ItineraryPreview() {
 
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0,
                       transform: expandedDay === day.day ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s ease' }}>
-                      <path d="M3 6l5 5 5-5" stroke="var(--color-ash)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M3 6l5 5 5-5" stroke="var(--color-steel)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
 
                   {expandedDay === day.day && (
                     <div style={{ padding: '0 22px 18px 74px', animation: 'revealUp 0.3s ease both' }}>
-                      <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 14,
+                      <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 14,
                         color: 'var(--color-steel)', lineHeight: 1.7 }}>
                         {day.desc}
                       </p>
@@ -97,10 +97,10 @@ export default function ItineraryPreview() {
               <div style={{ position: 'relative' }}>
                 <div style={{ filter: 'blur(4px)', opacity: 0.4, pointerEvents: 'none' }}>
                   {SAMPLE_ITINERARY.days.slice(6).map(day => (
-                    <div key={day.day} className="card-white" style={{ padding: '16px 22px', marginBottom: 6 }}>
+                    <div key={day.day} className="card-white" style={{ padding: '16px 22px', marginBottom: 10, background: 'var(--surface-card-white)', border: '1px solid var(--color-pebble)', borderRadius: '36px', boxShadow: 'none' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', flexShrink: 0 }} />
-                        <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15, color: '#fff' }}>{day.title}</p>
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--color-fog)', flexShrink: 0 }} />
+                        <p style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 15, color: 'var(--color-ash)' }}>{day.title}</p>
                       </div>
                     </div>
                   ))}
@@ -112,15 +112,14 @@ export default function ItineraryPreview() {
             </div>
           </div>
 
-          {/* Right — CTA card */}
           <div className="itinerary-cta-wrap" style={{ position: 'sticky', top: 80 }}>
-            <div className="card-dark" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            <div className="card-dark" style={{ display: 'flex', flexDirection: 'column', gap: 20, background: 'var(--surface-card-white)', border: '1px solid rgba(220,38,38,0.18)', borderRadius: '36px', padding: '32px', boxShadow: 'none' }}>
               
               {/* Image Header on right card */}
-              <div style={{ height: 160, borderRadius: 'var(--radius-card-compact)', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ height: 160, borderRadius: '28px', overflow: 'hidden', position: 'relative' }}>
                 <img src="/images/ladakh.png" alt="Ladakh Mountains" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.6) 0%, transparent 100%)' }} />
-                <span className="badge" style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', fontSize: 10 }}>Pangong Tso</span>
+                <span className="badge" style={{ position: 'absolute', top: 12, left: 12, background: 'rgba(9,9,11,0.65)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontSize: 10 }}>Pangong Tso</span>
               </div>
 
               <div>
@@ -132,8 +131,8 @@ export default function ItineraryPreview() {
                   color: '#fff', lineHeight: 1.25, marginBottom: 8 }}>
                   Want a customized adventure?
                 </h3>
-                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 300, fontSize: 13,
-                  color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                <p style={{ fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 13,
+                  color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>
                   Submit a query to co-create a perfect Himalayan or backwater itinerary with our experts.
                 </p>
               </div>
@@ -156,7 +155,7 @@ export default function ItineraryPreview() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <button className="btn-primary"
-                  style={{ background: '#fff', color: '#141419', boxShadow: 'none', width: '100%', justifyContent: 'center' }}
+                  style={{ boxShadow: 'none', width: '100%', justifyContent: 'center' }}
                   onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
                   Design My Plan — Free
                 </button>

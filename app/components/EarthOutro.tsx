@@ -6,7 +6,7 @@ export default function EarthOutro() {
       style={{ 
         position: 'relative', 
         padding: '120px 0', 
-        background: 'var(--color-obsidian)', 
+        background: 'var(--surface-canvas)', 
         overflow: 'hidden' 
       }}
       onMouseEnter={e => {
@@ -33,12 +33,11 @@ export default function EarthOutro() {
         }}
       />
 
-      {/* Radial ambient glow overlay */}
       <div 
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(circle at 50% 50%, transparent 20%, rgba(9, 9, 11, 0.95) 100%)',
+          background: 'radial-gradient(circle at 50% 50%, rgba(220, 38, 38, 0.05) 0%, rgba(0, 0, 0, 0.98) 100%)',
           zIndex: 2
         }}
       />
@@ -61,7 +60,7 @@ export default function EarthOutro() {
             lineHeight: 1.1,
           }}>
             Your Indian Odyssey<br />
-            <span style={{ color: 'var(--color-orchid-flash)' }}>starts here.</span>
+            <span style={{ color: '#a1a1aa' }}>starts here.</span>
           </h2>
 
           <p className="reveal" style={{
@@ -75,6 +74,7 @@ export default function EarthOutro() {
 
           {/* Email form */}
           <form
+            className="outro-form"
             onSubmit={e => { e.preventDefault(); document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' }); }}
             style={{
               display: 'flex', gap: 8, width: '100%', maxWidth: 440,
@@ -94,7 +94,7 @@ export default function EarthOutro() {
                 color: '#fff', padding: '8px 12px',
               }}
             />
-            <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '10px 20px', background: 'var(--color-ember)' }}>
+            <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, padding: '10px 20px', border: 'none' }}>
               Plan my journey
             </button>
           </form>

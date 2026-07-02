@@ -45,10 +45,10 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: 'var(--color-obsidian)', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '64px 0 40px' }}>
+    <footer style={{ background: 'var(--surface-canvas)', borderTop: '1px solid var(--color-pebble)', padding: '64px 0 40px' }}>
       <div className="container">
         {/* Top */}
-        <div className="footer-top-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 64, marginBottom: 64 }}>
+        <div className="footer-top-grid">
           {/* Brand */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
@@ -69,21 +69,21 @@ export default function Footer() {
               Complete travel solutions for all your pilgrimage and holiday needs.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 28 }}>
-              <a href="mailto:info@shivalaytravels.com" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}>
+              <a href="mailto:info@shivalaytravels.com" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
                 info@shivalaytravels.com
               </a>
-              <a href="https://wa.me/919340994628" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.4)', textDecoration: 'none', transition: 'color 0.2s' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}>
+              <a href="https://wa.me/919340994628" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'rgba(255,255,255,0.45)', textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
                 WhatsApp: +91 93409 94628
               </a>
             </div>
           </div>
 
           {/* Link columns */}
-          <div className="footer-links-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          <div className="footer-links-grid">
             {COLS.map(col => (
               <div key={col.label}>
                 <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 20 }}>
@@ -99,11 +99,11 @@ export default function Footer() {
                       onClick={(e) => handleLinkClick(e, link.href, link.external)}
                       style={{
                         fontFamily: 'var(--font-cosmica)', fontSize: 13.5, fontWeight: 400,
-                        color: 'rgba(255,255,255,0.45)', textAlign: 'left', padding: 0,
+                        color: 'rgba(255,255,255,0.55)', textAlign: 'left', padding: 0,
                         textDecoration: 'none', transition: 'color 0.2s ease', cursor: 'pointer'
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-orchid-flash)')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}
+                      onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                      onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.55)')}
                     >
                       {link.name}
                     </a>
@@ -115,7 +115,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 32, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
           <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 400, color: 'rgba(255,255,255,0.25)' }}>
             © 2026 Shivalay Travels. All rights reserved.
           </p>

@@ -82,8 +82,8 @@ export default function Destinations() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <div className="badge badge-dark reveal" style={{ marginBottom: 16 }}>Curated Destinations</div>
-            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: '#fff', lineHeight: 1.2 }}>
+            <div className="badge badge-dark reveal" style={{ background: 'var(--color-graphite)', color: '#fafafa', borderRadius: '12px', marginBottom: 16 }}>Curated Destinations</div>
+            <h2 className="reveal reveal-d1" style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 'clamp(28px,3.5vw,42px)', color: 'var(--color-obsidian)', lineHeight: 1.2 }}>
               Sacred Yatras & Scenic Getaways.<br />Endless Memories.
             </h2>
           </div>
@@ -97,15 +97,15 @@ export default function Destinations() {
                   key={dir}
                   onClick={() => scrollTo(dir)}
                   style={{
-                    width: 42, height: 42, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.12)',
-                    background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: 42, height: 42, borderRadius: '50%', border: '1px solid var(--color-pebble)',
+                    background: 'var(--surface-card-white)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                     cursor: 'pointer', transition: 'all 0.25s var(--ease-out)',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-ember)'; e.currentTarget.style.borderColor = 'var(--color-ember)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'var(--color-fog)'; e.currentTarget.style.borderColor = 'var(--color-obsidian)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'var(--surface-card-white)'; e.currentTarget.style.borderColor = 'var(--color-pebble)'; }}
                   aria-label={dir === 'left' ? 'Scroll left' : 'Scroll right'}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" strokeWidth="2" style={{ transition: 'stroke 0.25s' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-obsidian)" strokeWidth="2" style={{ transition: 'stroke 0.25s' }}>
                     {dir === 'left'
                       ? <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
                       : <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />}
@@ -123,10 +123,10 @@ export default function Destinations() {
               padding: '7px 18px', borderRadius: 'var(--radius-pill)', cursor: 'pointer',
               fontFamily: 'var(--font-cosmica)', fontSize: 13, fontWeight: 500,
               transition: 'all 0.22s var(--ease-out)',
-              background: activeFilter === f ? 'var(--color-ember)' : 'rgba(255,255,255,0.03)',
-              color: '#fff',
-              border: `1px solid ${activeFilter === f ? 'var(--color-ember)' : 'rgba(255,255,255,0.08)'}`,
-              boxShadow: activeFilter === f ? 'var(--shadow-glow-ember)' : 'none',
+              background: activeFilter === f ? 'var(--color-ember)' : 'var(--surface-card-white)',
+              color: activeFilter === f ? '#fff' : 'var(--color-slate)',
+              border: `1px solid ${activeFilter === f ? 'var(--color-ember)' : 'var(--color-pebble)'}`,
+              boxShadow: 'none',
               transform: activeFilter === f ? 'scale(1.04)' : 'scale(1)',
             }}>
               {f}
@@ -149,42 +149,42 @@ export default function Destinations() {
             onMouseUp={stopDrag}
             onMouseLeave={stopDrag}
           >
-            {/* Decorative tile */}
+            {/* Decorative Orchid Flash solid color wash card */}
             <div style={{
-              width: 160, height: 420, borderRadius: 'var(--radius-card)', flexShrink: 0,
-              background: 'linear-gradient(135deg, var(--color-ember) 0%, #7f0000 100%)',
+              width: 160, height: 420, borderRadius: '36px', flexShrink: 0,
+              background: 'var(--color-orchid-flash)',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10,
-              boxShadow: 'var(--shadow-glow-ember)',
+              boxShadow: 'none',
             }}>
               <div style={{ fontSize: 42 }}>🇮🇳</div>
-              <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.95)', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.5 }}>Incredible<br />India</p>
+              <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 700, color: '#ffffff', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.5 }}>Incredible<br />India</p>
             </div>
 
             {filtered.map((d, i) => (
               <div
                 key={d.id}
                 className="portfolio-tile"
-                style={{ width: i % 3 === 0 ? 360 : 300, height: 420, cursor: 'pointer' }}
+                style={{ width: i % 3 === 0 ? 360 : 300, height: 420, cursor: 'pointer', borderRadius: '36px' }}
                 onClick={() => setExpanded(expanded === d.id ? null : d.id)}
               >
                 <img className="tile-img" src={d.imagePath} alt={d.name} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.95) 0%, rgba(9,9,11,0.25) 55%, transparent 100%)', zIndex: 1 }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.9) 0%, rgba(9,9,11,0.2) 55%, transparent 100%)', zIndex: 1 }} />
 
                 {/* Hover overlay */}
                 <div className="tile-overlay" style={{
                   position: 'absolute', inset: 0, zIndex: 2,
-                  background: `linear-gradient(135deg, ${d.accent}20 0%, transparent 100%)`,
+                  background: 'linear-gradient(135deg, rgba(9,9,11,0.15) 0%, transparent 100%)',
                   opacity: 0, transition: 'opacity 0.4s ease',
                 }} />
 
                 <div style={{ position: 'absolute', top: 16, left: 16, right: 16, display: 'flex', justifyContent: 'space-between', zIndex: 3 }}>
-                  <span className="badge" style={{ background: 'rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', color: '#fff', border: '1px solid rgba(255,255,255,0.25)' }}>{d.bestSeason}</span>
-                  <span className="badge" style={{ background: DIFFICULTY_COLOR[d.difficulty], color: '#fff', fontWeight: 600 }}>{d.difficulty}</span>
+                  <span className="badge" style={{ background: 'rgba(9,9,11,0.6)', backdropFilter: 'blur(8px)', color: '#fff', border: '1px solid rgba(255,255,255,0.25)' }}>{d.bestSeason}</span>
+                  <span className="badge" style={{ background: 'rgba(9,9,11,0.8)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontWeight: 600 }}>{d.difficulty}</span>
                 </div>
 
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '20px 20px', zIndex: 3 }}>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: d.accent, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1.5 }}>{d.region}</p>
-                  <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 23, color: '#fff', marginBottom: 5, lineHeight: 1.1 }}>{d.name}</h3>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 10, fontWeight: 700, color: 'var(--color-ash)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1.5 }}>{d.region}</p>
+                  <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 600, fontSize: 23, color: '#fff', marginBottom: 5, lineHeight: 1.1 }}>{d.name}</h3>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 300, fontSize: 12, color: 'rgba(255,255,255,0.7)', marginBottom: 14, lineHeight: 1.45 }}>{d.tagline}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', gap: 5 }}>
@@ -216,30 +216,30 @@ export default function Destinations() {
         {expanded && (() => {
           const d = DESTINATIONS.find(x => x.id === expanded)!;
           return (
-            <div className="card-white" key={expanded} style={{ marginTop: 24, animation: 'scaleIn 0.4s var(--ease-out) both' }}>
-              <div className="destination-detail-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 40 }}>
+            <div className="card-white" key={expanded} style={{ marginTop: 24, padding: '28px', border: '1px solid var(--color-pebble)', borderRadius: '36px', boxShadow: 'none', animation: 'scaleIn 0.4s var(--ease-out) both' }}>
+              <div className="destination-detail-grid" style={{ gap: 40 }}>
                 <div>
                   <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-                    <span className="badge badge-dark">{d.region}</span>
-                    <span className="badge" style={{ background: DIFFICULTY_COLOR[d.difficulty] + '18', color: DIFFICULTY_COLOR[d.difficulty], border: `1px solid ${DIFFICULTY_COLOR[d.difficulty]}40` }}>{d.difficulty}</span>
+                    <span className="badge badge-dark" style={{ background: 'var(--color-graphite)', color: '#fafafa', borderRadius: '12px' }}>{d.region}</span>
+                    <span className="badge" style={{ background: 'var(--color-fog)', color: 'var(--color-obsidian)', border: '1px solid var(--color-pebble)' }}>{d.difficulty}</span>
                   </div>
-                  <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 28, color: '#fff', marginBottom: 8 }}>{d.name} Expedition</h3>
+                  <h3 style={{ fontFamily: 'var(--font-cosmica)', fontWeight: 700, fontSize: 28, color: 'var(--color-obsidian)', marginBottom: 8 }}>{d.name} Expedition</h3>
                   <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, color: 'var(--color-steel)', lineHeight: 1.65, marginBottom: 24 }}>{d.tagline}</p>
                   <div style={{ display: 'flex', gap: 24, marginBottom: 28, flexWrap: 'wrap' }}>
                     {[{ label: 'Duration', val: d.duration }, { label: 'Group size', val: d.groupSize }, { label: 'Best season', val: d.bestSeason }, { label: 'Starting from', val: d.startingFrom }].map(m => (
                       <div key={m.label}>
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{m.label}</p>
-                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, fontWeight: 600, color: '#fff' }}>{m.val}</p>
+                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-steel)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{m.label}</p>
+                        <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 15, fontWeight: 600, color: 'var(--color-obsidian)' }}>{m.val}</p>
                       </div>
                     ))}
                   </div>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Signature experiences</p>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 11, fontWeight: 600, color: 'var(--color-steel)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Signature experiences</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {d.highlights.map(h => (
                       <div key={h} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style={{ marginTop: 2, flexShrink: 0 }}>
-                          <circle cx="8" cy="8" r="7" stroke="#fff" strokeWidth="1" />
-                          <path d="M5 8l2 2 4-4" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <circle cx="8" cy="8" r="7" stroke="var(--color-obsidian)" strokeWidth="1" />
+                          <path d="M5 8l2 2 4-4" stroke="var(--color-obsidian)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 14, color: 'var(--color-steel)' }}>{h}</span>
                       </div>
@@ -250,12 +250,18 @@ export default function Destinations() {
                   <div className="img-zoom-wrap" style={{ height: 180, borderRadius: 'var(--radius-card-compact)', overflow: 'hidden' }}>
                     <img src={d.imagePath} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600, color: 'var(--color-ash)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: -8 }}>Included in every journey</p>
+                  <p style={{ fontFamily: 'var(--font-cosmica)', fontSize: 12, fontWeight: 600, color: 'var(--color-steel)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: -8 }}>Included in every journey</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {d.includes.map(inc => (
-                      <div key={inc} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, transition: 'background 0.2s' }}
-                        onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
-                        onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}>
+                      <div key={inc} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '8px 12px', background: 'var(--surface-card-muted)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 8, transition: 'all 0.2s' }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = 'rgba(220,38,38,0.12)';
+                          e.currentTarget.style.borderColor = 'rgba(220,38,38,0.25)';
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = 'var(--surface-card-muted)';
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.03)';
+                        }}>
                         <span style={{ fontSize: 12, color: 'var(--color-ember)' }}>✦</span>
                         <span style={{ fontFamily: 'var(--font-cosmica)', fontSize: 13, color: 'var(--color-steel)' }}>{inc}</span>
                       </div>
@@ -263,7 +269,7 @@ export default function Destinations() {
                   </div>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginTop: 8 }}>
                     <button className="btn-primary" onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>Plan this journey</button>
-                    <button className="btn-outline" onClick={() => setExpanded(null)}>Close</button>
+                    <button className="btn-outline" style={{ background: 'transparent' }} onClick={() => setExpanded(null)}>Close</button>
                   </div>
                 </div>
               </div>
