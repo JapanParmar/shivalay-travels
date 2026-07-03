@@ -1,9 +1,9 @@
 'use client';
 
 const PARTNERS = [
-  'Taj Palaces', 'The Oberoi Group', 'SUJÁN Sher Bagh', 'Aman-i-Khas',
-  'RAAS Devigarh', 'Mary Budden Estate', 'Glenburn Tea Estate', 'The Leela',
-  'National Geographic', 'Condé Nast Traveller India', 'Travel + Leisure India', 'Virtuoso',
+  '✈ IRCTC Authorized', '🚌 RedBus Partner', '🚢 Cruise Authority', '🏨 MakeMyTrip',
+  '🛡️ Insured Trips', '⚡ Instant PNR', '🇮🇳 India Tourism', '📱 24/7 WhatsApp',
+  '💳 EMI Available', '🔒 Secure Booking', '✦ Lowest Fares', '🎯 100% Verified',
 ];
 
 export default function LogoStrip() {
@@ -11,27 +11,21 @@ export default function LogoStrip() {
 
   return (
     <section style={{
-      borderTop: '1px solid var(--color-pebble)',
-      borderBottom: '1px solid var(--color-pebble)',
-      background: 'var(--color-fog)',
-      padding: '24px 0',
+      borderTop: '1px solid var(--color-zinc-hairline)',
+      borderBottom: '1px solid var(--color-zinc-hairline)',
+      background: 'var(--color-carbon)',
+      padding: '16px 0',
       overflow: 'hidden',
     }}>
       <div className="ticker-wrap">
         <div className="ticker-track">
           {doubled.map((name, i) => (
-            <div key={i} style={{
-              display: 'flex', alignItems: 'center', gap: 12,
-              flexShrink: 0,
-            }}>
-              <div style={{
-                width: 6, height: 6, borderRadius: '50%',
-                background: 'var(--color-ash)', flexShrink: 0,
-              }} />
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+              <div style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--color-highlighter-lime)', flexShrink: 0 }} />
               <span style={{
-                fontFamily: 'var(--font-cosmica)',
-                fontSize: 14, fontWeight: 500,
-                color: 'var(--color-slate)',
+                fontFamily: 'var(--font-geist-mono)',
+                fontSize: 12, fontWeight: 400,
+                color: 'var(--color-steel-gray)',
                 whiteSpace: 'nowrap',
               }}>
                 {name}
