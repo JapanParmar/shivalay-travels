@@ -241,7 +241,10 @@ export default function TicketBooking() {
                         <label className="input-box-label">From</label>
                         <div className="travelgo-input-box">
                           <span className="input-box-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L15 22L11 13L2 9L22 2Z" /></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
                           </span>
                           <input
                             type="text"
@@ -262,15 +265,20 @@ export default function TicketBooking() {
                         className="travelgo-swap-btn"
                         title="Swap Destinations"
                       >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M16 3H4m0 0l4 4M4 3l4-4m8 18h12m0 0l-4-4m4 4l-4 4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 17H4M4 17l4 4M4 17l4-4M4 7h16M20 7l-4-4M20 7l-4 4" />
+                        </svg>
                       </button>
 
                       {/* To field */}
                       <div className="travelgo-field-group">
                         <label className="input-box-label">To</label>
                         <div className="travelgo-input-box">
-                          <span className="input-box-icon" style={{ transform: 'rotate(90deg)' }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L15 22L11 13L2 9L22 2Z" /></svg>
+                          <span className="input-box-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                              <circle cx="12" cy="10" r="3" />
+                            </svg>
                           </span>
                           <input
                             type="text"
