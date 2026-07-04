@@ -61,16 +61,6 @@ export default function JourneyPlanner() {
     setSubmitted(true);
   };
 
-  const labelStyle: React.CSSProperties = {
-    display: 'block',
-    fontSize: 10, fontWeight: 500,
-    color: 'var(--color-steel-gray)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
-    marginBottom: 6,
-    fontFamily: 'var(--font-geist-mono)',
-  };
-
   return (
     <section id="planner" style={{ background: 'var(--surface-canvas)', padding: '48px 0', borderBottom: '1px solid var(--color-zinc-hairline)' }}>
       <div className="container">
@@ -80,7 +70,7 @@ export default function JourneyPlanner() {
           <div className="planner-sidebar">
             <p className="section-label" style={{ marginBottom: 8 }}>Journey Planner</p>
             <h2 className="heading-md" style={{ marginBottom: 8 }}>Build your perfect private escape.</h2>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.6, marginBottom: 24 }}>
+            <p className="font-primary text-sm lh-16 text-muted" style={{ marginBottom: 24 }}>
               {STEPS.length} steps to your dream itinerary. Every field is fully customisable.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -114,14 +104,14 @@ export default function JourneyPlanner() {
                           <path d="M2 5L4 7L8 3" stroke="var(--color-onyx-black)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       ) : (
-                        <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 8, fontWeight: 500, color: isActive ? 'var(--color-highlighter-lime)' : 'var(--color-ash-gray)' }}>{i + 1}</span>
+                        <span className="font-primary fs-8 fw-medium" style={{ color: isActive ? 'var(--color-highlighter-lime)' : 'var(--color-ash-gray)' }}>{i + 1}</span>
                       )}
                     </div>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, fontWeight: isActive ? 500 : 400, color: isActive ? 'var(--color-pure-white)' : isDone ? 'var(--color-steel-gray)' : 'var(--color-ash-gray)', flex: 1 }}>
+                    <span className={`font-primary fs-11 ${isActive ? 'fw-medium' : 'fw-regular'}`} style={{ color: isActive ? 'var(--color-pure-white)' : isDone ? 'var(--color-steel-gray)' : 'var(--color-ash-gray)', flex: 1 }}>
                       {s.label}
                     </span>
                     {answers[s.id] && (
-                      <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, color: 'var(--color-highlighter-lime)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 64 }}>
+                      <span className="font-primary fs-9" style={{ color: 'var(--color-highlighter-lime)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 64 }}>
                         {answers[s.id]}
                       </span>
                     )}
@@ -148,8 +138,8 @@ export default function JourneyPlanner() {
                 {/* Progress bar */}
                 <div style={{ marginBottom: 28 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-ash-gray)' }}>Step {step + 1} of {STEPS.length}</span>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, fontWeight: 500, color: 'var(--color-highlighter-lime)' }}>{progress}%</span>
+                    <span className="font-primary fs-11" style={{ color: 'var(--color-ash-gray)' }}>Step {step + 1} of {STEPS.length}</span>
+                    <span className="font-primary fs-11 fw-medium" style={{ color: 'var(--color-highlighter-lime)' }}>{progress}%</span>
                   </div>
                   <div style={{ height: 3, background: 'var(--color-zinc-hairline)', borderRadius: 3, overflow: 'hidden' }}>
                     <div className="progress-bar-fill" style={{ height: '100%', width: `${progress}%`, background: 'var(--color-highlighter-lime)', borderRadius: 3, transition: 'width 0.5s var(--ease-out)' }} />
@@ -160,12 +150,12 @@ export default function JourneyPlanner() {
                 <div key={step} style={{ animation: 'revealUp 0.35s var(--ease-out) both', flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <span style={{ fontSize: 20 }}>{current.icon}</span>
-                    <h3 style={{ fontFamily: 'var(--font-tomorrow)', fontWeight: 400, fontSize: 'clamp(18px, 2.2vw, 24px)', color: 'var(--color-pure-white)', lineHeight: 1.25 }}>
+                    <h3 className="fs-planner-q" style={{ color: 'var(--color-pure-white)' }}>
                       {current.question}
                     </h3>
                   </div>
                   {current.subtext && (
-                    <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.55, marginBottom: 20, marginLeft: 30 }}>
+                    <p className="font-primary text-sm lh-15 text-muted" style={{ marginBottom: 20, marginLeft: 30 }}>
                       {current.subtext}
                     </p>
                   )}
@@ -179,11 +169,11 @@ export default function JourneyPlanner() {
                           <button
                             key={opt}
                             onClick={() => select(opt)}
+                            className="font-primary text-sm"
                             style={{
                               padding: '7px 14px', borderRadius: 'var(--radius-md)',
                               border: `1px solid ${isSelected ? 'var(--color-highlighter-lime)' : 'var(--color-zinc-hairline)'}`,
                               background: isSelected ? 'var(--color-highlighter-lime)' : 'transparent',
-                              fontFamily: 'var(--font-geist-mono)', fontSize: 12,
                               color: isSelected ? 'var(--color-onyx-black)' : 'var(--color-steel-gray)',
                               cursor: 'pointer', transition: 'all 0.18s ease',
                             }}
@@ -201,7 +191,7 @@ export default function JourneyPlanner() {
                   {!isLastStep && (
                     <div style={{ borderTop: current.options.length > 0 ? '1px solid var(--color-zinc-hairline)' : 'none', paddingTop: current.options.length > 0 ? 18 : 0 }}>
                       {current.options.length > 0 && (
-                        <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-ash-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 10 }}>
+                        <p className="font-primary text-xs fw-medium uppercase ls-05" style={{ color: 'var(--color-ash-gray)', marginBottom: 10 }}>
                           Or enter custom details:
                         </p>
                       )}
@@ -236,8 +226,8 @@ export default function JourneyPlanner() {
                         )}
                         <button
                           type="button"
-                          className="btn-primary"
-                          style={{ padding: '10px 18px', fontSize: 13, flexShrink: 0 }}
+                          className="btn-primary fs-13"
+                          style={{ padding: '10px 18px', flexShrink: 0 }}
                           disabled={!customInputs[current.id]?.trim()}
                           onClick={handleCustomNext}
                         >
@@ -248,7 +238,8 @@ export default function JourneyPlanner() {
                         <button
                           type="button"
                           onClick={() => { setAnswers(prev => ({ ...prev, notes: customInputs.notes || '' })); setStep(s => s + 1); }}
-                          style={{ marginTop: 10, fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-ash-gray)', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}
+                          className="font-primary text-sm underline"
+                          style={{ marginTop: 10, color: 'var(--color-ash-gray)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                         >
                           Skip this step
                         </button>
@@ -265,7 +256,7 @@ export default function JourneyPlanner() {
                         { label: 'WhatsApp / Phone (optional)', val: phone, set: setPhone, placeholder: '+91 93409 94628', type: 'tel', required: false },
                       ].map(field => (
                         <div key={field.label}>
-                          <label style={labelStyle}>{field.label}</label>
+                          <label className="text-field-label">{field.label}</label>
                           <input
                             className="input-terminal"
                             type={field.type}
@@ -279,19 +270,19 @@ export default function JourneyPlanner() {
 
                       {/* Summary */}
                       <div style={{ background: 'var(--color-onyx-black)', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-xl)', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                        <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>Your journey summary</p>
+                        <p className="font-primary text-xs fw-medium uppercase ls-05" style={{ color: 'var(--color-steel-gray)', marginBottom: 4 }}>Your journey summary</p>
                         {Object.entries(answers).filter(([, v]) => v).map(([k, v]) => {
                           const stepDef = STEPS.find(s => s.id === k);
                           return (
                             <div key={k} style={{ display: 'flex', justifyContent: 'space-between', gap: 16, alignItems: 'flex-start' }}>
-                              <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-ash-gray)', flexShrink: 0 }}>{stepDef?.label?.replace(/^\d+ — /, '') || k}</span>
-                              <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, fontWeight: 500, color: 'var(--color-pure-white)', textAlign: 'right' }}>{v}</span>
+                              <span className="font-primary fs-11" style={{ color: 'var(--color-ash-gray)', flexShrink: 0 }}>{stepDef?.label?.replace(/^\d+ — /, '') || k}</span>
+                              <span className="font-primary fs-11 fw-medium text-right" style={{ color: 'var(--color-pure-white)' }}>{v}</span>
                             </div>
                           );
                         })}
                       </div>
 
-                      <button type="submit" className="btn-primary" style={{ alignSelf: 'flex-start', fontSize: 13 }}>
+                      <button type="submit" className="btn-primary fs-13" style={{ alignSelf: 'flex-start' }}>
                         Send My Journey Brief →
                       </button>
                     </form>
@@ -302,7 +293,8 @@ export default function JourneyPlanner() {
                 {step > 0 && (
                   <button
                     onClick={() => setStep(s => s - 1)}
-                    style={{ marginTop: 20, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-ash-gray)', display: 'flex', alignItems: 'center', gap: 5, transition: 'color 0.18s' }}
+                    className="font-primary text-sm"
+                    style={{ marginTop: 20, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-ash-gray)', display: 'flex', alignItems: 'center', gap: 5, transition: 'color 0.18s' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-ash-gray)')}
                   >
@@ -324,10 +316,10 @@ export default function JourneyPlanner() {
                   </svg>
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: 'var(--font-tomorrow)', fontWeight: 400, fontSize: 24, color: 'var(--color-pure-white)', marginBottom: 8, lineHeight: 1.3 }}>
+                  <h3 className="font-secondary fs-24 fw-regular lh-13" style={{ color: 'var(--color-pure-white)', marginBottom: 8 }}>
                     Your Journey Brief is On Its Way! 🎉
                   </h3>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, color: 'var(--color-steel-gray)', lineHeight: 1.65, maxWidth: 400 }}>
+                  <p className="font-primary fs-13 lh-16 text-muted" style={{ maxWidth: 400 }}>
                     Our travel specialist will contact you within 2 hours with a personalised draft itinerary based on your selections.
                   </p>
                 </div>

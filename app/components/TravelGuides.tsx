@@ -23,7 +23,7 @@ export default function TravelGuides() {
           <div>
             <p className="section-label" style={{ marginBottom: 8 }}>Travel Intelligence</p>
             <h2 className="heading-lg">Expert Tips &amp; Yatra Guidance.</h2>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.6, marginTop: 8, maxWidth: 420 }}>
+            <p className="font-primary text-sm lh-16 text-muted" style={{ marginTop: 8, maxWidth: 420 }}>
               Practical packing tips, yatra safety guidelines, and destination insights written by our local coordinators.
             </p>
           </div>
@@ -60,19 +60,19 @@ export default function TravelGuides() {
                 <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
                 <div style={{ position: 'absolute', bottom: 8, left: 12, display: 'flex', gap: 6, alignItems: 'center' }}>
                   <span style={{ fontSize: 13 }}>{g.icon}</span>
-                  <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, fontWeight: 500, color: 'var(--color-white-80)', textTransform: 'uppercase', letterSpacing: '1px' }}>{g.category}</span>
+                  <span className="font-primary fs-9 fw-medium uppercase ls-1" style={{ color: 'var(--color-white-80)' }}>{g.category}</span>
                 </div>
                 {g.badge && (
-                  <span style={{ position: 'absolute', top: 8, right: 10, fontFamily: 'var(--font-geist-mono)', fontSize: 9, color: 'var(--color-onyx-black)', background: 'var(--color-highlighter-lime)', padding: '2px 6px', borderRadius: 'var(--radius-full)', fontWeight: 500 }}>{g.badge}</span>
+                  <span className="font-primary fs-9 fw-medium" style={{ position: 'absolute', top: 8, right: 10, color: 'var(--color-onyx-black)', background: 'var(--color-highlighter-lime)', padding: '2px 6px', borderRadius: 'var(--radius-full)' }}>{g.badge}</span>
                 )}
               </div>
 
               {/* Content */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '14px 16px', flex: 1 }}>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontWeight: 500, fontSize: 12, color: 'var(--color-pure-white)', lineHeight: 1.5, flex: 1 }}>{g.title}</p>
+                <p className="font-primary fw-medium text-sm lh-15" style={{ color: 'var(--color-pure-white)', flex: 1 }}>{g.title}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-steel-gray)' }}>{g.readTime}</span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-highlighter-lime)' }}>
+                  <span className="font-primary fs-11 text-muted">{g.readTime}</span>
+                  <div className="font-primary fs-11" style={{ display: 'flex', alignItems: 'center', gap: 3, color: 'var(--color-highlighter-lime)' }}>
                     Read guide
                     <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
                       <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -85,8 +85,8 @@ export default function TravelGuides() {
         </div>
 
         {/* View all */}
-        <div className="reveal" style={{ textAlign: 'center', marginTop: 28 }}>
-          <button className="btn-ghost" style={{ fontSize: 13 }}>
+        <div className="reveal text-center" style={{ marginTop: 28 }}>
+          <button className="btn-ghost fs-13">
             View All India Travel Guides →
           </button>
         </div>

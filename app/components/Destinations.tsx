@@ -83,7 +83,7 @@ export default function Destinations() {
             <h2 className="heading-lg">Sacred Yatras &amp; Scenic Getaways</h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <button className="btn-ghost" style={{ fontSize: 12, padding: '6px 14px' }} onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
+            <button className="btn-ghost text-sm" style={{ padding: '6px 14px' }} onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
               Custom Package
             </button>
             {(['left', 'right'] as const).map(dir => (
@@ -140,35 +140,35 @@ export default function Destinations() {
               border: '1px solid var(--color-zinc-hairline)',
             }}>
               <div style={{ fontSize: 36 }}>🇮🇳</div>
-              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-onyx-black)', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.6 }}>Incredible<br />India</p>
+              <p className="font-primary text-xs fw-medium ls-2 uppercase text-center lh-16" style={{ color: 'var(--color-onyx-black)' }}>Incredible<br />India</p>
             </div>
 
             {filtered.map((d, i) => (
               <div
                 key={d.id}
                 className="portfolio-tile"
-                style={{ width: i % 3 === 0 ? 300 : 240, height: 380, cursor: 'pointer' }}
+                style={{ width:300 , height: 380, cursor: 'pointer' }}
                 onClick={() => setExpanded(expanded === d.id ? null : d.id)}
               >
                 <img className="tile-img" src={d.imagePath} alt={d.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
 
                 <div style={{ position: 'absolute', top: 12, left: 12, right: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, color: 'var(--color-white-80)', padding: '3px 7px', border: '1px solid var(--color-white-20)', borderRadius: 'var(--radius-full)', backdropFilter: 'blur(4px)' }}>
+                  <span className="font-primary fs-9" style={{ color: 'var(--color-white-80)', padding: '3px 7px', border: '1px solid var(--color-white-20)', borderRadius: 'var(--radius-full)', backdropFilter: 'blur(4px)' }}>
                     {d.bestSeason.split(',')[0]}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, color: 'var(--color-onyx-black)', background: 'var(--color-highlighter-lime)', padding: '3px 7px', borderRadius: 'var(--radius-full)', fontWeight: 500 }}>
+                  <span className="font-primary fs-9 fw-medium" style={{ color: 'var(--color-onyx-black)', background: 'var(--color-highlighter-lime)', padding: '3px 7px', borderRadius: 'var(--radius-full)' }}>
                     {DIFFICULTY_LABEL[d.difficulty]}
                   </span>
                 </div>
 
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '16px' }}>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 4 }}>{d.region}</p>
-                  <h3 style={{ fontFamily: 'var(--font-tomorrow)', fontWeight: 400, fontSize: 18, color: 'var(--color-pure-white)', marginBottom: 4, lineHeight: 1.2 }}>{d.name}</h3>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-white-60)', marginBottom: 12, lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{d.tagline}</p>
+                  <p className="font-primary fs-9 fw-medium uppercase ls-1 text-muted" style={{ marginBottom: 4 }}>{d.region}</p>
+                  <h3 className="font-secondary fw-regular fs-18 lh-12" style={{ color: 'var(--color-pure-white)', marginBottom: 4 }}>{d.name}</h3>
+                  <p className="font-primary fs-11 lh-14" style={{ color: 'var(--color-white-60)', marginBottom: 12, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{d.tagline}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-steel-gray)' }}>{d.duration}</span>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, fontWeight: 500, color: 'var(--color-highlighter-lime)' }}>{d.startingFrom}</span>
+                    <span className="font-primary fs-11 text-muted">{d.duration}</span>
+                    <span className="font-primary fs-13 fw-medium" style={{ color: 'var(--color-highlighter-lime)' }}>{d.startingFrom}</span>
                   </div>
                 </div>
               </div>
@@ -205,25 +205,25 @@ export default function Destinations() {
               <div className="destinations-detail-grid">
                 <div>
                   <div style={{ display: 'flex', gap: 6, marginBottom: 16 }}>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--color-steel-gray)', padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>{d.region}</span>
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--color-highlighter-lime)', padding: '3px 8px', border: '1px solid var(--color-highlighter-lime)', borderRadius: 'var(--radius-full)' }}>{d.difficulty}</span>
+                    <span className="font-primary text-xs text-muted" style={{ padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>{d.region}</span>
+                    <span className="font-primary text-xs" style={{ color: 'var(--color-highlighter-lime)', padding: '3px 8px', border: '1px solid var(--color-highlighter-lime)', borderRadius: 'var(--radius-full)' }}>{d.difficulty}</span>
                   </div>
                   <h3 className="heading-md" style={{ marginBottom: 8 }}>{d.name} Expedition</h3>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, color: 'var(--color-steel-gray)', lineHeight: 1.6, marginBottom: 20 }}>{d.tagline}</p>
+                  <p className="font-primary fs-13 text-muted lh-16" style={{ marginBottom: 20 }}>{d.tagline}</p>
                   <div style={{ display: 'flex', gap: 24, marginBottom: 24, flexWrap: 'wrap' }}>
                     {[{ label: 'Duration', val: d.duration }, { label: 'Group size', val: d.groupSize }, { label: 'Best season', val: d.bestSeason }, { label: 'Starting from', val: d.startingFrom }].map(m => (
                       <div key={m.label}>
-                        <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>{m.label}</p>
-                        <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 14, fontWeight: 500, color: m.label === 'Starting from' ? 'var(--color-highlighter-lime)' : 'var(--color-pure-white)' }}>{m.val}</p>
+                        <p className="font-primary text-xs fw-medium uppercase ls-05 text-muted" style={{ marginBottom: 4 }}>{m.label}</p>
+                        <p className="font-primary fs-14 fw-medium" style={{ color: m.label === 'Starting from' ? 'var(--color-highlighter-lime)' : 'var(--color-pure-white)' }}>{m.val}</p>
                       </div>
                     ))}
                   </div>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 12 }}>Signature Experiences</p>
+                  <p className="font-primary text-xs fw-medium uppercase ls-05 text-muted" style={{ marginBottom: 12 }}>Signature Experiences</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
                     {d.highlights.map(h => (
                       <div key={h} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
                         <span style={{ color: 'var(--color-highlighter-lime)', fontSize: 10, marginTop: 2, flexShrink: 0 }}>✦</span>
-                        <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, color: 'var(--color-steel-gray)' }}>{h}</span>
+                        <span className="font-primary fs-13 text-muted">{h}</span>
                       </div>
                     ))}
                   </div>
@@ -236,14 +236,14 @@ export default function Destinations() {
                   <div className="img-zoom-wrap" style={{ height: 200, borderRadius: 'var(--radius-xl)' }}>
                     <img src={d.imagePath} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                  <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Included in every journey</p>
+                  <p className="font-primary text-xs fw-medium uppercase ls-05 text-muted">Included in every journey</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     {d.includes.map(inc => (
                       <div key={inc} style={{ display: 'flex', gap: 8, alignItems: 'center', padding: '8px 10px', background: 'var(--color-carbon)', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-md)', transition: 'all 0.18s ease' }}
                         onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-highlighter-lime)'; }}
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-zinc-hairline)'; }}>
                         <span style={{ color: 'var(--color-highlighter-lime)', fontSize: 10, flexShrink: 0 }}>✦</span>
-                        <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)' }}>{inc}</span>
+                        <span className="font-primary text-sm text-muted">{inc}</span>
                       </div>
                     ))}
                   </div>

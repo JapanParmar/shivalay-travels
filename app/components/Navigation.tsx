@@ -80,8 +80,8 @@ export default function Navigation() {
                 <path d="M22 2L15 22L11 13L2 9L22 2Z" />
               </svg>
             </div>
-            <span style={{ fontFamily: 'var(--font-geist-mono)', fontWeight: 500, fontSize: 14, color: 'var(--color-pure-white)', letterSpacing: '-0.2px' }}>
-              Shivalay<span style={{ color: 'var(--color-steel-gray)', fontWeight: 400 }}> Travels</span>
+            <span className="text-logo-brand">
+              Shivalay<span className="fw-regular" style={{ color: 'var(--color-steel-gray)' }}> Travels</span>
             </span>
           </button>
 
@@ -104,9 +104,9 @@ export default function Navigation() {
             <a
               href="https://wa.me/919340994628?text=Hello%20Shivalay%20Travels!%20I%20need%20help%20with%20a%20booking."
               target="_blank" rel="noopener noreferrer"
-              className="desktop-nav"
+              className="desktop-nav ff-mono fs-12"
               style={{
-                fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)',
+                color: 'var(--color-steel-gray)',
                 display: 'flex', alignItems: 'center', gap: 5,
                 padding: '5px 10px', borderRadius: 'var(--radius-md)',
                 border: '1px solid var(--color-zinc-hairline)',
@@ -124,7 +124,7 @@ export default function Navigation() {
             <button
               className="btn-primary desktop-nav"
               onClick={() => scrollTo('planner')}
-              style={{ fontSize: 13, padding: '7px 14px' }}
+              style={{ padding: '7px 14px' }}
             >
               Plan Journey →
             </button>
@@ -164,8 +164,8 @@ export default function Navigation() {
           <button
             key={link.id}
             onClick={() => scrollTo(link.id)}
+            className="ff-tomorrow fs-24 fw-400"
             style={{
-              fontFamily: 'var(--font-tomorrow)', fontWeight: 400, fontSize: 24,
               color: activeSection === link.id ? 'var(--color-highlighter-lime)' : 'var(--color-pure-white)',
               background: 'none', border: 'none', cursor: 'pointer',
               padding: '12px 24px', borderRadius: 'var(--radius-xl)',
@@ -184,7 +184,7 @@ export default function Navigation() {
           className="btn-primary"
           onClick={() => scrollTo('planner')}
           style={{
-            marginTop: 20, fontSize: 14,
+            marginTop: 20,
             opacity: mobileOpen ? 1 : 0,
             transform: mobileOpen ? 'translateY(0)' : 'translateY(10px)',
             transition: 'all 0.3s ease',
@@ -215,7 +215,7 @@ export default function Navigation() {
               }}
             >
               {item.icon}
-              <span style={{ fontSize: 9, fontFamily: 'var(--font-geist-mono)', fontWeight: 500 }}>{item.label}</span>
+              <span className="text-nav-label">{item.label}</span>
             </button>
           );
         })}

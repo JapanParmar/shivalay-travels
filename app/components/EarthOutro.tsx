@@ -38,28 +38,16 @@ export default function EarthOutro() {
           </div>
 
           <h2
-            className="reveal"
-            style={{
-              fontFamily: 'var(--font-tomorrow)',
-              fontSize: 'clamp(28px, 4vw, 48px)',
-              fontWeight: 400,
-              color: 'var(--color-pure-white)',
-              lineHeight: 1.15,
-            }}
+            className="reveal font-secondary fs-outro fw-regular lh-115"
+            style={{ color: 'var(--color-pure-white)' }}
           >
             Your Indian Odyssey<br />
             <span style={{ color: 'var(--color-ash-gray)' }}>starts here.</span>
           </h2>
 
           <p
-            className="reveal reveal-d1"
-            style={{
-              fontFamily: 'var(--font-geist-mono)',
-              fontSize: 14, fontWeight: 400,
-              color: 'var(--color-steel-gray)',
-              lineHeight: 1.7,
-              maxWidth: 480,
-            }}
+            className="reveal reveal-d1 font-primary text-md fw-regular lh-17 text-muted"
+            style={{ maxWidth: 480 }}
           >
             Every extraordinary journey begins with a single conversation. Tell us where you want to go — we&apos;ll handle every extraordinary detail.
           </p>
@@ -76,7 +64,7 @@ export default function EarthOutro() {
               className="input-terminal"
               style={{ flex: 1 }}
             />
-            <button type="submit" className="btn-primary" style={{ flexShrink: 0, fontSize: 13, whiteSpace: 'nowrap' }}>
+            <button type="submit" className="btn-primary fs-13" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
               Plan my journey
             </button>
           </form>
@@ -86,7 +74,8 @@ export default function EarthOutro() {
             <a
               href="https://wa.me/919340994628"
               target="_blank" rel="noopener noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-geist-mono)', fontSize: 13, color: 'var(--color-steel-gray)', textDecoration: 'none', transition: 'color 0.18s ease' }}
+              className="font-primary fs-13 no-underline text-muted"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'color 0.18s ease' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-steel-gray)')}
             >
@@ -98,7 +87,8 @@ export default function EarthOutro() {
             <span style={{ color: 'var(--color-zinc-hairline)' }}>·</span>
             <a
               href="mailto:info@shivalaytravels.com"
-              style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, color: 'var(--color-steel-gray)', textDecoration: 'none', transition: 'color 0.18s ease' }}
+              className="font-primary fs-13 no-underline text-muted"
+              style={{ transition: 'color 0.18s ease' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-steel-gray)')}
             >

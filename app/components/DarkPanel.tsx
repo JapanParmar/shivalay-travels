@@ -26,19 +26,16 @@ export default function DarkPanel() {
           <div>
             <p className="section-label" style={{ marginBottom: 12, color: 'var(--color-ash-gray)' }}>The problem</p>
             <h2
+              className="font-secondary fs-section-heading fw-regular lh-12"
               style={{
-                fontFamily: 'var(--font-tomorrow)',
-                fontSize: 'clamp(22px, 2.5vw, 32px)',
-                fontWeight: 400,
                 color: 'var(--color-pure-white)',
-                lineHeight: 1.2,
                 marginBottom: 14,
               }}
             >
               Indian tourism has become<br />
               <span style={{ color: 'var(--color-ash-gray)' }}>an assembly line.</span>
             </h2>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.7, marginBottom: 24, maxWidth: 340 }}>
+            <p className="font-primary text-sm lh-17 text-muted" style={{ marginBottom: 24, maxWidth: 340 }}>
               Most agencies reuse identical templates for Leh, Srinagar, or Munnar. Shivalay Travels was built for those who seek authentic, reliable travel without compromises.
             </p>
             <button
@@ -66,9 +63,9 @@ export default function DarkPanel() {
                 onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
               >
                 <span style={{ color: 'var(--color-highlighter-lime)', fontSize: 10, marginTop: 3, flexShrink: 0 }}>✦</span>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, lineHeight: 1.55 }}>
-                  <span style={{ color: 'var(--color-steel-gray)', fontWeight: 400 }}>{p.lead} </span>
-                  <span style={{ color: 'var(--color-pure-white)', fontWeight: 500 }}>{p.key}</span>
+                <p className="font-primary text-sm lh-155">
+                  <span className="fw-regular text-muted">{p.lead} </span>
+                  <span className="fw-medium" style={{ color: 'var(--color-pure-white)' }}>{p.key}</span>
                 </p>
               </div>
             ))}
@@ -79,8 +76,8 @@ export default function DarkPanel() {
             <img src="/images/meghalaya.png" alt="Meghalaya" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
             <div style={{ position: 'absolute', bottom: 14, left: 14, right: 14 }}>
-              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 9, fontWeight: 500, color: 'var(--color-steel-gray)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 4 }}>Raw Ecotourism</p>
-              <p style={{ fontFamily: 'var(--font-tomorrow)', fontSize: 15, fontWeight: 400, color: 'var(--color-pure-white)' }}>Cherrapunji rainforest loops</p>
+              <p className="font-primary fs-9 fw-medium uppercase ls-1 text-muted" style={{ marginBottom: 4 }}>Raw Ecotourism</p>
+              <p className="font-secondary fs-15 fw-regular" style={{ color: 'var(--color-pure-white)' }}>Cherrapunji rainforest loops</p>
             </div>
           </div>
         </div>

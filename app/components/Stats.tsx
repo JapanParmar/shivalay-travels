@@ -60,21 +60,10 @@ export default function Stats() {
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-carbon)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
             >
-              <div style={{
-                fontFamily: 'var(--font-geist-mono)',
-                fontSize: 'clamp(24px, 2.5vw, 36px)',
-                fontWeight: 500,
-                color: 'var(--color-highlighter-lime)',
-                lineHeight: 1,
-              }}>
+              <div className="text-stat">
                 <CountUp end={s.num} />
               </div>
-              <p style={{
-                fontFamily: 'var(--font-geist-mono)',
-                fontSize: 12, fontWeight: 400,
-                color: 'var(--color-steel-gray)',
-                lineHeight: 1.5,
-              }}>
+              <p className="font-primary text-sm fw-regular lh-15 text-muted">
                 {s.label}
               </p>
             </div>

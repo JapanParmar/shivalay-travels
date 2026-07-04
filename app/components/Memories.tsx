@@ -54,7 +54,7 @@ export default function Memories() {
                 <span key={i} style={{ color: 'var(--color-highlighter-lime)', fontSize: 14 }}>★</span>
               ))}
             </div>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)' }}>4.97 / 5 from 860+ families</p>
+            <p className="font-primary text-sm text-muted">4.97 / 5 from 860+ families</p>
           </div>
         </div>
 
@@ -74,33 +74,36 @@ export default function Memories() {
               position: 'relative', overflow: 'hidden',
             }}
           >
-            <div style={{ position: 'absolute', top: 16, right: 20, fontSize: 80, fontFamily: 'serif', color: 'var(--color-lime-06)', fontWeight: 'bold', lineHeight: 1, pointerEvents: 'none' }}>&ldquo;</div>
+            <div className="text-quote-mark" style={{ position: 'absolute', top: 16, right: 20 }}>&ldquo;</div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
               <div style={{ display: 'flex', gap: 2 }}>
                 {Array.from({ length: t.rating }).map((_, i) => (
                   <span key={i} style={{ color: 'var(--color-highlighter-lime)', fontSize: 12 }}>★</span>
                 ))}
               </div>
-              <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--color-steel-gray)', padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>
+              <span className="font-primary text-xs" style={{ color: 'var(--color-steel-gray)', padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>
                 {t.destination}
               </span>
             </div>
-            <p style={{ fontFamily: 'var(--font-tomorrow)', fontSize: 'clamp(15px, 1.8vw, 19px)', fontWeight: 400, color: 'var(--color-pure-white)', lineHeight: 1.65, fontStyle: 'italic', flex: 1, marginBottom: 24, position: 'relative', zIndex: 1 }}>
+            <p className="text-quote" style={{ flex: 1, marginBottom: 24, position: 'relative', zIndex: 1 }}>
               &ldquo;{t.quote}&rdquo;
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, borderTop: '1px solid var(--color-zinc-hairline)', paddingTop: 18 }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: 'var(--radius-md)',
-                background: 'var(--color-highlighter-lime)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: 'var(--color-onyx-black)', fontWeight: 500, fontSize: 13, fontFamily: 'var(--font-geist-mono)',
-                flexShrink: 0,
-              }}>
+              <div
+                className="font-primary fs-13 fw-medium"
+                style={{
+                  width: 40, height: 40, borderRadius: 'var(--radius-md)',
+                  background: 'var(--color-highlighter-lime)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'var(--color-onyx-black)',
+                  flexShrink: 0,
+                }}
+              >
                 {t.avatar}
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontWeight: 500, fontSize: 13, color: 'var(--color-pure-white)', marginBottom: 2 }}>{t.name}</p>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-steel-gray)' }}>{t.location} · {t.trip}</p>
+                <p className="font-primary fw-medium fs-13" style={{ color: 'var(--color-pure-white)', marginBottom: 2 }}>{t.name}</p>
+                <p className="font-primary fs-11 text-muted">{t.location} · {t.trip}</p>
               </div>
               {/* Nav arrows */}
               <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
@@ -152,19 +155,21 @@ export default function Memories() {
                   onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = 'var(--color-carbon)'; }}
                   onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = 'transparent'; }}
                 >
-                  <div style={{
-                    width: 32, height: 32, borderRadius: 'var(--radius-md)', flexShrink: 0,
-                    background: isActive ? 'var(--color-highlighter-lime)' : 'var(--color-zinc-hairline)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: isActive ? 'var(--color-onyx-black)' : 'var(--color-steel-gray)',
-                    fontSize: 11, fontFamily: 'var(--font-geist-mono)', fontWeight: 500,
-                    transition: 'all 0.18s ease',
-                  }}>
+                  <div
+                    className="font-primary fs-11 fw-medium"
+                    style={{
+                      width: 32, height: 32, borderRadius: 'var(--radius-md)', flexShrink: 0,
+                      background: isActive ? 'var(--color-highlighter-lime)' : 'var(--color-zinc-hairline)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      color: isActive ? 'var(--color-onyx-black)' : 'var(--color-steel-gray)',
+                      transition: 'all 0.18s ease',
+                    }}
+                  >
                     {item.avatar}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontFamily: 'var(--font-geist-mono)', fontWeight: 500, fontSize: 11, color: isActive ? 'var(--color-pure-white)' : 'var(--color-steel-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 2 }}>{item.name}</p>
-                    <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--color-ash-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.destination}</p>
+                    <p className="font-primary fw-medium fs-11" style={{ color: isActive ? 'var(--color-pure-white)' : 'var(--color-steel-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 2 }}>{item.name}</p>
+                    <p className="font-primary text-xs" style={{ color: 'var(--color-ash-gray)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.destination}</p>
                   </div>
                 </button>
               );
@@ -182,9 +187,9 @@ export default function Memories() {
         {/* Media mentions */}
         <div style={{ borderTop: '1px solid var(--color-zinc-hairline)', borderBottom: '1px solid var(--color-zinc-hairline)', padding: '16px 0', marginBottom: 24 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-ash-gray)', textTransform: 'uppercase', letterSpacing: '1px', whiteSpace: 'nowrap' }}>As featured in</p>
+            <p className="font-primary text-xs fw-medium uppercase ls-1" style={{ color: 'var(--color-ash-gray)', whiteSpace: 'nowrap' }}>As featured in</p>
             {MEDIA_MENTIONS.map(m => (
-              <span key={m} style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', whiteSpace: 'nowrap', transition: 'color 0.18s', cursor: 'default' }}
+              <span key={m} className="font-primary text-sm text-muted" style={{ whiteSpace: 'nowrap', transition: 'color 0.18s', cursor: 'default' }}
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-steel-gray)')}>
                 {m}
@@ -196,8 +201,8 @@ export default function Memories() {
         {/* CTA */}
         <div className="reveal" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <p style={{ fontFamily: 'var(--font-tomorrow)', fontSize: 18, fontWeight: 400, color: 'var(--color-pure-white)', marginBottom: 4 }}>Your story belongs here too.</p>
-            <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)' }}>Join thousands of happy travellers who choose Shivalay Travels.</p>
+            <p className="font-secondary text-xl fw-regular" style={{ color: 'var(--color-pure-white)', marginBottom: 4 }}>Your story belongs here too.</p>
+            <p className="font-primary text-sm text-muted">Join thousands of happy travellers who choose Shivalay Travels.</p>
           </div>
           <button className="btn-primary" onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}>
             Start My Journey

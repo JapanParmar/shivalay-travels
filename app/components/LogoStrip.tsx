@@ -22,12 +22,7 @@ export default function LogoStrip() {
           {doubled.map((name, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--color-highlighter-lime)', flexShrink: 0 }} />
-              <span style={{
-                fontFamily: 'var(--font-geist-mono)',
-                fontSize: 12, fontWeight: 400,
-                color: 'var(--color-steel-gray)',
-                whiteSpace: 'nowrap',
-              }}>
+              <span className="font-primary text-sm fw-regular text-muted" style={{ whiteSpace: 'nowrap' }}>
                 {name}
               </span>
             </div>

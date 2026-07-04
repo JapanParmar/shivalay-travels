@@ -45,6 +45,10 @@
 
   --font-geist-mono: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-tomorrow: 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --font-primary: var(--font-geist-mono);
+  --font-secondary: var(--font-tomorrow);
+
   /* Type Scale */
   --text-caption: 10px;   --leading-caption: 1;
   --text-body: 14px;      --leading-body: 1.43;
@@ -52,8 +56,20 @@
   --text-heading: 24px;   --leading-heading: 1.29;
   --text-heading-lg: 28px;--leading-heading-lg: 1.17;
 
-  --font-weight-regular: 700;
-  --font-weight-medium: 900;
+  --theme-font-weight-regular: 700;
+  --theme-font-weight-medium: 900;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-xs: 10px;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
 
   /* Spacing */
   --spacing-8: 8px;
@@ -93,7 +109,7 @@
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
   font-family: var(--font-geist-mono);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--theme-font-weight-regular);
   background: var(--surface-canvas);
   color: var(--color-pure-white);
   overflow-x: hidden;
@@ -177,7 +193,7 @@ input, select, textarea { font-family: inherit; }
   color: #000000;
   font-family: var(--font-geist-mono);
   font-size: var(--text-body);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
   border-radius: var(--radius-md);
   padding: 8px 16px;
   border: none;
@@ -195,7 +211,7 @@ input, select, textarea { font-family: inherit; }
   color: var(--color-pure-white);
   font-family: var(--font-geist-mono);
   font-size: var(--text-body);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--theme-font-weight-regular);
   border-radius: var(--radius-md);
   padding: 8px 16px;
   border: 1px solid var(--color-zinc-hairline);
@@ -215,7 +231,7 @@ input, select, textarea { font-family: inherit; }
   background: transparent;
   font-family: var(--font-geist-mono);
   font-size: 12px;
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--theme-font-weight-regular);
   color: var(--color-steel-gray);
   cursor: pointer;
   transition: all 0.18s ease;
@@ -226,7 +242,7 @@ input, select, textarea { font-family: inherit; }
   background: var(--color-highlighter-lime);
   border-color: var(--color-highlighter-lime);
   color: #000000;
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
 }
 
 /* ─── TIME-RANGE PILL ─────────────────────────────────────────── */
@@ -281,7 +297,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .nav-link {
   font-family: var(--font-geist-mono);
   font-size: var(--text-body);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--theme-font-weight-regular);
   color: var(--color-steel-gray);
   background: none;
   border: none;
@@ -298,7 +314,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .data-table th {
   font-family: var(--font-geist-mono);
   font-size: 12px;
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
   color: var(--color-steel-gray);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -361,7 +377,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .section-label {
   font-family: var(--font-geist-mono);
   font-size: 12px;
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
   color: var(--color-steel-gray);
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -372,21 +388,21 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   font-family: var(--font-tomorrow);
   font-size: var(--text-heading-lg);
   line-height: var(--leading-heading-lg);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
   color: var(--color-pure-white);
 }
 .heading-lg {
   font-family: var(--font-tomorrow);
   font-size: var(--text-heading);
   line-height: var(--leading-heading);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--theme-font-weight-medium);
   color: var(--color-pure-white);
 }
 .heading-md {
   font-family: var(--font-tomorrow);
   font-size: var(--text-subheading);
   line-height: var(--leading-subheading);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--theme-font-weight-regular);
   color: var(--color-pure-white);
 }
 .mono-body { font-family: var(--font-geist-mono); font-size: var(--text-body); line-height: var(--leading-body); }
@@ -394,6 +410,204 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .text-muted { color: var(--color-steel-gray); }
 .text-dim { color: var(--color-ash-gray); }
 .text-lime { color: var(--color-highlighter-lime); }
+
+/* ─── FONT UTILITY CLASSES ────────────────────────────────── */
+/* Custom variables type scale utility classes */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+
+/* Sizes */
+.fs-8  { font-size: 8px; }
+.fs-9  { font-size: 9px; }
+.fs-10 { font-size: 10px; }
+.fs-11 { font-size: 11px; }
+.fs-12 { font-size: 12px; }
+.fs-13 { font-size: 13px; }
+.fs-14 { font-size: var(--text-body); }
+.fs-15 { font-size: 15px; }
+.fs-16 { font-size: 16px; }
+.fs-18 { font-size: var(--text-subheading); }
+.fs-20 { font-size: 20px; }
+.fs-24 { font-size: var(--text-heading); }
+.fs-hero { font-size: clamp(28px, 3.2vw, 46px); }
+.fs-outro { font-size: clamp(28px, 4vw, 48px); }
+.fs-section-heading { font-size: clamp(22px, 2.5vw, 32px); }
+.fs-testimonial { font-size: clamp(15px, 1.8vw, 19px); }
+.fs-planner-q { font-size: clamp(18px, 2.2vw, 24px); }
+
+/* Weights */
+.fw-light   { font-weight: var(--font-weight-light); }
+.fw-regular { font-weight: var(--font-weight-regular); }
+.fw-medium  { font-weight: var(--font-weight-medium); }
+.fw-semibold { font-weight: var(--font-weight-semibold); }
+.fw-bold    { font-weight: var(--font-weight-bold); }
+.fw-400 { font-weight: 400; }
+.fw-500 { font-weight: 500; }
+
+/* Line heights */
+.lh-1   { line-height: 1; }
+.lh-115 { line-height: 1.15; }
+.lh-12  { line-height: 1.2; }
+.lh-125 { line-height: 1.25; }
+.lh-13  { line-height: 1.3; }
+.lh-14  { line-height: 1.4; }
+.lh-15  { line-height: 1.5; }
+.lh-155 { line-height: 1.55; }
+.lh-16  { line-height: 1.6; }
+.lh-165 { line-height: 1.65; }
+.lh-17  { line-height: 1.7; }
+.lh-body { line-height: var(--leading-body); }
+
+/* Font families */
+.ff-mono     { font-family: var(--font-geist-mono); }
+.ff-tomorrow { font-family: var(--font-tomorrow); }
+.font-primary { font-family: var(--font-primary); }
+.font-secondary { font-family: var(--font-secondary); }
+
+/* Alignments */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Transforms */
+.uppercase { text-transform: uppercase; }
+.lowercase { text-transform: lowercase; }
+.capitalize { text-transform: capitalize; }
+
+/* Letter spacing */
+.ls-05 { letter-spacing: 0.5px; }
+.ls-06 { letter-spacing: 0.6px; }
+.ls-08 { letter-spacing: 0.8px; }
+.ls-1 { letter-spacing: 1px; }
+.ls-2 { letter-spacing: 2px; }
+
+/* Font styles */
+.italic { font-style: italic; }
+
+/* Text decoration */
+.underline { text-decoration: underline; }
+.no-underline { text-decoration: none; }
+
+/* Common composite text styles (font + size + weight + color combos) */
+/* Section label equivalent for small uppercase mono labels */
+.text-label {
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  font-weight: var(--theme-font-weight-medium);
+  color: var(--color-steel-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.text-label-dim {
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  font-weight: var(--theme-font-weight-medium);
+  color: var(--color-ash-gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* Small body text in steel gray */
+.text-body-sm {
+  font-family: var(--font-geist-mono);
+  font-size: 12px;
+  color: var(--color-steel-gray);
+  line-height: 1.6;
+}
+/* Standard body in steel gray */
+.text-body-muted {
+  font-family: var(--font-geist-mono);
+  font-size: var(--text-body);
+  color: var(--color-steel-gray);
+  line-height: var(--leading-body);
+}
+/* Stat number (large) */
+.text-stat {
+  font-family: var(--font-geist-mono);
+  font-size: clamp(24px, 2.5vw, 36px);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-highlighter-lime);
+  line-height: 1;
+}
+/* Tile heading (card inside image overlay) */
+.text-tile-heading {
+  font-family: var(--font-tomorrow);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-pure-white);
+  line-height: 1.2;
+}
+/* Step heading in process cards */
+.text-step-heading {
+  font-family: var(--font-tomorrow);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-pure-white);
+}
+/* Nav logo brand name */
+.text-logo-brand {
+  font-family: var(--font-geist-mono);
+  font-size: var(--text-body);
+  font-weight: var(--theme-font-weight-medium);
+  color: var(--color-pure-white);
+  letter-spacing: -0.2px;
+}
+/* Footer / small link text */
+.text-link-sm {
+  font-family: var(--font-geist-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-ash-gray);
+  text-decoration: none;
+  transition: color 0.18s ease;
+  cursor: pointer;
+  display: block;
+}
+/* Badge / pill label inside image tiles */
+.text-badge {
+  font-family: var(--font-geist-mono);
+  font-size: 9px;
+  font-weight: var(--theme-font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* Mobile bottom nav label */
+.text-nav-label {
+  font-family: var(--font-geist-mono);
+  font-size: 9px;
+  font-weight: var(--theme-font-weight-medium);
+}
+/* Form field label */
+.text-field-label {
+  display: block;
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-steel-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+/* Italic quote text */
+.text-quote {
+  font-family: var(--font-tomorrow);
+  font-size: clamp(15px, 1.8vw, 19px);
+  font-weight: 400;
+  color: var(--color-pure-white);
+  line-height: 1.65;
+  font-style: italic;
+}
+/* Large decorative quote mark */
+.text-quote-mark {
+  font-size: 80px;
+  font-family: serif;
+  color: var(--color-lime-06);
+  font-weight: bold;
+  line-height: 1;
+  pointer-events: none;
+}
 
 /* ─── GRID LAYOUTS ────────────────────────────────────────────── */
 .hero-grid {

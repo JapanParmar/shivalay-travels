@@ -55,14 +55,14 @@ export default function Philosophy() {
                 }}>
                   {s.icon}
                 </div>
-                <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, color: 'var(--color-steel-gray)', padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>
+                <span className="font-primary text-xs" style={{ color: 'var(--color-steel-gray)', padding: '3px 8px', border: '1px solid var(--color-zinc-hairline)', borderRadius: 'var(--radius-full)' }}>
                   {s.duration}
                 </span>
               </div>
               <div>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-ash-gray)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 4 }}>Step {s.num}</p>
-                <h3 style={{ fontFamily: 'var(--font-tomorrow)', fontSize: 16, fontWeight: 400, color: 'var(--color-pure-white)', marginBottom: 6 }}>{s.title}</h3>
-                <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.6 }}>{s.body}</p>
+                <p className="font-primary text-xs fw-medium uppercase ls-05" style={{ color: 'var(--color-ash-gray)', marginBottom: 4 }}>Step {s.num}</p>
+                <h3 className="font-secondary text-lg fw-regular" style={{ color: 'var(--color-pure-white)', marginBottom: 6 }}>{s.title}</h3>
+                <p className="font-primary text-sm lh-16 text-muted">{s.body}</p>
               </div>
             </div>
           ))}
@@ -82,11 +82,11 @@ export default function Philosophy() {
             }}
           >
             <div>
-              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 10, fontWeight: 500, color: 'var(--color-ash-gray)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 12 }}>Our philosophy</p>
+              <p className="font-primary text-xs fw-medium uppercase ls-1" style={{ color: 'var(--color-ash-gray)', marginBottom: 12 }}>Our philosophy</p>
               <h3 className="heading-md" style={{ marginBottom: 12 }}>
                 Curating divine pilgrimages &amp;<br />tours with absolute responsibility.
               </h3>
-              <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.7 }}>
+              <p className="font-primary text-sm lh-17 text-muted">
                 Shivalay Travels brings premium coordination standards to Indian domestic tourism. We coordinate directly with local teams, select verified hotels, and maintain round-the-clock support.
               </p>
             </div>
@@ -97,18 +97,18 @@ export default function Philosophy() {
                 { label: 'Local expert guides only', desc: 'Regional culture & terrain specialists' },
               ].map((p) => (
                 <div key={p.label} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <span style={{ color: 'var(--color-highlighter-lime)', fontSize: 10, marginTop: 2, flexShrink: 0 }}>✦</span>
+                  <span className="text-xs" style={{ color: 'var(--color-highlighter-lime)', marginTop: 2, flexShrink: 0 }}>✦</span>
                   <div>
-                    <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, fontWeight: 500, color: 'var(--color-pure-white)', lineHeight: 1.3 }}>{p.label}</p>
-                    <p style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 11, color: 'var(--color-steel-gray)', marginTop: 2 }}>{p.desc}</p>
+                    <p className="font-primary fs-13 fw-medium lh-13" style={{ color: 'var(--color-pure-white)' }}>{p.label}</p>
+                    <p className="font-primary fs-11 text-muted" style={{ marginTop: 2 }}>{p.desc}</p>
                   </div>
                 </div>
               ))}
             </div>
             <button
-              className="btn-primary"
+              className="btn-primary fs-13"
               onClick={() => document.getElementById('planner')?.scrollIntoView({ behavior: 'smooth' })}
-              style={{ alignSelf: 'flex-start', fontSize: 13 }}
+              style={{ alignSelf: 'flex-start' }}
             >
               Plan My Journey
             </button>
@@ -140,13 +140,13 @@ export default function Philosophy() {
                     onMouseEnter={e => { if (openFaq !== i) e.currentTarget.style.background = 'var(--color-carbon)'; }}
                     onMouseLeave={e => { if (openFaq !== i) e.currentTarget.style.background = 'transparent'; }}
                   >
-                    <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: 13, fontWeight: 500, color: 'var(--color-pure-white)', lineHeight: 1.4 }}>{faq.q}</span>
+                    <span className="font-primary fs-13 fw-medium lh-14" style={{ color: 'var(--color-pure-white)' }}>{faq.q}</span>
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0, transform: openFaq === i ? 'rotate(180deg)' : 'none', transition: 'transform 0.28s var(--ease-out)' }}>
                       <path d="M3 6l5 5 5-5" stroke="var(--color-steel-gray)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                   <div style={{ overflow: 'hidden', maxHeight: openFaq === i ? 200 : 0, transition: 'max-height 0.35s var(--ease-out)' }}>
-                    <p style={{ padding: '0 16px 14px', fontFamily: 'var(--font-geist-mono)', fontSize: 12, color: 'var(--color-steel-gray)', lineHeight: 1.7 }}>{faq.a}</p>
+                    <p className="font-primary text-sm lh-17 text-muted" style={{ padding: '0 16px 14px' }}>{faq.a}</p>
                   </div>
                 </div>
               ))}
