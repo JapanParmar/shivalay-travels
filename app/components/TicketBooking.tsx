@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type TravelType = 'flight' | 'bus' | 'train' | 'cruise';
 
@@ -42,6 +42,8 @@ const classOptions = {
   train: ['AC 1st Class', 'AC 2 Tier', 'AC 3 Tier', 'Sleeper Class', 'Vande Bharat CC'],
   cruise: ['Standard Cabin', 'Ocean View', 'Balcony Suite', 'Luxury Penthouse'],
 };
+
+
 
 const TABS: { type: TravelType; label: string; icon: React.ReactNode }[] = [
   {
@@ -93,6 +95,90 @@ export default function TicketBooking() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const [citiesFrom, setCitiesFrom] = useState<any[]>([]);
+  const [citiesTo, setCitiesTo] = useState<any[]>([]);
+  const [showFromDropdown, setShowFromDropdown] = useState(false);
+  const [showToDropdown, setShowToDropdown] = useState(false);
+
+  const fetchCities = async (query: string): Promise<any[]> => {
+    if (!query || query.length < 2) return [];
+    try {
+      // 1. Fetch from our dynamic admin cities catalog API
+      const res = await fetch(`/api/admin/cities`);
+      if (res.ok) {
+        const dbCities = await res.json();
+        const matches = dbCities.filter((c: any) => 
+          c.name.toLowerCase().includes(query.toLowerCase()) ||
+          c.code.toLowerCase().includes(query.toLowerCase()) ||
+          c.state.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        if (matches.length >= 3) {
+          return matches.map((c: any) => ({
+            name: c.name,
+            code: c.code,
+            state: c.state,
+            country: c.country
+          }));
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching admin cities', err);
+    }
+
+    // 2. Supplemetary geocoding lookup using free Open-Meteo Geocoding API
+    try {
+      const response = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        return (data.results || [])
+          .filter((r: any) => r.country_code === 'IN' || r.country === 'India')
+          .map((r: any) => ({
+            name: r.name,
+            code: r.name.slice(0, 3).toUpperCase(),
+            state: r.admin1 || '',
+            country: r.country || 'India'
+          }));
+      }
+    } catch (err) {
+      console.error('External geocoding API failed', err);
+    }
+    
+    // 3. Fallback static list
+    const fallbackCities = [
+      { name: 'Indore', code: 'IDR', state: 'Madhya Pradesh', country: 'India' },
+      { name: 'Mumbai', code: 'BOM', state: 'Maharashtra', country: 'India' },
+      { name: 'Delhi', code: 'DEL', state: 'Delhi', country: 'India' },
+      { name: 'Bangalore', code: 'BLR', state: 'Karnataka', country: 'India' },
+      { name: 'Goa', code: 'GOI', state: 'Goa', country: 'India' }
+    ];
+    return fallbackCities.filter(c => 
+      c.name.toLowerCase().includes(query.toLowerCase()) || 
+      c.code.toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    // Strip parenthetical codes from search query to avoid infinite loop matching
+    const cleanSearch = formData.from.replace(/\s*\([^)]*\)/g, '').trim();
+    if (cleanSearch.length >= 2) {
+      fetchCities(cleanSearch).then(list => setCitiesFrom(list));
+    } else {
+      setCitiesFrom([]);
+    }
+  }, [formData.from]);
+
+  useEffect(() => {
+    const cleanSearch = formData.to.replace(/\s*\([^)]*\)/g, '').trim();
+    if (cleanSearch.length >= 2) {
+      fetchCities(cleanSearch).then(list => setCitiesTo(list));
+    } else {
+      setCitiesTo([]);
+    }
+  }, [formData.to]);
+
   const handleInputChange = (key: keyof BookingFormData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -142,9 +228,36 @@ export default function TicketBooking() {
     return `https://wa.me/919340994628?text=${encodeURIComponent(text)}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
+
+    // Default amount to 0 when booking from the main page. The admin side will set the actual price.
+    const computedAmount = 0;
+
+    try {
+      await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: 'Guest Traveller',
+          customerPhone: formData.phone,
+          fromCity: formData.from,
+          toCity: formData.to,
+          travelType: activeTab,
+          date: formData.date,
+          returnDate: formData.returnDate || null,
+          passengers: formData.passengers,
+          classType: formData.classType,
+          amount: computedAmount,
+          status: 'pending',
+          notes: `Web Inquiry from ${formData.phone}`
+        })
+      });
+    } catch (err) {
+      console.error('Failed to log booking in DB', err);
+    }
+
     setTimeout(() => { window.open(getWhatsAppLink(), '_blank'); }, 1200);
   };
 
@@ -252,10 +365,30 @@ export default function TicketBooking() {
                             placeholder="Departure Station / City"
                             value={formData.from}
                             onChange={e => handleInputChange('from', e.target.value)}
+                            onFocus={() => setShowFromDropdown(true)}
+                            onBlur={() => setTimeout(() => setShowFromDropdown(false), 250)}
+                            autoComplete="off"
                             required
                           />
                           <span className="input-box-code">{getCityCode(formData.from, 'IND')}</span>
                         </div>
+                        {showFromDropdown && citiesFrom.length > 0 && (
+                          <div className="autocomplete-dropdown">
+                            {citiesFrom.map((c, idx) => (
+                              <div
+                                key={idx}
+                                className="autocomplete-item"
+                                onMouseDown={() => {
+                                  handleInputChange('from', `${c.name} (${c.code})`);
+                                  setShowFromDropdown(false);
+                                }}
+                              >
+                                <div className="autocomplete-item-name">{c.name} ({c.code})</div>
+                                <div className="autocomplete-item-sub">{c.state}, {c.country}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       {/* Interactive Swap Button */}
@@ -286,10 +419,30 @@ export default function TicketBooking() {
                             placeholder="Arrival Station / City"
                             value={formData.to}
                             onChange={e => handleInputChange('to', e.target.value)}
+                            onFocus={() => setShowToDropdown(true)}
+                            onBlur={() => setTimeout(() => setShowToDropdown(false), 250)}
+                            autoComplete="off"
                             required
                           />
                           <span className="input-box-code">{getCityCode(formData.to, 'BOM')}</span>
                         </div>
+                        {showToDropdown && citiesTo.length > 0 && (
+                          <div className="autocomplete-dropdown">
+                            {citiesTo.map((c, idx) => (
+                              <div
+                                key={idx}
+                                className="autocomplete-item"
+                                onMouseDown={() => {
+                                  handleInputChange('to', `${c.name} (${c.code})`);
+                                  setShowToDropdown(false);
+                                }}
+                              >
+                                <div className="autocomplete-item-name">{c.name} ({c.code})</div>
+                                <div className="autocomplete-item-sub">{c.state}, {c.country}</div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -388,8 +541,32 @@ export default function TicketBooking() {
                       </p>
                     </div>
 
+                    {/* Direct Booking Note */}
+                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
+                      <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: 10, padding: '12px 18px', gap: 12,
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: 18 }}>📲</span>
+                          <div>
+                            <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', fontFamily: 'DM Sans, sans-serif' }}>
+                              Direct Agent Booking
+                            </div>
+                            <div style={{ fontSize: 11, color: '#888', fontFamily: 'DM Sans, sans-serif' }}>
+                              No prepayment required. Rates will be confirmed by an agent.
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 10, color: '#ff4444', textAlign: 'right', maxWidth: 180, lineHeight: 1.4 }}>
+                          ⚡ Instant inquiry logged directly to Shivalay Travels database
+                        </div>
+                      </div>
+                    </div>
+
                     {/* 4. Giant Search Button */}
-                    <div className="span-4" style={{ marginTop: 'var(--spacing-16)' }}>
+                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
                       <button
                         type="submit"
                         className="travelgo-search-btn"
@@ -1020,6 +1197,49 @@ export default function TicketBooking() {
           from { transform: scale(0.96); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
         }
+        .travelgo-field-group {
+          position: relative;
+        }
+        .autocomplete-dropdown {
+          position: absolute;
+          top: calc(100% + 4px);
+          left: 0;
+          right: 0;
+          background: rgba(20, 20, 20, 0.96);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 8px;
+          z-index: 200;
+          max-height: 240px;
+          overflow-y: auto;
+          box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        .autocomplete-item {
+          padding: 12px 16px;
+          cursor: pointer;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+          transition: all 0.2s ease;
+        }
+        .autocomplete-item:last-child {
+          border-bottom: none;
+        }
+        .autocomplete-item:hover {
+          background: rgba(255, 0, 0, 0.08);
+          padding-left: 20px;
+        }
+        .autocomplete-item-name {
+          font-family: var(--font-primary);
+          font-size: 13px;
+          font-weight: 600;
+          color: #fff;
+        }
+        .autocomplete-item-sub {
+          font-family: var(--font-geist-mono);
+          font-size: 10px;
+          color: #666;
+          margin-top: 3px;
+        }
+
         @media (max-width: 1024px) {
           .travelgo-form-grid {
             grid-template-columns: repeat(2, 1fr);
