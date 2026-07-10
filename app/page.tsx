@@ -17,8 +17,12 @@ import { db } from '@/app/admin/lib/db';
 
 export default async function Home() {
   let settings: any = null;
+  let packages: any[] = [];
+  let guides: any[] = [];
   try {
     settings = await db.getSettings();
+    packages = await db.getPackages();
+    guides = await db.getGuides();
   } catch (err) {
     console.error('Failed to load settings from DB', err);
   }
@@ -49,7 +53,7 @@ export default async function Home() {
         <LogoStrip />
 
         {/* Destinations — filter chips + horizontal scroll tiles + expandable details */}
-        <Destinations />
+        <Destinations initialPackages={packages} />
 
         {/* How we work (4-step process) + FAQ accordion + philosophy */}
         <Philosophy />
@@ -70,7 +74,7 @@ export default async function Home() {
         <Memories />
 
         {/* Travel intelligence — categorised article guides */}
-        <TravelGuides />
+        <TravelGuides initialGuides={guides} />
 
         {/* CTA outro */}
         <EarthOutro settings={activeSettings} />

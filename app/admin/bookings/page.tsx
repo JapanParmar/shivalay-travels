@@ -663,7 +663,7 @@ export default function BookingsPage() {
         .modal-title { font-size: 15px; font-weight: 700; color: #fff; }
         .modal-close { background: rgba(255,255,255,0.06); border: none; color: #aaa; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 13px; }
         .modal-body { padding: 24px; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
         .form-group { display: flex; flex-direction: column; gap: 6px; }
         .form-lbl { font-size: 11px; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .form-input, .form-select, .form-textarea { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 12px; color: #fff; font-size: 13px; outline: none; font-family: 'DM Sans',sans-serif; width: 100%; }

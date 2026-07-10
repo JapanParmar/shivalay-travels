@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 type Difficulty = 'Easy' | 'Moderate' | 'Challenging' | 'Expedition';
 
@@ -27,7 +28,7 @@ const DIFFICULTY_LABEL: Record<Difficulty, string> = {
   Easy: '●', Moderate: '●●', Challenging: '●●●', Expedition: '●●●●',
 };
 
-export default function Destinations() {
+export default function Destinations({ initialPackages }: { initialPackages?: Destination[] }) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [expanded, setExpanded] = useState<string | null>(null);
   const [activeDot, setActiveDot] = useState(0);
@@ -36,9 +37,11 @@ export default function Destinations() {
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
+  const displayDestinations = initialPackages && initialPackages.length > 0 ? initialPackages : DESTINATIONS;
+
   const filtered = activeFilter === 'All'
-    ? DESTINATIONS
-    : DESTINATIONS.filter(d => d.tags.some(t => t.toLowerCase().includes(activeFilter.toLowerCase())));
+    ? displayDestinations
+    : displayDestinations.filter(d => d.tags.some(t => t.toLowerCase().includes(activeFilter.toLowerCase())));
 
   const onMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
@@ -150,7 +153,7 @@ export default function Destinations() {
                 style={{ width:300 , height: 380, cursor: 'pointer' }}
                 onClick={() => setExpanded(expanded === d.id ? null : d.id)}
               >
-                <img className="tile-img" src={d.imagePath} alt={d.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                <ImageWithSkeleton className="tile-img" src={d.imagePath} alt={d.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
 
                 <div style={{ position: 'absolute', top: 12, left: 12, right: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -187,9 +190,8 @@ export default function Destinations() {
           ))}
         </div>
 
-        {/* Expanded detail panel */}
         {expanded && (() => {
-          const d = DESTINATIONS.find(x => x.id === expanded)!;
+          const d = displayDestinations.find(x => x.id === expanded)!;
           return (
             <div
               key={expanded}
@@ -234,7 +236,7 @@ export default function Destinations() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                   <div className="img-zoom-wrap" style={{ height: 200, borderRadius: 'var(--radius-xl)' }}>
-                    <img src={d.imagePath} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <ImageWithSkeleton src={d.imagePath} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                   <p className="font-primary text-xs fw-medium uppercase ls-05 text-muted">Included in every journey</p>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>

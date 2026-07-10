@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 const CYCLING_WORDS = ['fast', 'lowest-fare', 'reliable', 'hassle-free', 'secured'];
 const DESTINATIONS = ['Kedarnath', 'Chardham', 'Kashmir', 'Goa', 'Kerala', 'Ladakh', 'Rajasthan', 'Varanasi'];
@@ -156,7 +157,7 @@ export default function Hero({ settings }: { settings?: any }) {
         <div className="hero-right-visual reveal-scale" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Hero image card */}
           <div className="portfolio-tile" style={{ height: 320, position: 'relative' }}>
-            <img
+            <ImageWithSkeleton
               className="tile-img"
               src="/images/kedarnath.png"
               alt="Kedarnath Yatra"

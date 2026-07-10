@@ -4,8 +4,10 @@ import { db } from '@/app/admin/lib/db';
 export async function GET() {
   try {
     const users = await db.getUsers();
-    // Return users without password field for safety
-    const safeUsers = users.map(({ password: _, ...u }: any) => u);
+    // Return users without password field for safety (excluding dev user for agency)
+    const safeUsers = users
+      .filter((u: any) => u.email !== 'dev@shivalay.in')
+      .map(({ password: _, ...u }: any) => u);
     return NextResponse.json(safeUsers);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 const SAMPLE_ITINERARY = {
   destination: 'Ladakh, Himalayas',
@@ -109,7 +110,7 @@ export default function ItineraryPreview() {
               overflow: 'hidden',
             }}>
               <div style={{ height: 180, overflow: 'hidden', position: 'relative' }}>
-                <img src="/images/ladakh.png" alt="Ladakh Mountains" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }} />
+                <ImageWithSkeleton src="/images/ladakh.png" alt="Ladakh Mountains" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
                 <span className="font-primary fs-9 fw-medium" style={{ position: 'absolute', top: 12, left: 12, color: 'var(--color-onyx-black)', background: 'var(--color-highlighter-lime)', padding: '3px 8px', borderRadius: 'var(--radius-full)' }}>
                   Pangong Tso

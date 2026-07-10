@@ -1,4 +1,5 @@
 'use client';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 const PAIN_POINTS = [
   { lead: 'Forget about', key: 'crowded commercial buses packed with tourists.' },
@@ -73,7 +74,7 @@ export default function DarkPanel() {
 
           {/* Col 3: Image */}
           <div className="img-zoom-wrap" style={{ height: 320, borderRadius: 'var(--radius-xl)', overflow: 'hidden', position: 'relative' }}>
-            <img src="/images/meghalaya.png" alt="Meghalaya" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <ImageWithSkeleton src="/images/meghalaya.png" alt="Meghalaya" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
             <div style={{ position: 'absolute', bottom: 14, left: 14, right: 14 }}>
               <p className="font-primary fs-9 fw-medium uppercase ls-1 text-muted" style={{ marginBottom: 4 }}>Raw Ecotourism</p>

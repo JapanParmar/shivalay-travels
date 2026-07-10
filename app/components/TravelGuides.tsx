@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 const GUIDES = [
   { category: 'Packing Guide', title: 'The ultimate cold desert packing checklist for Ladakh — what to carry in June vs September', readTime: '7 min read', badge: 'Popular', image: '/images/ladakh.png', icon: '🏔️' },
@@ -12,9 +13,10 @@ const GUIDES = [
 
 const CATEGORIES = ['All', 'Packing Guide', 'Destination Intel', 'Health & Safety', 'Culture'];
 
-export default function TravelGuides() {
+export default function TravelGuides({ initialGuides }: { initialGuides?: any[] }) {
   const [cat, setCat] = useState('All');
-  const filtered = cat === 'All' ? GUIDES : GUIDES.filter(g => g.category === cat);
+  const displayGuides = initialGuides && initialGuides.length > 0 ? initialGuides : GUIDES;
+  const filtered = cat === 'All' ? displayGuides : displayGuides.filter(g => g.category === cat);
 
   return (
     <section id="guides" style={{ background: 'var(--surface-canvas)', padding: '48px 0', borderBottom: '1px solid var(--color-zinc-hairline)' }}>
@@ -56,7 +58,7 @@ export default function TravelGuides() {
             >
               {/* Image */}
               <div className="img-zoom-wrap" style={{ height: 110, position: 'relative', overflow: 'hidden', borderRadius: 0 }}>
-                <img src={g.image} alt={g.category} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <ImageWithSkeleton src={g.image} alt={g.category} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'var(--gradient-visual-overlay)' }} />
                 <div style={{ position: 'absolute', bottom: 8, left: 12, display: 'flex', gap: 6, alignItems: 'center' }}>
                   <span style={{ fontSize: 13 }}>{g.icon}</span>

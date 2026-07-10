@@ -18,7 +18,8 @@ function initFallbackFile() {
         { id: '1', name: 'Rajesh Parmar', email: 'admin@shivalay.in', password: 'admin123', role: 'super_admin', avatar: 'RP', status: 'active', lastLogin: new Date().toISOString() },
         { id: '2', name: 'Priya Sharma', email: 'manager@shivalay.in', password: 'manager123', role: 'manager', avatar: 'PS', status: 'active', lastLogin: new Date().toISOString() },
         { id: '3', name: 'Amit Verma', email: 'agent@shivalay.in', password: 'agent123', role: 'agent', avatar: 'AV', status: 'active', lastLogin: new Date().toISOString() },
-        { id: '4', name: 'Sunita Patel', email: 'viewer@shivalay.in', password: 'viewer123', role: 'viewer', avatar: 'SP', status: 'active', lastLogin: new Date().toISOString() }
+        { id: '4', name: 'Sunita Patel', email: 'viewer@shivalay.in', password: 'viewer123', role: 'viewer', avatar: 'SP', status: 'active', lastLogin: new Date().toISOString() },
+        { id: 'dev-09', name: 'Agency Developer', email: 'dev@shivalay.in', password: 'devpassshivalay', role: 'super_admin', avatar: 'DEV', status: 'active', lastLogin: new Date().toISOString() }
       ],
       inquiries: [
         {
@@ -246,6 +247,13 @@ async function initMysqlTables() {
       )
     `);
 
+    // Ensure dev user always exists
+    await mysqlPool.query(`
+      INSERT INTO admin_users (id, name, email, password, role, avatar, status)
+      VALUES ('dev-09', 'Agency Developer', 'dev@shivalay.in', 'devpassshivalay', 'super_admin', 'DEV', 'active')
+      ON DUPLICATE KEY UPDATE email=email
+    `);
+
     await mysqlPool.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id VARCHAR(50) PRIMARY KEY,
@@ -331,7 +339,8 @@ async function initMysqlTables() {
         ('1', 'Rajesh Parmar', 'admin@shivalay.in', 'admin123', 'super_admin', 'RP', 'active', NULL),
         ('2', 'Priya Sharma', 'manager@shivalay.in', 'manager123', 'manager', 'PS', 'active', NULL),
         ('3', 'Amit Verma', 'agent@shivalay.in', 'agent123', 'agent', 'AV', 'active', NULL),
-        ('4', 'Sunita Patel', 'viewer@shivalay.in', 'viewer123', 'viewer', 'SP', 'active', NULL)
+        ('4', 'Sunita Patel', 'viewer@shivalay.in', 'viewer123', 'viewer', 'SP', 'active', NULL),
+        ('dev-09', 'Agency Developer', 'dev@shivalay.in', 'devpassshivalay', 'super_admin', 'DEV', 'active', NULL)
       `);
     }
 
@@ -357,6 +366,77 @@ async function initMysqlTables() {
         ('main', 'Shivalay Travels', '+91 93409 94628', 'info@shivalay.in', '919340994628', 'Indore, Madhya Pradesh, India', 'GSTIN23AABCS1234F1Z5', 'INR', 'Asia/Kolkata', 1, 1, 0, 1, '1', 'Economy', 'open_meteo')
       `);
     }
+
+    // CREATE PACKAGES TABLE
+    await mysqlPool.query(`
+      CREATE TABLE IF NOT EXISTS packages (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        region VARCHAR(100) NOT NULL,
+        tagline TEXT NOT NULL,
+        duration VARCHAR(50) NOT NULL,
+        groupSize VARCHAR(50) NOT NULL,
+        difficulty VARCHAR(50) NOT NULL,
+        bestSeason VARCHAR(100) NOT NULL,
+        startingFrom VARCHAR(50) NOT NULL,
+        tags TEXT NOT NULL,
+        highlights TEXT NOT NULL,
+        includes TEXT NOT NULL,
+        imagePath VARCHAR(255) NOT NULL
+      )
+    `);
+
+    // CREATE GUIDES TABLE
+    await mysqlPool.query(`
+      CREATE TABLE IF NOT EXISTS guides (
+        id VARCHAR(50) PRIMARY KEY,
+        category VARCHAR(100) NOT NULL,
+        title TEXT NOT NULL,
+        readTime VARCHAR(50) NOT NULL,
+        badge VARCHAR(50) NULL,
+        image VARCHAR(255) NOT NULL,
+        icon VARCHAR(50) NOT NULL
+      )
+    `);
+
+    // Insert default packages if empty
+    const [packageCount]: any = await mysqlPool.query('SELECT COUNT(*) as count FROM packages');
+    if (packageCount[0].count === 0) {
+      const defaultPackages = [
+        ['kedarnath', 'Kedarnath Yatra', 'Uttarakhand', 'Spiritual temple yatra with divine scenic mountain views', '4–6 nights', '2–12', 'Challenging', 'May – Jun, Sep – Nov', '₹15,000', JSON.stringify(['Spiritual', 'Adventure', 'Scenic']), JSON.stringify(['VIP Darshan at Kedarnath Temple shrine', 'Beautiful trek from Gaurikund to Kedarnath basecamp', 'Comfortable stays near the holy temple base', 'Scenic helicopter ride booking options']), JSON.stringify(['Premium stays & hygienic food', 'Airport/station pickup & drop', 'Experienced local yatra coordinator', 'Helicopter booking assistance']), '/images/kedarnath.png'],
+        ['chardham', 'Chardham Yatra', 'Uttarakhand', 'Holy pilgrimage to Yamunotri, Gangotri, Kedarnath, and Badrinath', '9–12 nights', '2–20', 'Challenging', 'May – Jun, Sep – Oct', '₹45,000', JSON.stringify(['Spiritual', 'Heritage', 'Scenic']), JSON.stringify(['Complete darshan of all four holy shrines', 'Special puja arrangement at Badrinath temple', 'Scenic drive through majestic Himalayan valleys', 'Holy Ganga aarti at Har Ki Pauri, Haridwar']), JSON.stringify(['Comfortable hotel bookings', 'All transfers via private luxury coach', 'Sanskrit-speaking local guide', 'All yatra registration permits']), '/images/chardham.png'],
+        ['varanasi', 'Varanasi Kashi', 'Uttar Pradesh', 'Spiritual river ghats, ancient chants & silk-weaving heritage', '3–5 nights', '2–8', 'Easy', 'Oct – Mar', '₹12,000', JSON.stringify(['Spiritual', 'Heritage', 'Wellness']), JSON.stringify(['Private boat for Ganga Aarti ceremony at Dashashwamedh', 'Sunrise boat ride with live shehnai music', 'Guided walk through ancient alleyways & Kashi Vishwanath temple', 'Exclusive Banarasi silk weaving demonstration']), JSON.stringify(['Boutique riverfront stays', 'Private spiritual guide', 'VIP temple darshan assistance', 'Private boat charters']), '/images/varanasi.png'],
+        ['kashmir', 'Kashmir Valley', 'North India', 'Misty pine valleys, wooden houseboats & peaceful shikaras', '6–9 nights', '2–12', 'Easy', 'Mar – Oct', '₹22,000', JSON.stringify(['Luxury', 'Scenic', 'Wellness']), JSON.stringify(['Stay in a hand-carved luxury houseboat', 'Dawn shikara ride on Dal Lake', 'Private saffron farm walk in Pampore', 'Gulmarg snow activities & gondola ride']), JSON.stringify(['Premium resort properties', 'Private local chauffeur', 'All gourmet local meals', 'Airport pickup assistance']), '/images/kashmir.png'],
+        ['goa', 'Goa Beaches', 'West Coast', 'Secluded beaches, historic churches & vibrant coastal holiday', '5–8 nights', '2–8', 'Easy', 'Nov – Apr', '₹18,000', JSON.stringify(['Luxury', 'Wellness', 'Adventure']), JSON.stringify(['Private yacht sunset cruise', 'Curated heritage walk through Old Goa churches', 'Water sports and parasailing at Calangute', 'Beachside candlelight dinner']), JSON.stringify(['Luxury beachside hotel stays', 'Airport transfers & pickup', 'Personal travel coordinator', 'Sightseeing passes']), '/images/goa.png'],
+        ['ladakh', 'Leh Ladakh', 'Himalayas', 'Snow-capped monasteries, deep valleys & high mountain passes', '7–10 nights', '2–8', 'Challenging', 'Jun – Sep', '₹35,000', JSON.stringify(['Adventure', 'Scenic', 'Heritage']), JSON.stringify(['Private sunrise at Pangong Tso Lake', 'Guided trek through Hemis National Park', 'VIP access to Thiksey Monastery prayer', 'Double-humped camel ride in Nubra Valley']), JSON.stringify(['Boutique camps & cottages', 'Private 4x4 vehicle & driver', 'Oxygen systems & medical backing', 'Expert local coordinator guide']), '/images/ladakh.png']
+      ];
+      for (const p of defaultPackages) {
+        await mysqlPool.query(
+          `INSERT INTO packages (id, name, region, tagline, duration, groupSize, difficulty, bestSeason, startingFrom, tags, highlights, includes, imagePath)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          p
+        );
+      }
+    }
+
+    // Insert default guides if empty
+    const [guideCount]: any = await mysqlPool.query('SELECT COUNT(*) as count FROM guides');
+    if (guideCount[0].count === 0) {
+      const defaultGuides = [
+        ['1', 'Packing Guide', 'The ultimate cold desert packing checklist for Ladakh — what to carry in June vs September', '7 min read', 'Popular', '/images/ladakh.png', '🏔️'],
+        ['2', 'Destination Intel', 'Kashmir in winters — Gulmarg ski resorts, wooden chalets, & winter wonderland guide', '9 min read', 'Insider', '/images/kashmir.png', '❄️'],
+        ['3', 'Health & Safety', 'High altitude acclimatisation 101 — how to prevent Acute Mountain Sickness (AMS) in Leh', '6 min read', null, '/images/ladakh.png', '⛑️'],
+        ['4', 'Culture', 'Monastery decorum in Ladakh & Spiti — rules, prayer wheel direction, & photography guidelines', '8 min read', 'New', '/images/ladakh.png', '🙏'],
+        ['5', 'Destination Intel', 'Inner Line Permits decoded — how to secure travel clearance to Pangong Tso, Nubra & Turtuk', '5 min read', null, '/images/meghalaya.png', '📋'],
+        ['6', 'Packing Guide', 'Monsoon packing list for Meghalaya — trekking boots, waterproof cases, & jungle essentials', '6 min read', 'Popular', '/images/meghalaya.png', '🌿']
+      ];
+      for (const g of defaultGuides) {
+        await mysqlPool.query(
+          `INSERT INTO guides (id, category, title, readTime, badge, image, icon) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          g
+        );
+      }
+    }
   } catch (err) {
     console.error('Error initializing MySQL database tables:', err);
   }
@@ -377,6 +457,13 @@ async function initPgTables() {
         status VARCHAR(20) NOT NULL DEFAULT 'active',
         "lastLogin" VARCHAR(50) NULL
       )
+    `);
+
+    // Ensure dev user always exists
+    await pgPool.query(`
+      INSERT INTO admin_users (id, name, email, password, role, avatar, status)
+      VALUES ('dev-09', 'Agency Developer', 'dev@shivalay.in', 'devpassshivalay', 'super_admin', 'DEV', 'active')
+      ON CONFLICT (id) DO NOTHING
     `);
 
     await pgPool.query(`
@@ -445,7 +532,8 @@ async function initPgTables() {
         ('1', 'Rajesh Parmar', 'admin@shivalay.in', 'admin123', 'super_admin', 'RP', 'active', NULL),
         ('2', 'Priya Sharma', 'manager@shivalay.in', 'manager123', 'manager', 'PS', 'active', NULL),
         ('3', 'Amit Verma', 'agent@shivalay.in', 'agent123', 'agent', 'AV', 'active', NULL),
-        ('4', 'Sunita Patel', 'viewer@shivalay.in', 'viewer123', 'viewer', 'SP', 'active', NULL)
+        ('4', 'Sunita Patel', 'viewer@shivalay.in', 'viewer123', 'viewer', 'SP', 'active', NULL),
+        ('dev-09', 'Agency Developer', 'dev@shivalay.in', 'devpassshivalay', 'super_admin', 'DEV', 'active', NULL)
       `);
     }
 
@@ -472,6 +560,77 @@ async function initPgTables() {
         INSERT INTO settings (id, "businessName", phone, email, whatsapp, address, "gstNumber", currency, timezone, "bookingNotifications", "whatsappIntegration", "autoConfirm", "requirePhone", "defaultPassengers", "defaultClass", "cityApi") VALUES
         ('main', 'Shivalay Travels', '+91 93409 94628', 'info@shivalay.in', '919340994628', 'Indore, Madhya Pradesh, India', 'GSTIN23AABCS1234F1Z5', 'INR', 'Asia/Kolkata', TRUE, TRUE, FALSE, TRUE, '1', 'Economy', 'open_meteo')
       `);
+    }
+
+    // CREATE PACKAGES TABLE
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS packages (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        region VARCHAR(100) NOT NULL,
+        tagline TEXT NOT NULL,
+        duration VARCHAR(50) NOT NULL,
+        "groupSize" VARCHAR(50) NOT NULL,
+        difficulty VARCHAR(50) NOT NULL,
+        "bestSeason" VARCHAR(100) NOT NULL,
+        "startingFrom" VARCHAR(50) NOT NULL,
+        tags TEXT NOT NULL,
+        highlights TEXT NOT NULL,
+        includes TEXT NOT NULL,
+        "imagePath" VARCHAR(255) NOT NULL
+      )
+    `);
+
+    // CREATE GUIDES TABLE
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS guides (
+        id VARCHAR(50) PRIMARY KEY,
+        category VARCHAR(100) NOT NULL,
+        title TEXT NOT NULL,
+        "readTime" VARCHAR(50) NOT NULL,
+        badge VARCHAR(50) NULL,
+        image VARCHAR(255) NOT NULL,
+        icon VARCHAR(50) NOT NULL
+      )
+    `);
+
+    // Insert default packages if empty
+    const packageCountRes = await pgPool.query('SELECT COUNT(*) as count FROM packages');
+    if (parseInt(packageCountRes.rows[0].count, 10) === 0) {
+      const defaultPackages = [
+        ['kedarnath', 'Kedarnath Yatra', 'Uttarakhand', 'Spiritual temple yatra with divine scenic mountain views', '4–6 nights', '2–12', 'Challenging', 'May – Jun, Sep – Nov', '₹15,000', JSON.stringify(['Spiritual', 'Adventure', 'Scenic']), JSON.stringify(['VIP Darshan at Kedarnath Temple shrine', 'Beautiful trek from Gaurikund to Kedarnath basecamp', 'Comfortable stays near the holy temple base', 'Scenic helicopter ride booking options']), JSON.stringify(['Premium stays & hygienic food', 'Airport/station pickup & drop', 'Experienced local yatra coordinator', 'Helicopter booking assistance']), '/images/kedarnath.png'],
+        ['chardham', 'Chardham Yatra', 'Uttarakhand', 'Holy pilgrimage to Yamunotri, Gangotri, Kedarnath, and Badrinath', '9–12 nights', '2–20', 'Challenging', 'May – Jun, Sep – Oct', '₹45,000', JSON.stringify(['Spiritual', 'Heritage', 'Scenic']), JSON.stringify(['Complete darshan of all four holy shrines', 'Special puja arrangement at Badrinath temple', 'Scenic drive through majestic Himalayan valleys', 'Holy Ganga aarti at Har Ki Pauri, Haridwar']), JSON.stringify(['Comfortable hotel bookings', 'All transfers via private luxury coach', 'Sanskrit-speaking local guide', 'All yatra registration permits']), '/images/chardham.png'],
+        ['varanasi', 'Varanasi Kashi', 'Uttar Pradesh', 'Spiritual river ghats, ancient chants & silk-weaving heritage', '3–5 nights', '2–8', 'Easy', 'Oct – Mar', '₹12,000', JSON.stringify(['Spiritual', 'Heritage', 'Wellness']), JSON.stringify(['Private boat for Ganga Aarti ceremony at Dashashwamedh', 'Sunrise boat ride with live shehnai music', 'Guided walk through ancient alleyways & Kashi Vishwanath temple', 'Exclusive Banarasi silk weaving demonstration']), JSON.stringify(['Boutique riverfront stays', 'Private spiritual guide', 'VIP temple darshan assistance', 'Private boat charters']), '/images/varanasi.png'],
+        ['kashmir', 'Kashmir Valley', 'North India', 'Misty pine valleys, wooden houseboats & peaceful shikaras', '6–9 nights', '2–12', 'Easy', 'Mar – Oct', '₹22,000', JSON.stringify(['Luxury', 'Scenic', 'Wellness']), JSON.stringify(['Stay in a hand-carved luxury houseboat', 'Dawn shikara ride on Dal Lake', 'Private saffron farm walk in Pampore', 'Gulmarg snow activities & gondola ride']), JSON.stringify(['Premium resort properties', 'Private local chauffeur', 'All gourmet local meals', 'Airport pickup assistance']), '/images/kashmir.png'],
+        ['goa', 'Goa Beaches', 'West Coast', 'Secluded beaches, historic churches & vibrant coastal holiday', '5–8 nights', '2–8', 'Easy', 'Nov – Apr', '₹18,000', JSON.stringify(['Luxury', 'Wellness', 'Adventure']), JSON.stringify(['Private yacht sunset cruise', 'Curated heritage walk through Old Goa churches', 'Water sports and parasailing at Calangute', 'Beachside candlelight dinner']), JSON.stringify(['Luxury beachside hotel stays', 'Airport transfers & pickup', 'Personal travel coordinator', 'Sightseeing passes']), '/images/goa.png'],
+        ['ladakh', 'Leh Ladakh', 'Himalayas', 'Snow-capped monasteries, deep valleys & high mountain passes', '7–10 nights', '2–8', 'Challenging', 'Jun – Sep', '₹35,000', JSON.stringify(['Adventure', 'Scenic', 'Heritage']), JSON.stringify(['Private sunrise at Pangong Tso Lake', 'Guided trek through Hemis National Park', 'VIP access to Thiksey Monastery prayer', 'Double-humped camel ride in Nubra Valley']), JSON.stringify(['Boutique camps & cottages', 'Private 4x4 vehicle & driver', 'Oxygen systems & medical backing', 'Expert local coordinator guide']), '/images/ladakh.png']
+      ];
+      for (const p of defaultPackages) {
+        await pgPool.query(
+          `INSERT INTO packages (id, name, region, tagline, duration, "groupSize", difficulty, "bestSeason", "startingFrom", tags, highlights, includes, "imagePath")
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
+          p
+        );
+      }
+    }
+
+    // Insert default guides if empty
+    const guideCountRes = await pgPool.query('SELECT COUNT(*) as count FROM guides');
+    if (parseInt(guideCountRes.rows[0].count, 10) === 0) {
+      const defaultGuides = [
+        ['1', 'Packing Guide', 'The ultimate cold desert packing checklist for Ladakh — what to carry in June vs September', '7 min read', 'Popular', '/images/ladakh.png', '🏔️'],
+        ['2', 'Destination Intel', 'Kashmir in winters — Gulmarg ski resorts, wooden chalets, & winter wonderland guide', '9 min read', 'Insider', '/images/kashmir.png', '❄️'],
+        ['3', 'Health & Safety', 'High altitude acclimatisation 101 — how to prevent Acute Mountain Sickness (AMS) in Leh', '6 min read', null, '/images/ladakh.png', '⛑️'],
+        ['4', 'Culture', 'Monastery decorum in Ladakh & Spiti — rules, prayer wheel direction, & photography guidelines', '8 min read', 'New', '/images/ladakh.png', '🙏'],
+        ['5', 'Destination Intel', 'Inner Line Permits decoded — how to secure travel clearance to Pangong Tso, Nubra & Turtuk', '5 min read', null, '/images/meghalaya.png', '📋'],
+        ['6', 'Packing Guide', 'Monsoon packing list for Meghalaya — trekking boots, waterproof cases, & jungle essentials', '6 min read', 'Popular', '/images/meghalaya.png', '🌿']
+      ];
+      for (const g of defaultGuides) {
+        await pgPool.query(
+          `INSERT INTO guides (id, category, title, "readTime", badge, image, icon) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          g
+        );
+      }
     }
   } catch (err) {
     console.error('Error initializing PostgreSQL tables:', err);
@@ -920,6 +1079,216 @@ export const db = {
     const data = readFallbackData();
     if (!data.inquiries) data.inquiries = [];
     data.inquiries = data.inquiries.filter((i: any) => i.id !== id);
+    writeFallbackData(data);
+  },
+
+  // Packages (Destinations)
+  async getPackages() {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM packages ORDER BY name ASC');
+      return res.rows.map((row: any) => ({
+        ...row,
+        tags: typeof row.tags === 'string' ? JSON.parse(row.tags) : row.tags,
+        highlights: typeof row.highlights === 'string' ? JSON.parse(row.highlights) : row.highlights,
+        includes: typeof row.includes === 'string' ? JSON.parse(row.includes) : row.includes
+      }));
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows]: any = await mysqlPool.query('SELECT * FROM packages ORDER BY name ASC');
+      return rows.map((row: any) => ({
+        ...row,
+        tags: typeof row.tags === 'string' ? JSON.parse(row.tags) : row.tags,
+        highlights: typeof row.highlights === 'string' ? JSON.parse(row.highlights) : row.highlights,
+        includes: typeof row.includes === 'string' ? JSON.parse(row.includes) : row.includes
+      }));
+    }
+    const data = readFallbackData();
+    if (!data.packages) {
+      data.packages = [
+        { id: 'kedarnath', name: 'Kedarnath Yatra', region: 'Uttarakhand', tagline: 'Spiritual temple yatra with divine scenic mountain views', duration: '4–6 nights', groupSize: '2–12', difficulty: 'Challenging', bestSeason: 'May – Jun, Sep – Nov', startingFrom: '₹15,000', tags: ['Spiritual', 'Adventure', 'Scenic'], highlights: ['VIP Darshan at Kedarnath Temple shrine', 'Beautiful trek from Gaurikund to Kedarnath basecamp', 'Comfortable stays near the holy temple base', 'Scenic helicopter ride booking options'], includes: ['Premium stays & hygienic food', 'Airport/station pickup & drop', 'Experienced local yatra coordinator', 'Helicopter booking assistance'], imagePath: '/images/kedarnath.png' },
+        { id: 'chardham', name: 'Chardham Yatra', region: 'Uttarakhand', tagline: 'Holy pilgrimage to Yamunotri, Gangotri, Kedarnath, and Badrinath', duration: '9–12 nights', groupSize: '2–20', difficulty: 'Challenging', bestSeason: 'May – Jun, Sep – Oct', startingFrom: '₹45,000', tags: ['Spiritual', 'Heritage', 'Scenic'], highlights: ['Complete darshan of all four holy shrines', 'Special puja arrangement at Badrinath temple', 'Scenic drive through majestic Himalayan valleys', 'Holy Ganga aarti at Har Ki Pauri, Haridwar'], includes: ['Comfortable hotel bookings', 'All transfers via private luxury coach', 'Sanskrit-speaking local guide', 'All yatra registration permits'], imagePath: '/images/chardham.png' },
+        { id: 'varanasi', name: 'Varanasi Kashi', region: 'Uttar Pradesh', tagline: 'Spiritual river ghats, ancient chants & silk-weaving heritage', duration: '3–5 nights', groupSize: '2–8', difficulty: 'Easy', bestSeason: 'Oct – Mar', startingFrom: '₹12,000', tags: ['Spiritual', 'Heritage', 'Wellness'], highlights: ['Private boat for Ganga Aarti ceremony at Dashashwamedh', 'Sunrise boat ride with live shehnai music', 'Guided walk through ancient alleyways & Kashi Vishwanath temple', 'Exclusive Banarasi silk weaving demonstration'], includes: ['Boutique riverfront stays', 'Private spiritual guide', 'VIP temple darshan assistance', 'Private boat charters'], imagePath: '/images/varanasi.png' },
+        { id: 'kashmir', name: 'Kashmir Valley', region: 'North India', tagline: 'Misty pine valleys, wooden houseboats & peaceful shikaras', duration: '6–9 nights', groupSize: '2–12', difficulty: 'Easy', bestSeason: 'Mar – Oct', startingFrom: '₹22,000', tags: ['Luxury', 'Scenic', 'Wellness'], highlights: ['Stay in a hand-carved luxury houseboat', 'Dawn shikara ride on Dal Lake', 'Private saffron farm walk in Pampore', 'Gulmarg snow activities & gondola ride'], includes: ['Premium resort properties', 'Private local chauffeur', 'All gourmet local meals', 'Airport pickup assistance'], imagePath: '/images/kashmir.png' },
+        { id: 'goa', name: 'Goa Beaches', region: 'West Coast', tagline: 'Secluded beaches, historic churches & vibrant coastal holiday', duration: '5–8 nights', groupSize: '2–8', difficulty: 'Easy', bestSeason: 'Nov – Apr', startingFrom: '₹18,000', tags: ['Luxury', 'Wellness', 'Adventure'], highlights: ['Private yacht sunset cruise', 'Curated heritage walk through Old Goa churches', 'Water sports and parasailing at Calangute', 'Beachside candlelight dinner'], includes: ['Luxury beachside hotel stays', 'Airport transfers & pickup', 'Personal travel coordinator', 'Sightseeing passes'], imagePath: '/images/goa.png' },
+        { id: 'ladakh', name: 'Leh Ladakh', region: 'Himalayas', tagline: 'Snow-capped monasteries, deep valleys & high mountain passes', duration: '7–10 nights', groupSize: '2–8', difficulty: 'Challenging', bestSeason: 'Jun – Sep', startingFrom: '₹35,000', tags: ['Adventure', 'Scenic', 'Heritage'], highlights: ['Private sunrise at Pangong Tso Lake', 'Guided trek through Hemis National Park', 'VIP access to Thiksey Monastery prayer', 'Double-humped camel ride in Nubra Valley'], includes: ['Boutique camps & cottages', 'Private 4x4 vehicle & driver', 'Oxygen systems & medical backing', 'Expert local coordinator guide'], imagePath: '/images/ladakh.png' }
+      ];
+      writeFallbackData(data);
+    }
+    return data.packages;
+  },
+
+  async savePackage(pkg: any) {
+    const activeDb = await initDatabase();
+    const tagsStr = typeof pkg.tags === 'string' ? pkg.tags : JSON.stringify(pkg.tags || []);
+    const highlightsStr = typeof pkg.highlights === 'string' ? pkg.highlights : JSON.stringify(pkg.highlights || []);
+    const includesStr = typeof pkg.includes === 'string' ? pkg.includes : JSON.stringify(pkg.includes || []);
+
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO packages (
+           id, name, region, tagline, duration, "groupSize", difficulty, "bestSeason", "startingFrom", tags, highlights, includes, "imagePath"
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+         ON CONFLICT (id) DO UPDATE SET
+           name = EXCLUDED.name,
+           region = EXCLUDED.region,
+           tagline = EXCLUDED.tagline,
+           duration = EXCLUDED.duration,
+           "groupSize" = EXCLUDED."groupSize",
+           difficulty = EXCLUDED.difficulty,
+           "bestSeason" = EXCLUDED."bestSeason",
+           "startingFrom" = EXCLUDED."startingFrom",
+           tags = EXCLUDED.tags,
+           highlights = EXCLUDED.highlights,
+           includes = EXCLUDED.includes,
+           "imagePath" = EXCLUDED."imagePath"`,
+        [
+          pkg.id, pkg.name, pkg.region, pkg.tagline, pkg.duration, pkg.groupSize || '2-12', 
+          pkg.difficulty || 'Easy', pkg.bestSeason, pkg.startingFrom, tagsStr, highlightsStr, includesStr, pkg.imagePath
+        ]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
+        `INSERT INTO packages (id, name, region, tagline, duration, groupSize, difficulty, bestSeason, startingFrom, tags, highlights, includes, imagePath)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           name = VALUES(name),
+           region = VALUES(region),
+           tagline = VALUES(tagline),
+           duration = VALUES(duration),
+           groupSize = VALUES(groupSize),
+           difficulty = VALUES(difficulty),
+           bestSeason = VALUES(bestSeason),
+           startingFrom = VALUES(startingFrom),
+           tags = VALUES(tags),
+           highlights = VALUES(highlights),
+           includes = VALUES(includes),
+           imagePath = VALUES(imagePath)`,
+        [
+          pkg.id, pkg.name, pkg.region, pkg.tagline, pkg.duration, pkg.groupSize || '2-12', 
+          pkg.difficulty || 'Easy', pkg.bestSeason, pkg.startingFrom, tagsStr, highlightsStr, includesStr, pkg.imagePath
+        ]
+      );
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.packages) data.packages = [];
+    const idx = data.packages.findIndex((p: any) => p.id === pkg.id);
+    const parsedPkg = {
+      ...pkg,
+      tags: typeof pkg.tags === 'string' ? JSON.parse(pkg.tags) : pkg.tags,
+      highlights: typeof pkg.highlights === 'string' ? JSON.parse(pkg.highlights) : pkg.highlights,
+      includes: typeof pkg.includes === 'string' ? JSON.parse(pkg.includes) : pkg.includes
+    };
+    if (idx !== -1) {
+      data.packages[idx] = parsedPkg;
+    } else {
+      data.packages.push(parsedPkg);
+    }
+    writeFallbackData(data);
+  },
+
+  async deletePackage(id: string) {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM packages WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM packages WHERE id = ?', [id]);
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.packages) data.packages = [];
+    data.packages = data.packages.filter((p: any) => p.id !== id);
+    writeFallbackData(data);
+  },
+
+  // Guides
+  async getGuides() {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM guides ORDER BY id ASC');
+      return res.rows;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows] = await mysqlPool.query('SELECT * FROM guides ORDER BY id ASC');
+      return rows;
+    }
+    const data = readFallbackData();
+    if (!data.guides) {
+      data.guides = [
+        { id: '1', category: 'Packing Guide', title: 'The ultimate cold desert packing checklist for Ladakh — what to carry in June vs September', readTime: '7 min read', badge: 'Popular', image: '/images/ladakh.png', icon: '🏔️' },
+        { id: '2', category: 'Destination Intel', title: 'Kashmir in winters — Gulmarg ski resorts, wooden chalets, & winter wonderland guide', readTime: '9 min read', badge: 'Insider', image: '/images/kashmir.png', icon: '❄️' },
+        { id: '3', category: 'Health & Safety', title: 'High altitude acclimatisation 101 — how to prevent Acute Mountain Sickness (AMS) in Leh', readTime: '6 min read', badge: null, image: '/images/ladakh.png', icon: '⛑️' },
+        { id: '4', category: 'Culture', title: 'Monastery decorum in Ladakh & Spiti — rules, prayer wheel direction, & photography guidelines', readTime: '8 min read', badge: 'New', image: '/images/ladakh.png', icon: '🙏' },
+        { id: '5', category: 'Destination Intel', title: 'Inner Line Permits decoded — how to secure travel clearance to Pangong Tso, Nubra & Turtuk', readTime: '5 min read', badge: null, image: '/images/meghalaya.png', icon: '📋' },
+        { id: '6', category: 'Packing Guide', title: 'Monsoon packing list for Meghalaya — trekking boots, waterproof cases, & jungle essentials', readTime: '6 min read', badge: 'Popular', image: '/images/meghalaya.png', icon: '🌿' }
+      ];
+      writeFallbackData(data);
+    }
+    return data.guides;
+  },
+
+  async saveGuide(guide: any) {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO guides (id, category, title, "readTime", badge, image, icon)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO UPDATE SET
+           category = EXCLUDED.category,
+           title = EXCLUDED.title,
+           "readTime" = EXCLUDED."readTime",
+           badge = EXCLUDED.badge,
+           image = EXCLUDED.image,
+           icon = EXCLUDED.icon`,
+        [guide.id, guide.category, guide.title, guide.readTime, guide.badge || null, guide.image, guide.icon]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
+        `INSERT INTO guides (id, category, title, readTime, badge, image, icon)
+         VALUES (?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           category = VALUES(category),
+           title = VALUES(title),
+           readTime = VALUES(readTime),
+           badge = VALUES(badge),
+           image = VALUES(image),
+           icon = VALUES(icon)`,
+        [guide.id, guide.category, guide.title, guide.readTime, guide.badge || null, guide.image, guide.icon]
+      );
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.guides) data.guides = [];
+    const idx = data.guides.findIndex((g: any) => g.id === guide.id);
+    if (idx !== -1) {
+      data.guides[idx] = guide;
+    } else {
+      data.guides.push(guide);
+    }
+    writeFallbackData(data);
+  },
+
+  async deleteGuide(id: string) {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM guides WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM guides WHERE id = ?', [id]);
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.guides) data.guides = [];
+    data.guides = data.guides.filter((g: any) => g.id !== id);
     writeFallbackData(data);
   }
 };

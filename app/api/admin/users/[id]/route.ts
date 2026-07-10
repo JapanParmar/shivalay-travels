@@ -9,6 +9,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (!existing) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
+    if (existing.email === 'dev@shivalay.in') {
+      return NextResponse.json({ error: 'Unauthorized operation' }, { status: 403 });
+    }
 
     const updated = {
       ...existing,
@@ -27,6 +30,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const id = (await params).id;
+    const existing = (await db.getUsers()).find((u: any) => u.id === id);
+    if (existing && existing.email === 'dev@shivalay.in') {
+      return NextResponse.json({ error: 'Unauthorized operation' }, { status: 403 });
+    }
     await db.deleteUser(id);
     return NextResponse.json({ success: true });
   } catch (error: any) {

@@ -844,3 +844,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .footer-links-grid { grid-template-columns: 1fr; gap: 24px; }
   .process-grid { grid-template-columns: 1fr; }
 }
+
+/* Custom Select Dropdown Styling Overrides */
+select, select *, option {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+  color-scheme: dark !important;
+}
+
