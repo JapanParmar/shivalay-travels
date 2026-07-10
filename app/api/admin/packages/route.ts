@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/app/admin/lib/db';
 
+const DEV_TOKEN = process.env.DEV_CMS_TOKEN || 'shivalay-dev-cms-2026';
+
+function isDevRequest(request: Request): boolean {
+  return request.headers.get('x-dev-token') === DEV_TOKEN;
+}
+
 export async function GET() {
   try {
     const packages = await db.getPackages();
@@ -11,6 +17,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!isDevRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized — developer access only.' }, { status: 403 });
+  }
   try {
     const body = await request.json();
     if (!body.id) {

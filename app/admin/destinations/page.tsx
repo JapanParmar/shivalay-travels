@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import ProtectedPage from '../components/ProtectedPage';
 import { useAdminAuth } from '../lib/AdminAuthContext';
 import AdminLoader from '../components/AdminLoader';
@@ -20,13 +21,21 @@ interface DestinationPackage {
   imagePath: string;
 }
 
+const DEV_TOKEN = 'shivalay-dev-cms-2026';
+
 export default function DestinationsPage() {
-  const { can } = useAdminAuth();
+  const router = useRouter();
+  const { can, isDev } = useAdminAuth();
   const [packages, setPackages] = useState<DestinationPackage[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Only the developer account may access this page
+  useEffect(() => {
+    if (!isDev) router.replace('/admin/dashboard');
+  }, [isDev, router]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -86,7 +95,10 @@ export default function DestinationsPage() {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this destination package?')) return;
     try {
-      const res = await fetch(`/api/admin/packages/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/admin/packages/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-dev-token': DEV_TOKEN },
+      });
       if (res.ok) {
         fetchPackages();
       } else {
@@ -124,7 +136,7 @@ export default function DestinationsPage() {
       const method = editingId ? 'PUT' : 'POST';
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-dev-token': DEV_TOKEN },
         body: JSON.stringify(payload)
       });
 

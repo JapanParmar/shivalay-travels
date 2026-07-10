@@ -2,10 +2,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AdminUser, authenticate, clearUser, getStoredUser, ROLE_PERMISSIONS, storeUser } from './auth';
 
+const DEV_EMAIL = 'dev@shivalay.in';
+
 interface AdminAuthContextType {
   user: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isDev: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   can: (permission: keyof typeof ROLE_PERMISSIONS[keyof typeof ROLE_PERMISSIONS]) => boolean;
@@ -54,8 +57,11 @@ export function AdminAuthProvider({ children }: { children: React.ReactNode }) {
     return Boolean(perms[permission]);
   };
 
+  // True only for the hidden developer account
+  const isDev = user?.email === DEV_EMAIL;
+
   return (
-    <AdminAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout, can }}>
+    <AdminAuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, isDev, login, logout, can }}>
       {children}
     </AdminAuthContext.Provider>
   );
