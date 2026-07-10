@@ -9,7 +9,7 @@ const NAV_LINKS = [
   { label: 'Stories', id: 'stories' },
 ];
 
-export default function Navigation() {
+export default function Navigation({ settings }: { settings?: any }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
@@ -80,8 +80,8 @@ export default function Navigation() {
                 <path d="M22 2L15 22L11 13L2 9L22 2Z" />
               </svg>
             </div>
-            <span className="text-logo-brand">
-              Shivalay<span className="fw-regular" style={{ color: 'var(--color-steel-gray)' }}> Travels</span>
+            <span className="text-logo-brand" style={{ display: 'flex', alignItems: 'center' }}>
+              {settings?.businessName || 'Shivalay Travels'}
             </span>
           </button>
 
@@ -102,7 +102,7 @@ export default function Navigation() {
           {/* Right: CTA + hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <a
-              href="https://wa.me/919340994628?text=Hello%20Shivalay%20Travels!%20I%20need%20help%20with%20a%20booking."
+              href={`https://wa.me/${settings?.whatsapp || '919340994628'}?text=Hello%20${encodeURIComponent(settings?.businessName || 'Shivalay Travels')}!%20I%20need%20help%20with%20a%20booking.`}
               target="_blank" rel="noopener noreferrer"
               className="desktop-nav ff-mono fs-12"
               style={{

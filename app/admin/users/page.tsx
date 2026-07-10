@@ -4,6 +4,7 @@ import ProtectedPage from '../components/ProtectedPage';
 import { DEMO_USERS } from '../lib/auth';
 import { useAdminAuth } from '../lib/AdminAuthContext';
 import { ROLE_PERMISSIONS, UserRole, AdminUser } from '../lib/auth';
+import AdminLoader from '../components/AdminLoader';
 
 const ROLE_ORDER: UserRole[] = ['super_admin', 'manager', 'agent', 'viewer'];
 
@@ -14,7 +15,7 @@ export default function UsersPage() {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: 'agent' as UserRole });
+  const [newUser, setNewUser] = useState({ name: '', email: '', password: '', role: 'agent' as UserRole });
   const [editingRole, setEditingRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ export default function UsersPage() {
   };
 
   const addUser = async () => {
-    if (!newUser.name || !newUser.email) return;
+    if (!newUser.name || !newUser.email || !newUser.password) return;
     try {
       const res = await fetch('/api/admin/users', {
         method: 'POST',
@@ -47,7 +48,7 @@ export default function UsersPage() {
       if (res.ok) {
         const added = await res.json();
         setUsers(prev => [...prev, added]);
-        setNewUser({ name: '', email: '', role: 'agent' });
+        setNewUser({ name: '', email: '', password: '', role: 'agent' });
         setShowAdd(false);
       }
     } catch (err) {
@@ -114,6 +115,16 @@ export default function UsersPage() {
     );
   }
 
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <div style={{ padding: '24px 0' }}>
+          <AdminLoader message="Loading team members and permissions..." />
+        </div>
+      </ProtectedPage>
+    );
+  }
+
   return (
     <ProtectedPage>
       <div className="usr-root">
@@ -156,6 +167,7 @@ export default function UsersPage() {
             <div className="usr-form-grid">
               <div><label className="usr-lbl">Full Name *</label><input className="usr-input" placeholder="Rahul Kumar" value={newUser.name} onChange={e => setNewUser(p => ({ ...p, name: e.target.value }))} /></div>
               <div><label className="usr-lbl">Email *</label><input className="usr-input" type="email" placeholder="rahul@shivalay.in" value={newUser.email} onChange={e => setNewUser(p => ({ ...p, email: e.target.value }))} /></div>
+              <div><label className="usr-lbl">Password *</label><input className="usr-input" type="password" placeholder="••••••••" value={newUser.password} onChange={e => setNewUser(p => ({ ...p, password: e.target.value }))} /></div>
               <div>
                 <label className="usr-lbl">Role</label>
                 <select className="usr-select" value={newUser.role} onChange={e => setNewUser(p => ({ ...p, role: e.target.value as UserRole }))}>
@@ -257,7 +269,7 @@ export default function UsersPage() {
         .role-perm { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 2px 6px; font-size: 10px; color: #666; }
 
         .usr-add-form { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,0,0,0.15); border-radius: 14px; padding: 24px; }
-        .usr-form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        .usr-form-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
         .usr-lbl { display: block; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
         .usr-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 9px 12px; color: #fff; font-size: 13px; outline: none; font-family: 'DM Sans',sans-serif; }
         .usr-select { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 9px 12px; color: #aaa; font-size: 13px; outline: none; cursor: pointer; font-family: 'DM Sans',sans-serif; }

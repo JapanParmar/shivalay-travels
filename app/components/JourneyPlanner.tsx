@@ -18,7 +18,7 @@ const STEPS: Step[] = [
   { id: 'contact', label: '09 — Contact', question: 'Last step — how do we reach you?', subtext: 'We respond within 2 hours with a personalised itinerary draft.', options: [], icon: '📞' },
 ];
 
-export default function JourneyPlanner() {
+export default function JourneyPlanner({ settings }: { settings?: any }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [customInputs, setCustomInputs] = useState<Record<string, string>>({});
@@ -27,10 +27,35 @@ export default function JourneyPlanner() {
   const [phone, setPhone] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  const [captchaSvg, setCaptchaSvg] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+
+  const fetchCaptcha = async () => {
+    try {
+      const res = await fetch('/api/captcha');
+      if (res.ok) {
+        const data = await res.json();
+        setCaptchaSvg(data.svg);
+        setCaptchaToken(data.token);
+        setCaptchaInput('');
+        setCaptchaError('');
+      }
+    } catch (err) {
+      console.error('Failed to fetch CAPTCHA', err);
+    }
+  };
+
   const current = STEPS[step];
   const progress = Math.round((step / (STEPS.length - 1)) * 100);
   const isLastStep = step === STEPS.length - 1;
   const isNotesStep = current.id === 'notes';
+
+  useState(() => {
+    // Initial fetch if step is already last (fallback)
+    if (isLastStep) fetchCaptcha();
+  });
 
   const select = (option: string) => {
     setAnswers(prev => ({ ...prev, [current.id]: option }));
@@ -39,7 +64,13 @@ export default function JourneyPlanner() {
     } else {
       setCustomInputs(prev => ({ ...prev, [current.id]: '' }));
     }
-    if (step < STEPS.length - 1) setStep(s => s + 1);
+    if (step < STEPS.length - 1) {
+      const nextStep = step + 1;
+      setStep(nextStep);
+      if (nextStep === STEPS.length - 1) {
+        fetchCaptcha();
+      }
+    }
   };
 
   const handleCustomNext = () => {
@@ -47,18 +78,69 @@ export default function JourneyPlanner() {
     if (val) select(val);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setCaptchaError('');
+
     const summaryLines = Object.entries(answers)
       .filter(([, v]) => v)
       .map(([k, v]) => {
         const stepDef = STEPS.find(s => s.id === k);
         const label = stepDef?.label?.replace(/^\d+ — /, '') || k;
-        return `*${label}:* ${v}`;
+        return `${label}: ${v}`;
       });
-    const text = `Hello Shivalay Travels! Here is my journey brief:\n\n${summaryLines.join('\n')}\n\n*Name:* ${name}\n*Email:* ${email}\n${phone ? `*Phone:* ${phone}` : ''}`;
-    window.open(`https://wa.me/919340994628?text=${encodeURIComponent(text)}`, '_blank');
-    setSubmitted(true);
+
+    const destination = answers['destination'] || 'Custom Pilgrimage';
+    const dateRange = answers['dates'] || 'Flexible';
+    const duration = answers['duration'] || 'Not specified';
+    const passengers = answers['travelers'] || '1';
+    
+    // Parse passengers count if possible
+    let passengersCount = 1;
+    const match = passengers.match(/\d+/);
+    if (match) {
+      passengersCount = parseInt(match[0], 10);
+    }
+
+    try {
+      const response = await fetch('/api/admin/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerName: name,
+          customerPhone: phone || 'Not provided',
+          customerEmail: email,
+          fromCity: 'Online Inquiry',
+          toCity: destination,
+          travelType: 'custom',
+          date: dateRange,
+          returnDate: null,
+          passengers: passengersCount,
+          classType: duration,
+          amount: 0,
+          status: 'pending',
+          notes: `Journey Planner Brief:\n${summaryLines.join('\n')}`,
+          isPublicInquiry: true,
+          captchaToken,
+          captchaInput,
+        })
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setCaptchaError(data.error || 'CAPTCHA validation failed.');
+        fetchCaptcha();
+        return;
+      }
+
+      setSubmitted(true);
+      const text = `Hello ${settings?.businessName || 'Shivalay Travels'}! Here is my journey brief:\n\n${summaryLines.join('\n')}\n\n*Name:* ${name}\n*Email:* ${email}\n${phone ? `*Phone:* ${phone}` : ''}`;
+      const waNumber = settings?.whatsapp || '919340994628';
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
+    } catch (err) {
+      console.error('Failed to log journey brief in DB', err);
+      setCaptchaError('Network error. Please try again.');
+    }
   };
 
   return (
@@ -280,6 +362,56 @@ export default function JourneyPlanner() {
                             </div>
                           );
                         })}
+                      </div>
+
+                      {/* Captcha Verification */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+                        <label className="text-field-label">Security Verification (CAPTCHA)</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                          {captchaSvg ? (
+                            <div 
+                              dangerouslySetInnerHTML={{ __html: captchaSvg }}
+                              style={{ display: 'flex', alignItems: 'center', borderRadius: 4, overflow: 'hidden' }}
+                            />
+                          ) : (
+                            <div style={{ width: 140, height: 44, background: '#121212', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#666' }}>
+                              Loading...
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={fetchCaptcha}
+                            style={{
+                              background: 'rgba(255,255,255,0.05)',
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              color: '#fff',
+                              borderRadius: 4,
+                              width: 32,
+                              height: 32,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                            }}
+                            title="Refresh CAPTCHA"
+                          >
+                            🔄
+                          </button>
+                        </div>
+                        <input
+                          className="input-terminal"
+                          type="text"
+                          placeholder="Enter CAPTCHA code"
+                          value={captchaInput}
+                          onChange={e => setCaptchaInput(e.target.value)}
+                          required
+                          style={{ fontFamily: 'monospace', letterSpacing: 2 }}
+                        />
+                        {captchaError && (
+                          <p style={{ color: '#ff4444', fontSize: 12, marginTop: 4, fontWeight: 500 }}>
+                            ⚠️ {captchaError}
+                          </p>
+                        )}
                       </div>
 
                       <button type="submit" className="btn-primary fs-13" style={{ alignSelf: 'flex-start' }}>

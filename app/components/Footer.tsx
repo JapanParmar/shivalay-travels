@@ -1,39 +1,44 @@
 'use client';
 
-const COLS = [
-  {
-    label: 'Destinations',
-    links: [
-      { name: 'Kedarnath', href: '#destinations' },
-      { name: 'Chardham Yatra', href: '#destinations' },
-      { name: 'Varanasi Yatra', href: '#destinations' },
-      { name: 'Kashmir Valley', href: '#destinations' },
-      { name: 'Goa Beaches', href: '#destinations' },
-      { name: 'All Indian Tours', href: '#destinations' },
-    ],
-  },
-  {
-    label: 'Services',
-    links: [
-      { name: 'Flight Booking', href: '#tickets' },
-      { name: 'Bus Booking', href: '#tickets' },
-      { name: 'Train Booking', href: '#tickets' },
-      { name: 'Hotel Stays', href: '#planner' },
-      { name: 'Customised Tour Packages', href: '#planner' },
-    ],
-  },
-  {
-    label: 'Contact Office',
-    links: [
-      { name: 'Shop No. 2, Shivalay Travels', href: 'https://maps.google.com/?q=Shop+No.+2,+Shivalay+Travels,+Indore,+Madhya+Pradesh', external: true },
-      { name: 'Indore, Madhya Pradesh', href: 'https://maps.google.com/?q=Shop+No.+2,+Shivalay+Travels,+Indore,+Madhya+Pradesh', external: true },
-      { name: 'Nisha Chouhan: 9340994628', href: 'tel:+919340994628' },
-      { name: 'Manisha Mali: 9340994628', href: 'tel:+919340994628' },
-    ],
-  },
-];
+export default function Footer({ settings }: { settings?: any }) {
+  const businessName = settings?.businessName || 'Shivalay Travels';
+  const whatsappNumber = settings?.whatsapp || '919340994628';
+  const phoneNumber = settings?.phone || '+91 93409 94628';
+  const emailAddress = settings?.email || 'info@shivalaytravels.com';
+  const address = settings?.address || 'Indore, Madhya Pradesh, India';
 
-export default function Footer() {
+  const cols = [
+    {
+      label: 'Destinations',
+      links: [
+        { name: 'Kedarnath', href: '#destinations' },
+        { name: 'Chardham Yatra', href: '#destinations' },
+        { name: 'Varanasi Yatra', href: '#destinations' },
+        { name: 'Kashmir Valley', href: '#destinations' },
+        { name: 'Goa Beaches', href: '#destinations' },
+        { name: 'All Indian Tours', href: '#destinations' },
+      ],
+    },
+    {
+      label: 'Services',
+      links: [
+        { name: 'Flight Booking', href: '#tickets' },
+        { name: 'Bus Booking', href: '#tickets' },
+        { name: 'Train Booking', href: '#tickets' },
+        { name: 'Hotel Stays', href: '#planner' },
+        { name: 'Customised Tour Packages', href: '#planner' },
+      ],
+    },
+    {
+      label: 'Contact Office',
+      links: [
+        { name: address, href: `https://maps.google.com/?q=${encodeURIComponent(address)}`, external: true },
+        { name: `Phone: ${phoneNumber}`, href: `tel:${phoneNumber.replace(/\s+/g, '')}` },
+        { name: `WhatsApp: +${whatsappNumber}`, href: `https://wa.me/${whatsappNumber}` },
+      ],
+    },
+  ];
+
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, external?: boolean) => {
     if (!external && href.startsWith('#')) {
       e.preventDefault();
@@ -59,28 +64,28 @@ export default function Footer() {
                    <path d="M22 2L15 22L11 13L2 9L22 2Z" />
                 </svg>
               </div>
-              <span className="font-primary fw-medium text-md" style={{ color: 'var(--color-pure-white)' }}>Shivalay Travels</span>
+              <span className="font-primary fw-medium text-md" style={{ color: 'var(--color-pure-white)' }}>{businessName}</span>
             </div>
             <p className="font-primary text-sm lh-16 text-dim">
               Complete travel solutions for all your pilgrimage and holiday needs.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20 }}>
-              <a href="mailto:info@shivalaytravels.com" className="text-link-sm"
+              <a href={`mailto:${emailAddress}`} className="text-link-sm"
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-ash-gray)')}>
-                info@shivalaytravels.com
+                {emailAddress}
               </a>
-              <a href="https://wa.me/919340994628" target="_blank" rel="noopener noreferrer" className="text-link-sm"
+              <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="text-link-sm"
                 onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
                 onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-ash-gray)')}>
-                WhatsApp: +91 93409 94628
+                WhatsApp: +{whatsappNumber}
               </a>
             </div>
           </div>
 
           {/* Link columns */}
           <div className="footer-links-grid">
-            {COLS.map(col => (
+            {cols.map(col => (
               <div key={col.label}>
                 <p className="font-primary text-xs fw-medium uppercase ls-08 text-muted" style={{ marginBottom: 16 }}>
                   {col.label}
@@ -118,7 +123,7 @@ export default function Footer() {
           gap: 10,
         }}>
           <p className="font-primary text-sm text-dim">
-            © 2026 Shivalay Travels. All rights reserved.
+            © 2026 {businessName}. All rights reserved.
           </p>
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--color-highlighter-lime)', display: 'inline-block', animation: 'pulse 2s infinite' }} />

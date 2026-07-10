@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { LOCAL_CITIES, City, searchCitiesSimple } from '../lib/data';
 import { useAdminAuth } from '../lib/AdminAuthContext';
+import AdminLoader from '../components/AdminLoader';
 
 const TYPE_COLORS: Record<string, string> = { airport: '#3b82f6', railway: '#f59e0b', bus_stand: '#22c55e', port: '#8b5cf6' };
 
@@ -139,6 +140,16 @@ export default function CitiesPage() {
       console.error(err);
     }
   };
+
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <div style={{ padding: '24px 0' }}>
+          <AdminLoader message="Loading routes and location directory..." />
+        </div>
+      </ProtectedPage>
+    );
+  }
 
   return (
     <ProtectedPage>

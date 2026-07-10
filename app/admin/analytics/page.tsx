@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { useAdminAuth } from '../lib/AdminAuthContext';
 import Chart from 'chart.js/auto';
+import AdminLoader from '../components/AdminLoader';
 
 type Booking = {
   id: string; customerName: string; travelType: string; status: string;
@@ -229,6 +230,16 @@ export default function AnalyticsPage() {
     { label: 'Booking Rate', value: `${confirmationRate.toFixed(1)}%`, color: '#f59e0b', icon: '⚡' },
     { label: 'Total Passengers', value: totalPassengers.toString(), color: '#8b5cf6', icon: '👥' },
   ];
+
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <div style={{ padding: '24px 0' }}>
+          <AdminLoader message="Loading business reports and chart graphs..." />
+        </div>
+      </ProtectedPage>
+    );
+  }
 
   return (
     <ProtectedPage>

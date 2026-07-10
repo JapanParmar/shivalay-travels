@@ -13,18 +13,37 @@ import Memories from './components/Memories';
 import EarthOutro from './components/EarthOutro';
 import Footer from './components/Footer';
 import ScrollReveal from './components/ScrollReveal';
+import { db } from '@/app/admin/lib/db';
 
-export default function Home() {
+export default async function Home() {
+  let settings: any = null;
+  try {
+    settings = await db.getSettings();
+  } catch (err) {
+    console.error('Failed to load settings from DB', err);
+  }
+
+  // Fallback settings object if db call fails
+  const fallbackSettings = {
+    businessName: 'Shivalay Travels',
+    phone: '+91 93409 94628',
+    email: 'info@shivalaytravels.com',
+    whatsapp: '919340994628',
+    address: 'Indore, Madhya Pradesh, India',
+  };
+
+  const activeSettings = settings || fallbackSettings;
+
   return (
     <>
       <ScrollReveal />
-      <Navigation />
+      <Navigation settings={activeSettings} />
       <main>
         {/* Hero — 2-col headline + ticket capture + trust signals */}
-        <Hero />
+        <Hero settings={activeSettings} />
 
         {/* Ticket Booking — direct flights, trains, buses, cruises */}
-        <TicketBooking />
+        <TicketBooking settings={activeSettings} />
 
         {/* Partner / media ticker */}
         <LogoStrip />
@@ -45,7 +64,7 @@ export default function Home() {
         <Stats />
 
         {/* Journey planner — conversational 6-step builder */}
-        <JourneyPlanner />
+        <JourneyPlanner settings={activeSettings} />
 
         {/* Traveller stories — testimonials + media mentions */}
         <Memories />
@@ -54,13 +73,13 @@ export default function Home() {
         <TravelGuides />
 
         {/* CTA outro */}
-        <EarthOutro />
+        <EarthOutro settings={activeSettings} />
       </main>
-      <Footer />
+      <Footer settings={activeSettings} />
 
       {/* WhatsApp Floating Action Button — mobile only */}
       <a
-        href="https://wa.me/919340994628?text=Hello%20Shivalay%20Travels!%20I%20need%20help%20with%20a%20booking."
+        href={`https://wa.me/${activeSettings.whatsapp || '919340994628'}?text=Hello%20${encodeURIComponent(activeSettings.businessName || 'Shivalay Travels')}!%20I%20need%20help%20with%20a%20booking.`}
         target="_blank"
         rel="noopener noreferrer"
         className="whatsapp-fab"
@@ -73,4 +92,3 @@ export default function Home() {
     </>
   );
 }
-

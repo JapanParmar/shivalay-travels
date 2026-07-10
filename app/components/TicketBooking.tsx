@@ -87,7 +87,7 @@ const RECENT_SEARCHES = {
   ],
 };
 
-export default function TicketBooking() {
+export default function TicketBooking({ settings }: { settings?: any }) {
   const [activeTab, setActiveTab] = useState<TravelType>('flight');
   const [isRoundTrip, setIsRoundTrip] = useState(true);
   const [formData, setFormData] = useState<BookingFormData>({
@@ -101,7 +101,28 @@ export default function TicketBooking() {
   const [showToDropdown, setShowToDropdown] = useState(false);
   const [cityApiSetting, setCityApiSetting] = useState<string>('open_meteo');
 
+  const [captchaSvg, setCaptchaSvg] = useState('');
+  const [captchaToken, setCaptchaToken] = useState('');
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [captchaError, setCaptchaError] = useState('');
+
+  const fetchCaptcha = async () => {
+    try {
+      const res = await fetch('/api/captcha');
+      if (res.ok) {
+        const data = await res.json();
+        setCaptchaSvg(data.svg);
+        setCaptchaToken(data.token);
+        setCaptchaInput('');
+        setCaptchaError('');
+      }
+    } catch (err) {
+      console.error('Failed to fetch CAPTCHA', err);
+    }
+  };
+
   useEffect(() => {
+    fetchCaptcha();
     fetch('/api/admin/settings')
       .then(res => res.json())
       .then(data => {
@@ -263,7 +284,7 @@ export default function TicketBooking() {
 
   const getWhatsAppLink = () => {
     const emojiMap = { flight: '✈️ Flight', bus: '🚌 Bus', train: '🚆 Train', cruise: '🚢 Cruise' };
-    const text = `Hello Shivalay Travels! I would like to book a *${emojiMap[activeTab]} Ticket*:\n\n` +
+    const text = `Hello ${settings?.businessName || 'Shivalay Travels'}! I would like to book a *${emojiMap[activeTab]} Ticket*:\n\n` +
       `📍 *From:* ${formData.from || 'Not specified'}\n` +
       `📍 *To:* ${formData.to || 'Not specified'}\n` +
       `📅 *Departure:* ${formData.date || 'Not specified'}\n` +
@@ -271,18 +292,19 @@ export default function TicketBooking() {
       `👥 *Passengers:* ${formData.passengers}\n` +
       `✨ *Class:* ${formData.classType}\n\n` +
       `Please share the best available rates. Thanks!`;
-    return `https://wa.me/919340994628?text=${encodeURIComponent(text)}`;
+    const waNumber = settings?.whatsapp || '919340994628';
+    return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setCaptchaError('');
 
     // Default amount to 0 when booking from the main page. The admin side will set the actual price.
     const computedAmount = 0;
 
     try {
-      await fetch('/api/admin/bookings', {
+      const response = await fetch('/api/admin/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -297,14 +319,26 @@ export default function TicketBooking() {
           classType: formData.classType,
           amount: computedAmount,
           status: 'pending',
-          notes: `Web Inquiry from ${formData.phone}`
+          notes: `Web Inquiry from ${formData.phone}`,
+          isPublicInquiry: true,
+          captchaToken,
+          captchaInput,
         })
       });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setCaptchaError(data.error || 'CAPTCHA validation failed.');
+        fetchCaptcha();
+        return;
+      }
+
+      setIsSubmitted(true);
+      setTimeout(() => { window.open(getWhatsAppLink(), '_blank'); }, 1200);
     } catch (err) {
       console.error('Failed to log booking in DB', err);
+      setCaptchaError('Network error. Please try again.');
     }
-
-    setTimeout(() => { window.open(getWhatsAppLink(), '_blank'); }, 1200);
   };
 
   return (
@@ -585,6 +619,91 @@ export default function TicketBooking() {
                       <p className="font-primary text-xs text-muted" style={{ margin: 0, lineHeight: 1.4 }}>
                         <strong>Live Radar Search:</strong> Direct API lookup to Indian state transport links and flight booking platforms.
                       </p>
+                    </div>
+
+                    {/* Captcha Verification */}
+                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
+                      <label className="input-box-label" style={{ display: 'block', marginBottom: 8 }}>
+                        Security Verification (CAPTCHA)
+                      </label>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 16,
+                        flexWrap: 'wrap',
+                        background: 'rgba(255, 255, 255, 0.01)',
+                        border: '1px solid rgba(255, 255, 255, 0.05)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: 12
+                      }}>
+                        {/* Captcha Image */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          {captchaSvg ? (
+                            <div 
+                              dangerouslySetInnerHTML={{ __html: captchaSvg }}
+                              style={{ display: 'flex', alignItems: 'center', borderRadius: 4, overflow: 'hidden' }}
+                            />
+                          ) : (
+                            <div style={{ width: 140, height: 44, background: '#121212', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#666' }}>
+                              Loading...
+                            </div>
+                          )}
+                          <button
+                            type="button"
+                            onClick={fetchCaptcha}
+                            style={{
+                              background: 'rgba(255,255,255,0.05)',
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              color: '#fff',
+                              borderRadius: 4,
+                              width: 32,
+                              height: 32,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s',
+                            }}
+                            title="Refresh CAPTCHA"
+                            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                          >
+                            🔄
+                          </button>
+                        </div>
+                        
+                        {/* Captcha Input */}
+                        <div style={{ flex: 1, minWidth: 150, position: 'relative' }}>
+                          <input
+                            type="text"
+                            placeholder="Enter verification code"
+                            value={captchaInput}
+                            onChange={e => setCaptchaInput(e.target.value)}
+                            required
+                            style={{
+                              width: '100%',
+                              height: 38,
+                              background: 'rgba(255,255,255,0.02)',
+                              border: '1px solid rgba(255,255,255,0.08)',
+                              borderRadius: 6,
+                              padding: '0 12px',
+                              color: '#fff',
+                              fontFamily: 'monospace',
+                              letterSpacing: 2,
+                              fontSize: 14,
+                              outline: 'none',
+                              transition: 'all 0.2s'
+                            }}
+                            onFocus={e => e.currentTarget.style.borderColor = 'var(--color-highlighter-lime)'}
+                            onBlur={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'}
+                          />
+                        </div>
+                      </div>
+                      {captchaError && (
+                        <p style={{ color: '#ff4444', fontSize: 12, marginTop: 6, marginBottom: 0, fontWeight: 500 }}>
+                          ⚠️ {captchaError}
+                        </p>
+                      )}
                     </div>
 
                     {/* Direct Booking Note */}

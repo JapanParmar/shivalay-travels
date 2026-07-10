@@ -1,6 +1,9 @@
 'use client';
 
-export default function EarthOutro() {
+export default function EarthOutro({ settings }: { settings?: any }) {
+  const whatsappNumber = settings?.whatsapp || '919340994628';
+  const emailAddress = settings?.email || 'info@shivalaytravels.com';
+
   return (
     <section
       style={{
@@ -72,7 +75,7 @@ export default function EarthOutro() {
           {/* Secondary CTAs */}
           <div className="reveal reveal-d3" style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}>
             <a
-              href="https://wa.me/919340994628"
+              href={`https://wa.me/${whatsappNumber}`}
               target="_blank" rel="noopener noreferrer"
               className="font-primary fs-13 no-underline text-muted"
               style={{ display: 'inline-flex', alignItems: 'center', gap: 6, transition: 'color 0.18s ease' }}
@@ -86,13 +89,13 @@ export default function EarthOutro() {
             </a>
             <span style={{ color: 'var(--color-zinc-hairline)' }}>·</span>
             <a
-              href="mailto:info@shivalaytravels.com"
+              href={`mailto:${emailAddress}`}
               className="font-primary fs-13 no-underline text-muted"
               style={{ transition: 'color 0.18s ease' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--color-pure-white)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--color-steel-gray)')}
             >
-              info@shivalaytravels.com
+              {emailAddress}
             </a>
           </div>
         </div>

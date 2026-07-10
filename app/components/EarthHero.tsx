@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 const CYCLING_WORDS = ['fast', 'lowest-fare', 'reliable', 'hassle-free', 'secured'];
 const DESTINATIONS = ['Kedarnath', 'Chardham', 'Kashmir', 'Goa', 'Kerala', 'Ladakh', 'Rajasthan', 'Varanasi'];
 
-export default function Hero() {
+export default function Hero({ settings }: { settings?: any }) {
   const [wordIdx, setWordIdx] = useState(0);
   const [mounted, setMounted] = useState(false);
 
@@ -15,6 +15,8 @@ export default function Hero() {
   }, []);
 
   const scrollTo = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
+  const businessName = settings?.businessName || 'Shivalay Travels';
 
   return (
     <section
@@ -73,7 +75,7 @@ export default function Hero() {
                 marginBottom: 28,
               }}
             >
-              Shivalay Travels is Indore&apos;s trusted agency for instant ticket bookings.
+              {businessName} is Indore&apos;s trusted agency for instant ticket bookings.
               Get the lowest prices on Flights, Trains, Buses &amp; Cruises with 24/7 on-ground assistance.
             </p>
 

@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { useAdminAuth } from '../lib/AdminAuthContext';
+import AdminLoader from '../components/AdminLoader';
 import { ROLE_PERMISSIONS } from '../lib/auth';
 import Chart from 'chart.js/auto';
 
@@ -229,6 +230,16 @@ export default function DashboardPage() {
     ? `₹${(n / 100000).toFixed(1)}L`
     : n >= 1000 ? `₹${(n / 1000).toFixed(0)}K`
     : `₹${n}`;
+
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <div style={{ padding: '24px 0' }}>
+          <AdminLoader message="Loading dashboard statistics and charts..." />
+        </div>
+      </ProtectedPage>
+    );
+  }
 
   return (
     <ProtectedPage>

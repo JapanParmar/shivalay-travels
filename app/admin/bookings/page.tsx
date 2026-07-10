@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { BookingStatus, Booking } from '../lib/data';
 import { useAdminAuth } from '../lib/AdminAuthContext';
+import AdminLoader from '../components/AdminLoader';
 import {
   useReactTable,
   getCoreRowModel,
@@ -292,6 +293,16 @@ export default function BookingsPage() {
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <div style={{ padding: '24px 0' }}>
+          <AdminLoader message="Loading bookings and yatra logs..." />
+        </div>
+      </ProtectedPage>
+    );
+  }
 
   return (
     <ProtectedPage>
