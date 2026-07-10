@@ -20,6 +20,22 @@ function initFallbackFile() {
         { id: '3', name: 'Amit Verma', email: 'agent@shivalay.in', password: 'agent123', role: 'agent', avatar: 'AV', status: 'active', lastLogin: new Date().toISOString() },
         { id: '4', name: 'Sunita Patel', email: 'viewer@shivalay.in', password: 'viewer123', role: 'viewer', avatar: 'SP', status: 'active', lastLogin: new Date().toISOString() }
       ],
+      inquiries: [
+        {
+          id: 'INQ-001',
+          customerName: 'Rohit Sharma',
+          customerPhone: '+91 94250 12345',
+          customerEmail: 'rohit@email.com',
+          destinations: 'Kedarnath, Chardham',
+          duration: '7 Days',
+          travelers: 2,
+          budget: 'Standard',
+          accommodation: '3 Star Hotel',
+          status: 'pending',
+          notes: 'Planning family pilgrimage journey.',
+          createdAt: new Date().toISOString()
+        }
+      ],
       bookings: [
         {
           id: 'SHV-001',
@@ -281,6 +297,23 @@ async function initMysqlTables() {
         defaultPassengers VARCHAR(10) NOT NULL DEFAULT '1',
         defaultClass VARCHAR(50) NOT NULL DEFAULT 'Economy',
         cityApi VARCHAR(50) NOT NULL DEFAULT 'open_meteo'
+      )
+    `);
+
+    await mysqlPool.query(`
+      CREATE TABLE IF NOT EXISTS inquiries (
+        id VARCHAR(50) PRIMARY KEY,
+        customerName VARCHAR(100) NOT NULL,
+        customerPhone VARCHAR(30) NOT NULL,
+        customerEmail VARCHAR(100) NULL,
+        destinations TEXT NOT NULL,
+        duration VARCHAR(30) NOT NULL,
+        travelers INT NOT NULL DEFAULT 1,
+        budget VARCHAR(50) NOT NULL,
+        accommodation VARCHAR(50) NOT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        notes TEXT NULL,
+        createdAt VARCHAR(50) NOT NULL
       )
     `);
 
@@ -767,6 +800,126 @@ export const db = {
     }
     const data = readFallbackData();
     data.settings = { ...data.settings, ...settings };
+    writeFallbackData(data);
+  },
+
+  // Inquiries
+  async getInquiries() {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM inquiries ORDER BY "createdAt" DESC');
+      return res.rows.map(row => ({
+        id: row.id,
+        customerName: row.customerName,
+        customerPhone: row.customerPhone,
+        customerEmail: row.customerEmail,
+        destinations: row.destinations,
+        duration: row.duration,
+        travelers: Number(row.travelers),
+        budget: row.budget,
+        accommodation: row.accommodation,
+        status: row.status,
+        notes: row.notes,
+        createdAt: row.createdAt
+      }));
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows]: any = await mysqlPool.query('SELECT * FROM inquiries ORDER BY createdAt DESC');
+      return rows.map((row: any) => ({
+        id: row.id,
+        customerName: row.customerName,
+        customerPhone: row.customerPhone,
+        customerEmail: row.customerEmail,
+        destinations: row.destinations,
+        duration: row.duration,
+        travelers: Number(row.travelers),
+        budget: row.budget,
+        accommodation: row.accommodation,
+        status: row.status,
+        notes: row.notes,
+        createdAt: row.createdAt
+      }));
+    }
+    const data = readFallbackData();
+    if (!data.inquiries) data.inquiries = [];
+    return data.inquiries;
+  },
+
+  async saveInquiry(inquiry: any) {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO inquiries (
+           id, "customerName", "customerPhone", "customerEmail", destinations, 
+           duration, travelers, budget, accommodation, status, notes, "createdAt"
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+         ON CONFLICT (id) DO UPDATE SET
+           "customerName" = EXCLUDED."customerName",
+           "customerPhone" = EXCLUDED."customerPhone",
+           "customerEmail" = EXCLUDED."customerEmail",
+           destinations = EXCLUDED.destinations,
+           duration = EXCLUDED.duration,
+           travelers = EXCLUDED.travelers,
+           budget = EXCLUDED.budget,
+           accommodation = EXCLUDED.accommodation,
+           status = EXCLUDED.status,
+           notes = EXCLUDED.notes`,
+        [
+          inquiry.id, inquiry.customerName, inquiry.customerPhone, inquiry.customerEmail, 
+          inquiry.destinations, inquiry.duration, inquiry.travelers || 1, inquiry.budget, 
+          inquiry.accommodation, inquiry.status || 'pending', inquiry.notes, inquiry.createdAt
+        ]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
+        `INSERT INTO inquiries (id, customerName, customerPhone, customerEmail, destinations, duration, travelers, budget, accommodation, status, notes, createdAt)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE
+           customerName = VALUES(customerName),
+           customerPhone = VALUES(customerPhone),
+           customerEmail = VALUES(customerEmail),
+           destinations = VALUES(destinations),
+           duration = VALUES(duration),
+           travelers = VALUES(travelers),
+           budget = VALUES(budget),
+           accommodation = VALUES(accommodation),
+           status = VALUES(status),
+           notes = VALUES(notes)`,
+        [
+          inquiry.id, inquiry.customerName, inquiry.customerPhone, inquiry.customerEmail, 
+          inquiry.destinations, inquiry.duration, inquiry.travelers || 1, inquiry.budget, 
+          inquiry.accommodation, inquiry.status || 'pending', inquiry.notes, inquiry.createdAt
+        ]
+      );
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.inquiries) data.inquiries = [];
+    const idx = data.inquiries.findIndex((i: any) => i.id === inquiry.id);
+    if (idx !== -1) {
+      data.inquiries[idx] = { ...data.inquiries[idx], ...inquiry };
+    } else {
+      data.inquiries.unshift(inquiry);
+    }
+    writeFallbackData(data);
+  },
+
+  async deleteInquiry(id: string) {
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM inquiries WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM inquiries WHERE id = ?', [id]);
+      return;
+    }
+    const data = readFallbackData();
+    if (!data.inquiries) data.inquiries = [];
+    data.inquiries = data.inquiries.filter((i: any) => i.id !== id);
     writeFallbackData(data);
   }
 };

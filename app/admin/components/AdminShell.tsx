@@ -39,6 +39,16 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
+    id: 'inquiries',
+    label: 'Yatra Inquiries',
+    href: '/admin/inquiries',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+  },
+  {
     id: 'cities',
     label: 'Cities & Routes',
     href: '/admin/cities',
@@ -95,6 +105,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [pendingCount, setPendingCount] = useState<number | null>(null);
+  const [pendingInquiriesCount, setPendingInquiriesCount] = useState<number | null>(null);
 
   useEffect(() => {
     fetch('/api/admin/bookings')
@@ -106,6 +117,16 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         }
       })
       .catch(err => console.error('Failed to fetch pending bookings count', err));
+
+    fetch('/api/admin/inquiries')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) {
+          const pending = data.filter((i: any) => i.status === 'pending').length;
+          setPendingInquiriesCount(pending);
+        }
+      })
+      .catch(err => console.error('Failed to fetch pending inquiries count', err));
   }, []);
 
   const handleLogout = () => {
@@ -156,7 +177,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           {sidebarOpen && <span className="sidebar-nav-label">Main Menu</span>}
           {visibleItems.map(item => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-            const displayBadge = item.id === 'bookings' ? pendingCount : item.badge;
+             const displayBadge = item.id === 'bookings'
+               ? pendingCount
+               : item.id === 'inquiries'
+                 ? pendingInquiriesCount
+                 : item.badge;
             return (
               <Link
                 key={item.id}

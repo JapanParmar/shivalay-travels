@@ -622,21 +622,22 @@ export default function TicketBooking({ settings }: { settings?: any }) {
                     </div>
 
                     {/* Captcha Verification */}
-                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
+                    <div className="span-2" style={{ marginTop: 'var(--spacing-8)' }}>
                       <label className="input-box-label" style={{ display: 'block', marginBottom: 8 }}>
                         Security Verification (CAPTCHA)
                       </label>
                       <div style={{
-                        display: 'flex',
+                        display: 'grid',
+                        gridTemplateColumns: 'auto 1fr',
                         alignItems: 'center',
                         gap: 16,
-                        flexWrap: 'wrap',
                         background: 'rgba(255, 255, 255, 0.01)',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         borderRadius: 'var(--radius-md)',
-                        padding: 12
+                        padding: 12,
+                        width: '100%',
                       }}>
-                        {/* Captcha Image */}
+                        {/* Captcha Image & Refresh Button */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           {captchaSvg ? (
                             <div 
@@ -655,9 +656,9 @@ export default function TicketBooking({ settings }: { settings?: any }) {
                               background: 'rgba(255,255,255,0.05)',
                               border: '1px solid rgba(255,255,255,0.08)',
                               color: '#fff',
-                              borderRadius: 4,
-                              width: 32,
-                              height: 32,
+                              borderRadius: 6,
+                              width: 38,
+                              height: 38,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
@@ -668,12 +669,14 @@ export default function TicketBooking({ settings }: { settings?: any }) {
                             onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
                           >
-                            🔄
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-steel-gray)' }}>
+                              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                            </svg>
                           </button>
                         </div>
                         
                         {/* Captcha Input */}
-                        <div style={{ flex: 1, minWidth: 150, position: 'relative' }}>
+                        <div style={{ position: 'relative' }}>
                           <input
                             type="text"
                             placeholder="Enter verification code"
@@ -706,35 +709,35 @@ export default function TicketBooking({ settings }: { settings?: any }) {
                       )}
                     </div>
 
-                    {/* Direct Booking Note */}
-                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
+                    {/* Action container on side of CAPTCHA */}
+                    <div className="span-2" style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 'var(--spacing-8)', justifyContent: 'flex-end' }}>
+                      {/* Direct Booking Note */}
                       <div style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)',
-                        borderRadius: 10, padding: '12px 18px', gap: 12,
+                        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)',
+                        borderRadius: 10, padding: '10px 14px', gap: 8,
                       }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 18 }}>📲</span>
+                          <span style={{ fontSize: 16 }}>📲</span>
                           <div>
-                            <div style={{ fontSize: 12, fontWeight: 600, color: '#fff', fontFamily: 'DM Sans, sans-serif' }}>
+                            <div style={{ fontSize: 11, fontWeight: 600, color: '#fff', fontFamily: 'DM Sans, sans-serif' }}>
                               Direct Agent Booking
                             </div>
-                            <div style={{ fontSize: 11, color: '#888', fontFamily: 'DM Sans, sans-serif' }}>
-                              No prepayment required. Rates will be confirmed by an agent.
+                            <div style={{ fontSize: 10, color: '#666', fontFamily: 'DM Sans, sans-serif' }}>
+                              No prepayment required. Rates verified by agents.
                             </div>
                           </div>
                         </div>
-                        <div style={{ fontSize: 10, color: '#ff4444', textAlign: 'right', maxWidth: 180, lineHeight: 1.4 }}>
-                          ⚡ Instant inquiry logged directly to Shivalay Travels database
+                        <div style={{ fontSize: 9, color: 'var(--color-highlighter-lime)', textAlign: 'right', maxWidth: 140, lineHeight: 1.3 }}>
+                          ⚡ Instant inquiry logged directly
                         </div>
                       </div>
-                    </div>
 
-                    {/* 4. Giant Search Button */}
-                    <div className="span-4" style={{ marginTop: 'var(--spacing-8)' }}>
+                      {/* Search Button */}
                       <button
                         type="submit"
                         className="travelgo-search-btn"
+                        style={{ margin: 0, height: 44 }}
                       >
                         {getSubmitButtonText()}
                       </button>

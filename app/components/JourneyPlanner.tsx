@@ -103,22 +103,18 @@ export default function JourneyPlanner({ settings }: { settings?: any }) {
     }
 
     try {
-      const response = await fetch('/api/admin/bookings', {
+      const response = await fetch('/api/admin/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customerName: name,
           customerPhone: phone || 'Not provided',
           customerEmail: email,
-          fromCity: 'Online Inquiry',
-          toCity: destination,
-          travelType: 'custom',
-          date: dateRange,
-          returnDate: null,
-          passengers: passengersCount,
-          classType: duration,
-          amount: 0,
-          status: 'pending',
+          destinations: destination,
+          duration: duration,
+          travelers: passengersCount,
+          budget: answers['budget'] || 'Standard',
+          accommodation: answers['stay'] || 'Standard',
           notes: `Journey Planner Brief:\n${summaryLines.join('\n')}`,
           isPublicInquiry: true,
           captchaToken,
@@ -367,46 +363,81 @@ export default function JourneyPlanner({ settings }: { settings?: any }) {
                       {/* Captcha Verification */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
                         <label className="text-field-label">Security Verification (CAPTCHA)</label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                          {captchaSvg ? (
-                            <div 
-                              dangerouslySetInnerHTML={{ __html: captchaSvg }}
-                              style={{ display: 'flex', alignItems: 'center', borderRadius: 4, overflow: 'hidden' }}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'auto 1fr',
+                          alignItems: 'center',
+                          gap: 12,
+                          background: 'rgba(255, 255, 255, 0.01)',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          borderRadius: 8,
+                          padding: 12,
+                          maxWidth: 480,
+                        }}>
+                          {/* Captcha Image & Refresh Button */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {captchaSvg ? (
+                              <div 
+                                dangerouslySetInnerHTML={{ __html: captchaSvg }}
+                                style={{ display: 'flex', alignItems: 'center', borderRadius: 4, overflow: 'hidden' }}
+                              />
+                            ) : (
+                              <div style={{ width: 140, height: 44, background: '#121212', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#666' }}>
+                                Loading...
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              onClick={fetchCaptcha}
+                              style={{
+                                background: 'rgba(255,255,255,0.05)',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                                color: '#fff',
+                                borderRadius: 6,
+                                width: 38,
+                                height: 38,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s',
+                              }}
+                              title="Refresh CAPTCHA"
+                              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                              onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                            >
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-steel-gray)' }}>
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                              </svg>
+                            </button>
+                          </div>
+                          
+                          {/* Captcha Input */}
+                          <div style={{ position: 'relative' }}>
+                            <input
+                              className="input-terminal"
+                              type="text"
+                              placeholder="Enter CAPTCHA code"
+                              value={captchaInput}
+                              onChange={e => setCaptchaInput(e.target.value)}
+                              required
+                              style={{
+                                width: '100%',
+                                height: 38,
+                                background: 'rgba(255,255,255,0.02)',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                                borderRadius: 6,
+                                padding: '0 12px',
+                                color: '#fff',
+                                fontSize: 13,
+                                outline: 'none',
+                                transition: 'all 0.18s ease',
+                                fontFamily: 'monospace',
+                                letterSpacing: 2,
+                              }}
                             />
-                          ) : (
-                            <div style={{ width: 140, height: 44, background: '#121212', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#666' }}>
-                              Loading...
-                            </div>
-                          )}
-                          <button
-                            type="button"
-                            onClick={fetchCaptcha}
-                            style={{
-                              background: 'rgba(255,255,255,0.05)',
-                              border: '1px solid rgba(255,255,255,0.08)',
-                              color: '#fff',
-                              borderRadius: 4,
-                              width: 32,
-                              height: 32,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer',
-                            }}
-                            title="Refresh CAPTCHA"
-                          >
-                            🔄
-                          </button>
+                          </div>
                         </div>
-                        <input
-                          className="input-terminal"
-                          type="text"
-                          placeholder="Enter CAPTCHA code"
-                          value={captchaInput}
-                          onChange={e => setCaptchaInput(e.target.value)}
-                          required
-                          style={{ fontFamily: 'monospace', letterSpacing: 2 }}
-                        />
                         {captchaError && (
                           <p style={{ color: '#ff4444', fontSize: 12, marginTop: 4, fontWeight: 500 }}>
                             ⚠️ {captchaError}
