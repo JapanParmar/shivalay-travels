@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { useAdminAuth } from '../lib/AdminAuthContext';
 import { ROLE_PERMISSIONS } from '../lib/auth';
 
@@ -157,7 +158,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             const displayBadge = item.id === 'bookings' ? pendingCount : item.badge;
             return (
-              <a
+              <Link
                 key={item.id}
                 href={item.href}
                 className={`sidebar-nav-item ${isActive ? 'active' : ''}`}
@@ -168,7 +169,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 {sidebarOpen && displayBadge && displayBadge > 0 ? (
                   <span className="sidebar-badge">{displayBadge}</span>
                 ) : null}
-              </a>
+              </Link>
             );
           })}
         </nav>

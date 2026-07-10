@@ -1,7 +1,9 @@
 'use client';
+import { useEffect, useState, useRef } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { useAdminAuth } from '../lib/AdminAuthContext';
 import { ROLE_PERMISSIONS } from '../lib/auth';
+import Chart from 'chart.js/auto';
 
 function StatCard({ label, value, sub, icon, color, trend }: {
   label: string; value: string; sub?: string;
@@ -26,20 +28,131 @@ function StatCard({ label, value, sub, icon, color, trend }: {
   );
 }
 
-function MiniBarChart({ data }: { data: { day: string; revenue: number }[] }) {
-  const max = Math.max(...data.map(d => d.revenue));
+function RevenueChart({ data }: { data: { day: string; revenue: number }[] }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstanceRef = useRef<Chart | null>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+
+    chartInstanceRef.current = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d => d.day),
+        datasets: [{
+          label: 'Revenue (₹)',
+          data: data.map(d => d.revenue),
+          backgroundColor: 'rgba(255, 0, 0, 0.4)',
+          hoverBackgroundColor: 'rgba(255, 0, 0, 0.8)',
+          borderColor: '#ff0000',
+          borderWidth: 1.5,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => `₹${Number(context.raw).toLocaleString('en-IN')}`,
+            }
+          }
+        },
+        scales: {
+          y: {
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: {
+              color: '#888',
+              callback: (val) => {
+                const n = Number(val);
+                return n >= 100000 ? `${(n / 100000).toFixed(1)}L` : n >= 1000 ? `${(n / 1000).toFixed(0)}K` : String(n);
+              }
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: '#888' }
+          }
+        }
+      }
+    });
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [data]);
+
   return (
-    <div className="mini-bar-chart">
-      {data.map((d, i) => (
-        <div key={i} className="mini-bar-col">
-          <div
-            className="mini-bar"
-            style={{ height: `${(d.revenue / max) * 100}%` }}
-            title={`${d.day}: ₹${(d.revenue / 1000).toFixed(0)}K`}
-          />
-          <span className="mini-bar-label">{d.day}</span>
-        </div>
-      ))}
+    <div style={{ position: 'relative', height: '145px', width: '100%' }}>
+      <canvas ref={canvasRef} />
+    </div>
+  );
+}
+
+function TravelTypePieChart({ data }: { data: { type: string; count: number; color: string }[] }) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const chartInstanceRef = useRef<Chart | null>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+
+    const hasData = data.some(d => d.count > 0);
+
+    chartInstanceRef.current = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: data.map(d => d.type.charAt(0).toUpperCase() + d.type.slice(1)),
+        datasets: [{
+          data: hasData ? data.map(d => d.count) : [1],
+          backgroundColor: hasData ? data.map(d => d.color) : ['rgba(255,255,255,0.05)'],
+          borderColor: '#0c0c0c',
+          borderWidth: 2,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: '#aaa',
+              font: { family: 'DM Sans, sans-serif', size: 11 }
+            }
+          },
+        },
+        cutout: '70%',
+      }
+    });
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [data]);
+
+  return (
+    <div style={{ position: 'relative', height: '135px', width: '100%', marginTop: '6px' }}>
+      <canvas ref={canvasRef} />
     </div>
   );
 }
@@ -51,7 +164,7 @@ const STATUS_COLORS: Record<string, string> = {
   completed: '#3b82f6',
 };
 
-import { useEffect, useState } from 'react';
+// Empty line
 
 export default function DashboardPage() {
   const { user } = useAdminAuth();
@@ -184,7 +297,7 @@ export default function DashboardPage() {
                 Total: {fmt(revenueData.reduce((s, d) => s + d.revenue, 0))}
               </div>
             </div>
-            <MiniBarChart data={revenueData} />
+             <RevenueChart data={revenueData} />
           </div>
 
           {/* Travel Type Distribution */}
@@ -192,28 +305,7 @@ export default function DashboardPage() {
             <div className="dash-card-header">
               <h3 className="dash-card-title">By Travel Type</h3>
             </div>
-            <div className="travel-type-list">
-              {travelTypeStats.map(t => (
-                <div key={t.type} className="travel-type-item">
-                  <div className="travel-type-info">
-                    <span className="travel-type-dot" style={{ background: t.color }} />
-                    <span className="travel-type-name">{t.type}</span>
-                  </div>
-                  <div className="travel-type-right">
-                    <span className="travel-type-count">{t.count}</span>
-                    <div className="travel-type-bar-wrap">
-                      <div
-                        className="travel-type-bar-fill"
-                        style={{
-                          width: `${(t.count / Math.max(1, totalBookings)) * 100}%`,
-                          background: t.color,
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <TravelTypePieChart data={travelTypeStats} />
 
             {/* Role access info */}
             <div className="role-access-panel" style={{ borderColor: `${roleInfo?.color}30` }}>

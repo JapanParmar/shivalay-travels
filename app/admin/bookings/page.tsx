@@ -1,8 +1,17 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ProtectedPage from '../components/ProtectedPage';
 import { BookingStatus, Booking } from '../lib/data';
 import { useAdminAuth } from '../lib/AdminAuthContext';
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  ColumnDef,
+  flexRender,
+  SortingState,
+} from '@tanstack/react-table';
 
 const STATUS_COLORS: Record<BookingStatus, string> = {
   confirmed: '#22c55e', pending: '#f59e0b', cancelled: '#ef4444', completed: '#3b82f6',
@@ -20,6 +29,11 @@ export default function BookingsPage() {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<Booking | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
   // Form State
   const [formState, setFormState] = useState({
@@ -54,19 +68,6 @@ export default function BookingsPage() {
       setLoading(false);
     }
   };
-
-  const filtered = bookings.filter(b => {
-    const matchStatus = filter === 'all' || b.status === filter;
-    const matchType = typeFilter === 'all' || b.travelType === typeFilter;
-    const fromCity = b.from || b.fromCity || '';
-    const toCity = b.to || b.toCity || '';
-    const matchSearch = !search || 
-      b.customerName.toLowerCase().includes(search.toLowerCase()) ||
-      b.id.toLowerCase().includes(search.toLowerCase()) || 
-      fromCity.toLowerCase().includes(search.toLowerCase()) || 
-      toCity.toLowerCase().includes(search.toLowerCase());
-    return matchStatus && matchType && matchSearch;
-  });
 
   const openCreate = () => {
     setSelected(null);
@@ -159,6 +160,139 @@ export default function BookingsPage() {
     cancelled: bookings.filter(b => b.status === 'cancelled').length
   };
 
+  const filtered = useMemo(() => {
+    return bookings.filter(b => {
+      const matchStatus = filter === 'all' || b.status === filter;
+      const matchType = typeFilter === 'all' || b.travelType === typeFilter;
+      const fromCity = b.from || b.fromCity || '';
+      const toCity = b.to || b.toCity || '';
+      const matchSearch = !search || 
+        b.customerName.toLowerCase().includes(search.toLowerCase()) ||
+        b.id.toLowerCase().includes(search.toLowerCase()) || 
+        fromCity.toLowerCase().includes(search.toLowerCase()) || 
+        toCity.toLowerCase().includes(search.toLowerCase());
+      return matchStatus && matchType && matchSearch;
+    });
+  }, [bookings, filter, typeFilter, search]);
+
+  // TanStack React Table columns definition
+  const columns = useMemo<ColumnDef<Booking>[]>(() => [
+    {
+      accessorKey: 'id',
+      header: 'ID',
+      cell: info => <span className="bk-id">{String(info.getValue())}</span>,
+    },
+    {
+      accessorKey: 'customerName',
+      header: 'Customer Details',
+      cell: info => {
+        const row = info.row.original;
+        return (
+          <div className="bk-customer">
+            <div className="bk-avatar" style={{ 
+              border: `1px solid ${Number(row.amount) > 0 ? '#22c55e44' : '#ef444444'}`, 
+              color: Number(row.amount) > 0 ? '#22c55e' : '#ef4444' 
+            }}>
+              {row.customerName ? row.customerName[0].toUpperCase() : '?'}
+            </div>
+            <div>
+              <div className="bk-name">{row.customerName || 'Guest Traveller'}</div>
+              <div className="bk-phone">{row.customerPhone || 'No Phone'}</div>
+            </div>
+          </div>
+        );
+      }
+    },
+    {
+      header: 'Route / Journey',
+      accessorFn: row => `${row.fromCity || row.from || ''} → ${row.toCity || row.to || ''}`,
+      cell: info => {
+        const row = info.row.original;
+        return (
+          <span className="bk-route">
+            {(row.from || row.fromCity || 'Anywhere')} → {(row.to || row.toCity || 'Anywhere')}
+          </span>
+        );
+      }
+    },
+    {
+      accessorKey: 'travelType',
+      header: 'Type',
+      cell: info => {
+        const type = String(info.getValue());
+        return (
+          <span className="bk-type">
+            {type === 'flight' ? '✈️' : type === 'train' ? '🚆' : type === 'bus' ? '🚌' : '🚢'} 
+            <span style={{ marginLeft: 6, textTransform: 'capitalize' }}>{type}</span>
+          </span>
+        );
+      }
+    },
+    {
+      accessorKey: 'date',
+      header: 'Travel Date',
+      cell: info => {
+        const dateVal = String(info.getValue());
+        return dateVal ? new Date(dateVal).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+      }
+    },
+    {
+      accessorKey: 'passengers',
+      header: 'Pax',
+    },
+    {
+      accessorKey: 'amount',
+      header: 'Price (₹)',
+      cell: info => {
+        const val = Number(info.getValue());
+        return (
+          <span className="bk-amount" style={{ color: val > 0 ? '#22c55e' : '#ef4444' }}>
+            {val > 0 ? `₹${val.toLocaleString('en-IN')}` : 'Needs Quote'}
+          </span>
+        );
+      }
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: info => {
+        const status = info.getValue() as BookingStatus;
+        return (
+          <span className="bk-status" style={{ background: `${STATUS_COLORS[status]}15`, color: STATUS_COLORS[status], borderColor: `${STATUS_COLORS[status]}30` }}>
+            {status}
+          </span>
+        );
+      }
+    },
+    {
+      id: 'actions',
+      header: 'Action',
+      cell: info => {
+        const row = info.row.original;
+        return can('canManageBookings') ? (
+          <button className="bk-edit-btn" onClick={() => openEdit(row)}>
+            Edit Entry
+          </button>
+        ) : null;
+      }
+    }
+  ], [can]);
+
+  // TanStack Table Instance
+  const table = useReactTable({
+    data: filtered,
+    columns,
+    state: {
+      sorting,
+      pagination,
+    },
+    onSortingChange: setSorting,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+  });
+
   return (
     <ProtectedPage>
       <div className="bk-root">
@@ -205,66 +339,87 @@ export default function BookingsPage() {
         <div className="bk-table-wrap">
           <table className="bk-table">
             <thead>
-              <tr>
-                <th>ID</th>
-                <th>Customer Details</th>
-                <th>Route / Journey</th>
-                <th>Type</th>
-                <th>Travel Date</th>
-                <th>Pax</th>
-                <th>Price (₹)</th>
-                <th>Status</th>
-                {can('canManageBookings') && <th>Action</th>}
-              </tr>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          {...{
+                            className: header.column.getCanSort() ? 'bk-header-sortable' : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            cursor: header.column.getCanSort() ? 'pointer' : 'default',
+                          }}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: ' ⬆️',
+                            desc: ' ⬇️',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
             <tbody>
-              {filtered.map(b => (
-                <tr key={b.id}>
-                  <td><span className="bk-id">{b.id}</span></td>
-                  <td>
-                    <div className="bk-customer">
-                      <div className="bk-avatar" style={{ border: `1px solid ${b.amount > 0 ? '#22c55e44' : '#ef444444'}`, color: b.amount > 0 ? '#22c55e' : '#ef4444' }}>
-                        {b.customerName ? b.customerName[0].toUpperCase() : '?'}
-                      </div>
-                      <div>
-                        <div className="bk-name">{b.customerName || 'Guest Traveller'}</div>
-                        <div className="bk-phone">{b.customerPhone || 'No Phone'}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="bk-route">
-                    {(b.from || b.fromCity || 'Anywhere')} → {(b.to || b.toCity || 'Anywhere')}
-                  </td>
-                  <td>
-                    <span className="bk-type">
-                      {b.travelType === 'flight' ? '✈️' : b.travelType === 'train' ? '🚆' : b.travelType === 'bus' ? '🚌' : '🚢'} 
-                      <span style={{ marginLeft: 6, textTransform: 'capitalize' }}>{b.travelType}</span>
-                    </span>
-                  </td>
-                  <td className="bk-date">
-                    {b.date ? new Date(b.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}
-                  </td>
-                  <td>{b.passengers || 1}</td>
-                  <td className="bk-amount" style={{ color: b.amount > 0 ? '#22c55e' : '#ef4444' }}>
-                    {b.amount > 0 ? `₹${Number(b.amount).toLocaleString('en-IN')}` : 'Needs Quote'}
-                  </td>
-                  <td>
-                    <span className="bk-status" style={{ background: `${STATUS_COLORS[b.status]}15`, color: STATUS_COLORS[b.status], borderColor: `${STATUS_COLORS[b.status]}30` }}>
-                      {b.status}
-                    </span>
-                  </td>
-                  {can('canManageBookings') && (
-                    <td>
-                      <button className="bk-edit-btn" onClick={() => openEdit(b)}>
-                        Edit Entry
-                      </button>
+              {table.getRowModel().rows.map(row => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
-                  )}
+                  ))}
                 </tr>
               ))}
             </tbody>
           </table>
           {filtered.length === 0 && <div className="bk-empty">No bookings found matching filters.</div>}
+        </div>
+
+        {/* Pagination controls */}
+        <div className="bk-pagination">
+          <div className="bk-pagination-left">
+            Showing {table.getRowModel().rows.length} of {filtered.length} records (Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1})
+          </div>
+          <div className="bk-pagination-right">
+            <button
+              className="bk-page-btn"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </button>
+            <button
+              className="bk-page-btn"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </button>
+            <select
+              className="bk-page-select"
+              value={table.getState().pagination.pageSize}
+              onChange={e => {
+                table.setPageSize(Number(e.target.value));
+              }}
+            >
+              {[5, 10, 20, 50].map(pageSize => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Modal Editor */}
@@ -460,9 +615,11 @@ export default function BookingsPage() {
         .bk-table-wrap { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; overflow-x: auto; }
         .bk-table { width: 100%; border-collapse: collapse; }
         .bk-table th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.06); white-space: nowrap; }
-        .bk-table td { padding: 14px 16px; font-size: 13px; color: #bbb; border-bottom: 1px solid rgba(255,255,255,0.04); white-space: nowrap; }
+        .bk-table td { padding: 14px 16px; font-size: 13px; color: #bbb; border-bottom: 1px solid rgba(255,255,255,0.04); white-space: nowrap; vertical-align: middle; }
         .bk-table tr:last-child td { border-bottom: none; }
         .bk-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .bk-header-sortable { color: #666; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bk-header-sortable:hover { color: #fff; }
         .bk-id { font-family: monospace; color: #ff0000; background: rgba(255,0,0,0.08); padding: 2px 8px; border-radius: 4px; font-size: 11px; }
         .bk-customer { display: flex; align-items: center; gap: 10px; }
         .bk-avatar { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
@@ -477,6 +634,16 @@ export default function BookingsPage() {
         .bk-edit-btn:hover { border-color: rgba(255,0,0,0.4); color: #ff0000; background: rgba(255,0,0,0.05); }
         .bk-empty { text-align: center; padding: 48px; color: #444; font-size: 13px; }
         
+        /* Pagination Controls */
+        .bk-pagination { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding: 12px 16px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; }
+        .bk-pagination-left { font-size: 12px; color: #555; }
+        .bk-pagination-right { display: flex; align-items: center; gap: 8px; }
+        .bk-page-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #ccc; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: 'DM Sans',sans-serif; }
+        .bk-page-btn:hover:not(:disabled) { border-color: rgba(255,0,0,0.4); color: #ff0000; background: rgba(255,0,0,0.05); }
+        .bk-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .bk-page-select { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 5px 10px; color: #aaa; font-size: 12px; cursor: pointer; font-family: 'DM Sans',sans-serif; outline: none; }
+        .bk-page-select option { background: #111; color: #fff; }
+
         /* Modal Editor Form Styles */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 999; padding: 20px; backdrop-filter: blur(4px); }
         .modal-box { background: #0c0c0c; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 100%; max-width: 580px; overflow: hidden; animation: modalIn 0.2s ease; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }

@@ -99,34 +99,80 @@ export default function TicketBooking() {
   const [citiesTo, setCitiesTo] = useState<any[]>([]);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
+  const [cityApiSetting, setCityApiSetting] = useState<string>('open_meteo');
+
+  useEffect(() => {
+    fetch('/api/admin/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.cityApi) {
+          setCityApiSetting(data.cityApi);
+        }
+      })
+      .catch(err => console.error('Failed to fetch settings', err));
+  }, []);
 
   const fetchCities = async (query: string): Promise<any[]> => {
     if (!query || query.length < 2) return [];
+
+    let dbCities: any[] = [];
     try {
       // 1. Fetch from our dynamic admin cities catalog API
       const res = await fetch(`/api/admin/cities`);
       if (res.ok) {
-        const dbCities = await res.json();
-        const matches = dbCities.filter((c: any) => 
-          c.name.toLowerCase().includes(query.toLowerCase()) ||
-          c.code.toLowerCase().includes(query.toLowerCase()) ||
-          c.state.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        if (matches.length >= 3) {
-          return matches.map((c: any) => ({
-            name: c.name,
-            code: c.code,
-            state: c.state,
-            country: c.country
-          }));
-        }
+        dbCities = await res.json();
       }
     } catch (err) {
       console.error('Error fetching admin cities', err);
     }
 
-    // 2. Supplemetary geocoding lookup using free Open-Meteo Geocoding API
+    const matches = dbCities.filter((c: any) => 
+      c.name.toLowerCase().includes(query.toLowerCase()) ||
+      c.code.toLowerCase().includes(query.toLowerCase()) ||
+      c.state.toLowerCase().includes(query.toLowerCase())
+    );
+
+    // If set to local, only merge local DB results and fallback local cities
+    if (cityApiSetting === 'local') {
+      const fallbackCities = [
+        { name: 'Indore', code: 'IDR', state: 'Madhya Pradesh', country: 'India' },
+        { name: 'Mumbai', code: 'BOM', state: 'Maharashtra', country: 'India' },
+        { name: 'Delhi', code: 'DEL', state: 'Delhi', country: 'India' },
+        { name: 'Bangalore', code: 'BLR', state: 'Karnataka', country: 'India' },
+        { name: 'Goa', code: 'GOI', state: 'Goa', country: 'India' }
+      ];
+      
+      const staticMatches = fallbackCities.filter(c => 
+        c.name.toLowerCase().includes(query.toLowerCase()) || 
+        c.code.toLowerCase().includes(query.toLowerCase())
+      );
+
+      const merged = matches.map((c: any) => ({
+        name: c.name,
+        code: c.code,
+        state: c.state,
+        country: c.country
+      }));
+
+      for (const sm of staticMatches) {
+        if (!merged.find(m => m.name.toLowerCase() === sm.name.toLowerCase())) {
+          merged.push(sm);
+        }
+      }
+      return merged;
+    }
+
+    // Otherwise, try external Open-Meteo search if there are too few database matches
+    if (matches.length >= 3) {
+      return matches.map((c: any) => ({
+        name: c.name,
+        code: c.code,
+        state: c.state,
+        country: c.country
+      }));
+    }
+
+    // 2. Supplementary geocoding lookup using free Open-Meteo Geocoding API
     try {
       const response = await fetch(
         `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`
@@ -168,7 +214,7 @@ export default function TicketBooking() {
     } else {
       setCitiesFrom([]);
     }
-  }, [formData.from]);
+  }, [formData.from, cityApiSetting]);
 
   useEffect(() => {
     const cleanSearch = formData.to.replace(/\s*\([^)]*\)/g, '').trim();
@@ -177,7 +223,7 @@ export default function TicketBooking() {
     } else {
       setCitiesTo([]);
     }
-  }, [formData.to]);
+  }, [formData.to, cityApiSetting]);
 
   const handleInputChange = (key: keyof BookingFormData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [key]: value }));

@@ -24,6 +24,7 @@ export default function SettingsPage() {
     requirePhone: true,
     defaultPassengers: '1',
     defaultClass: 'Economy',
+    cityApi: 'open_meteo',
   });
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function SettingsPage() {
             whatsappIntegration: Boolean(data.whatsappIntegration),
             autoConfirm: Boolean(data.autoConfirm),
             requirePhone: Boolean(data.requirePhone),
+            cityApi: data.cityApi || 'open_meteo',
           });
         }
       }
@@ -212,20 +214,46 @@ export default function SettingsPage() {
             <div className="st-api-info">
               <div className="st-api-status">
                 <span className="st-api-dot" />
-                <span className="st-api-active">Active — Open-Meteo Geocoding API</span>
+                <span className="st-api-active">
+                  Active — {config.cityApi === 'open_meteo' && 'Open-Meteo Geocoding API'}
+                  {config.cityApi === 'geodb' && 'GeoDB Cities API'}
+                  {config.cityApi === 'local' && 'Local Database'}
+                </span>
               </div>
-              <p className="st-api-desc">Using <strong>Open-Meteo Geocoding API</strong> (completely free, no API key required). Supports 3M+ cities worldwide with India-first filtering. Fallback to local database of {30} curated Indian cities.</p>
+              <p className="st-api-desc">
+                {config.cityApi === 'open_meteo' && 'Using Open-Meteo Geocoding API (completely free, no API key required). Supports 3M+ cities worldwide with India-first filtering. Fallback to local database of 30 curated Indian cities.'}
+                {config.cityApi === 'geodb' && 'Using GeoDB Cities API on RapidAPI (requires API key). Highly accurate geolocation details.'}
+                {config.cityApi === 'local' && 'Using built-in local database of 30 curated Indian cities. Safe, fast, and does not require external network requests.'}
+              </p>
               <div className="st-api-cards">
-                <div className="st-api-card active">
-                  <div className="st-api-card-name">✓ Open-Meteo Geocoding</div>
+                <div 
+                  className={`st-api-card ${config.cityApi === 'open_meteo' ? 'active' : ''}`}
+                  onClick={() => setConfig(p => ({ ...p, cityApi: 'open_meteo' }))}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="st-api-card-name">
+                    {config.cityApi === 'open_meteo' ? '✓ ' : ''}Open-Meteo Geocoding
+                  </div>
                   <div className="st-api-card-desc">Free, no key needed. geocoding-api.open-meteo.com</div>
                 </div>
-                <div className="st-api-card">
-                  <div className="st-api-card-name">GeoDB Cities</div>
+                <div 
+                  className={`st-api-card ${config.cityApi === 'geodb' ? 'active' : ''}`}
+                  onClick={() => setConfig(p => ({ ...p, cityApi: 'geodb' }))}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="st-api-card-name">
+                    {config.cityApi === 'geodb' ? '✓ ' : ''}GeoDB Cities
+                  </div>
                   <div className="st-api-card-desc">RapidAPI — requires API key</div>
                 </div>
-                <div className="st-api-card">
-                  <div className="st-api-card-name">Local Database</div>
+                <div 
+                  className={`st-api-card ${config.cityApi === 'local' ? 'active' : ''}`}
+                  onClick={() => setConfig(p => ({ ...p, cityApi: 'local' }))}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="st-api-card-name">
+                    {config.cityApi === 'local' ? '✓ ' : ''}Local Database
+                  </div>
                   <div className="st-api-card-desc">30 curated Indian cities — always available</div>
                 </div>
               </div>

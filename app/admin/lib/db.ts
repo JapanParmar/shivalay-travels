@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { Pool as PgPool } from 'pg';
 import fs from 'fs';
 import path from 'path';
 
@@ -93,14 +94,15 @@ function initFallbackFile() {
         autoConfirm: false,
         requirePhone: true,
         defaultPassengers: '1',
-        defaultClass: 'Economy'
+        defaultClass: 'Economy',
+        cityApi: 'open_meteo'
       }
     };
     fs.writeFileSync(FALLBACK_FILE, JSON.stringify(defaultData, null, 2), 'utf-8');
   }
 }
 
-// Get client configuration
+// Client configurations
 const dbConfig = {
   host: process.env.MYSQL_HOST || 'localhost',
   user: process.env.MYSQL_USER,
@@ -109,21 +111,17 @@ const dbConfig = {
   port: parseInt(process.env.MYSQL_PORT || '3306', 10),
 };
 
-let pool: mysql.Pool | null = null;
-let useFallback = false;
+const pgConnectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+
+let mysqlPool: mysql.Pool | null = null;
+let pgPool: PgPool | null = null;
+let dbType: 'pg' | 'mysql' | 'fallback' = 'fallback';
+let isInitialized = false;
 
 // Initialize MySQL pool
-async function getPool(): Promise<mysql.Pool | null> {
-  if (useFallback) return null;
-  if (pool) return pool;
-
-  // If no user or database configured, automatically use JSON fallback
-  if (!dbConfig.user || !dbConfig.database) {
-    console.log('MySQL not configured in environment variables. Falling back to local JSON database.');
-    useFallback = true;
-    initFallbackFile();
-    return null;
-  }
+async function getMysqlPool(): Promise<mysql.Pool | null> {
+  if (mysqlPool) return mysqlPool;
+  if (!dbConfig.user || !dbConfig.database) return null;
 
   try {
     // Automatically create database if it does not exist
@@ -136,31 +134,90 @@ async function getPool(): Promise<mysql.Pool | null> {
     await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\``);
     await tempConnection.end();
 
-    pool = mysql.createPool({
+    mysqlPool = mysql.createPool({
       ...dbConfig,
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0
     });
+    
     // Test connection
-    const conn = await pool.getConnection();
+    const conn = await mysqlPool.getConnection();
     conn.release();
     console.log(`Successfully connected to MySQL database: ${dbConfig.database}`);
-    await initDbTables();
-    return pool;
+    await initMysqlTables();
+    return mysqlPool;
   } catch (err) {
-    console.error('Failed to connect to MySQL database. Falling back to JSON database. Error:', err);
-    useFallback = true;
-    initFallbackFile();
+    console.error('Failed to connect to MySQL database. Error:', err);
+    mysqlPool = null;
     return null;
   }
 }
 
-// Initialize tables if they do not exist
-async function initDbTables() {
-  if (!pool) return;
+// Initialize PostgreSQL pool
+async function getPgPool(): Promise<PgPool | null> {
+  if (pgPool) return pgPool;
+  if (!pgConnectionString) return null;
+
   try {
-    await pool.query(`
+    // Neon and Supabase require SSL for remote connection.
+    const isLocal = pgConnectionString.includes('localhost') || pgConnectionString.includes('127.0.0.1');
+    pgPool = new PgPool({
+      connectionString: pgConnectionString,
+      ssl: isLocal ? false : { rejectUnauthorized: false }
+    });
+
+    // Test connection
+    const client = await pgPool.connect();
+    client.release();
+    
+    console.log('Successfully connected to PostgreSQL database');
+    await initPgTables();
+    return pgPool;
+  } catch (err) {
+    console.error('Failed to connect to PostgreSQL database. Error:', err);
+    pgPool = null;
+    return null;
+  }
+}
+
+// Select active database and initialize
+async function initDatabase(): Promise<'pg' | 'mysql' | 'fallback'> {
+  if (isInitialized) return dbType;
+
+  // Try PostgreSQL first if DATABASE_URL is configured
+  if (pgConnectionString) {
+    const pool = await getPgPool();
+    if (pool) {
+      dbType = 'pg';
+      isInitialized = true;
+      return 'pg';
+    }
+  }
+
+  // Try MySQL next
+  if (dbConfig.user && dbConfig.database) {
+    const pool = await getMysqlPool();
+    if (pool) {
+      dbType = 'mysql';
+      isInitialized = true;
+      return 'mysql';
+    }
+  }
+
+  // Fallback to JSON file
+  console.log('No SQL databases configured or accessible. Falling back to local JSON database.');
+  dbType = 'fallback';
+  initFallbackFile();
+  isInitialized = true;
+  return 'fallback';
+}
+
+// Initialize MySQL tables
+async function initMysqlTables() {
+  if (!mysqlPool) return;
+  try {
+    await mysqlPool.query(`
       CREATE TABLE IF NOT EXISTS admin_users (
         id VARCHAR(50) PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -173,7 +230,7 @@ async function initDbTables() {
       )
     `);
 
-    await pool.query(`
+    await mysqlPool.query(`
       CREATE TABLE IF NOT EXISTS bookings (
         id VARCHAR(50) PRIMARY KEY,
         customerName VARCHAR(100) NOT NULL,
@@ -194,7 +251,7 @@ async function initDbTables() {
       )
     `);
 
-    await pool.query(`
+    await mysqlPool.query(`
       CREATE TABLE IF NOT EXISTS cities (
         id VARCHAR(50) PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -206,7 +263,7 @@ async function initDbTables() {
       )
     `);
 
-    await pool.query(`
+    await mysqlPool.query(`
       CREATE TABLE IF NOT EXISTS settings (
         id VARCHAR(50) PRIMARY KEY,
         businessName VARCHAR(100) NOT NULL,
@@ -222,14 +279,21 @@ async function initDbTables() {
         autoConfirm TINYINT(1) NOT NULL DEFAULT 0,
         requirePhone TINYINT(1) NOT NULL DEFAULT 1,
         defaultPassengers VARCHAR(10) NOT NULL DEFAULT '1',
-        defaultClass VARCHAR(50) NOT NULL DEFAULT 'Economy'
+        defaultClass VARCHAR(50) NOT NULL DEFAULT 'Economy',
+        cityApi VARCHAR(50) NOT NULL DEFAULT 'open_meteo'
       )
     `);
 
+    // Dynamic migration for existing MySQL tables
+    const [cols]: any = await mysqlPool.query("SHOW COLUMNS FROM settings LIKE 'cityApi'");
+    if (cols.length === 0) {
+      await mysqlPool.query("ALTER TABLE settings ADD COLUMN cityApi VARCHAR(50) NOT NULL DEFAULT 'open_meteo'");
+    }
+
     // Insert default user if table is empty
-    const [rows]: any = await pool.query('SELECT COUNT(*) as count FROM admin_users');
+    const [rows]: any = await mysqlPool.query('SELECT COUNT(*) as count FROM admin_users');
     if (rows[0].count === 0) {
-      await pool.query(`
+      await mysqlPool.query(`
         INSERT INTO admin_users (id, name, email, password, role, avatar, status, lastLogin) VALUES
         ('1', 'Rajesh Parmar', 'admin@shivalay.in', 'admin123', 'super_admin', 'RP', 'active', NULL),
         ('2', 'Priya Sharma', 'manager@shivalay.in', 'manager123', 'manager', 'PS', 'active', NULL),
@@ -239,9 +303,9 @@ async function initDbTables() {
     }
 
     // Insert default cities if table is empty
-    const [cityCount]: any = await pool.query('SELECT COUNT(*) as count FROM cities');
+    const [cityCount]: any = await mysqlPool.query('SELECT COUNT(*) as count FROM cities');
     if (cityCount[0].count === 0) {
-      await pool.query(`
+      await mysqlPool.query(`
         INSERT INTO cities (id, name, code, state, country, type, isPopular) VALUES
         ('1', 'Indore', 'IDR', 'Madhya Pradesh', 'India', 'airport', 1),
         ('2', 'Mumbai', 'BOM', 'Maharashtra', 'India', 'airport', 1),
@@ -253,15 +317,131 @@ async function initDbTables() {
     }
 
     // Insert default settings if empty
-    const [settingsCount]: any = await pool.query('SELECT COUNT(*) as count FROM settings');
+    const [settingsCount]: any = await mysqlPool.query('SELECT COUNT(*) as count FROM settings');
     if (settingsCount[0].count === 0) {
-      await pool.query(`
-        INSERT INTO settings (id, businessName, phone, email, whatsapp, address, gstNumber, currency, timezone, bookingNotifications, whatsappIntegration, autoConfirm, requirePhone, defaultPassengers, defaultClass) VALUES
-        ('main', 'Shivalay Travels', '+91 93409 94628', 'info@shivalay.in', '919340994628', 'Indore, Madhya Pradesh, India', 'GSTIN23AABCS1234F1Z5', 'INR', 'Asia/Kolkata', 1, 1, 0, 1, '1', 'Economy')
+      await mysqlPool.query(`
+        INSERT INTO settings (id, businessName, phone, email, whatsapp, address, gstNumber, currency, timezone, bookingNotifications, whatsappIntegration, autoConfirm, requirePhone, defaultPassengers, defaultClass, cityApi) VALUES
+        ('main', 'Shivalay Travels', '+91 93409 94628', 'info@shivalay.in', '919340994628', 'Indore, Madhya Pradesh, India', 'GSTIN23AABCS1234F1Z5', 'INR', 'Asia/Kolkata', 1, 1, 0, 1, '1', 'Economy', 'open_meteo')
       `);
     }
   } catch (err) {
-    console.error('Error initializing database tables:', err);
+    console.error('Error initializing MySQL database tables:', err);
+  }
+}
+
+// Initialize PostgreSQL tables
+async function initPgTables() {
+  if (!pgPool) return;
+  try {
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL UNIQUE,
+        password VARCHAR(100) NOT NULL,
+        role VARCHAR(20) NOT NULL,
+        avatar VARCHAR(10) NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'active',
+        "lastLogin" VARCHAR(50) NULL
+      )
+    `);
+
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS bookings (
+        id VARCHAR(50) PRIMARY KEY,
+        "customerName" VARCHAR(100) NOT NULL,
+        "customerPhone" VARCHAR(30) NOT NULL,
+        "customerEmail" VARCHAR(100) NULL,
+        "fromCity" VARCHAR(100) NOT NULL,
+        "toCity" VARCHAR(100) NOT NULL,
+        "travelType" VARCHAR(20) NOT NULL,
+        date VARCHAR(20) NOT NULL,
+        "returnDate" VARCHAR(20) NULL,
+        passengers INT NOT NULL DEFAULT 1,
+        "classType" VARCHAR(50) NOT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'pending',
+        amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+        "agentId" VARCHAR(50) NULL,
+        "createdAt" VARCHAR(50) NOT NULL,
+        notes TEXT NULL
+      )
+    `);
+
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS cities (
+        id VARCHAR(50) PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        code VARCHAR(10) NOT NULL UNIQUE,
+        state VARCHAR(100) NOT NULL,
+        country VARCHAR(100) NOT NULL DEFAULT 'India',
+        type VARCHAR(20) NOT NULL DEFAULT 'airport',
+        "isPopular" BOOLEAN NOT NULL DEFAULT FALSE
+      )
+    `);
+
+    await pgPool.query(`
+      CREATE TABLE IF NOT EXISTS settings (
+        id VARCHAR(50) PRIMARY KEY,
+        "businessName" VARCHAR(100) NOT NULL,
+        phone VARCHAR(30) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        whatsapp VARCHAR(30) NOT NULL,
+        address TEXT NOT NULL,
+        "gstNumber" VARCHAR(30) NULL,
+        currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+        timezone VARCHAR(50) NOT NULL DEFAULT 'Asia/Kolkata',
+        "bookingNotifications" BOOLEAN NOT NULL DEFAULT TRUE,
+        "whatsappIntegration" BOOLEAN NOT NULL DEFAULT TRUE,
+        "autoConfirm" BOOLEAN NOT NULL DEFAULT FALSE,
+        "requirePhone" BOOLEAN NOT NULL DEFAULT TRUE,
+        "defaultPassengers" VARCHAR(10) NOT NULL DEFAULT '1',
+        "defaultClass" VARCHAR(50) NOT NULL DEFAULT 'Economy',
+        "cityApi" VARCHAR(50) NOT NULL DEFAULT 'open_meteo'
+      )
+    `);
+
+    // Dynamic migration for existing PostgreSQL tables
+    await pgPool.query('ALTER TABLE settings ADD COLUMN IF NOT EXISTS "cityApi" VARCHAR(50) NOT NULL DEFAULT \'open_meteo\'');
+
+    // Insert default user if table is empty
+    const usersCountRes = await pgPool.query('SELECT COUNT(*) as count FROM admin_users');
+    const usersCount = parseInt(usersCountRes.rows[0].count, 10);
+    if (usersCount === 0) {
+      await pgPool.query(`
+        INSERT INTO admin_users (id, name, email, password, role, avatar, status, "lastLogin") VALUES
+        ('1', 'Rajesh Parmar', 'admin@shivalay.in', 'admin123', 'super_admin', 'RP', 'active', NULL),
+        ('2', 'Priya Sharma', 'manager@shivalay.in', 'manager123', 'manager', 'PS', 'active', NULL),
+        ('3', 'Amit Verma', 'agent@shivalay.in', 'agent123', 'agent', 'AV', 'active', NULL),
+        ('4', 'Sunita Patel', 'viewer@shivalay.in', 'viewer123', 'viewer', 'SP', 'active', NULL)
+      `);
+    }
+
+    // Insert default cities if table is empty
+    const citiesCountRes = await pgPool.query('SELECT COUNT(*) as count FROM cities');
+    const citiesCount = parseInt(citiesCountRes.rows[0].count, 10);
+    if (citiesCount === 0) {
+      await pgPool.query(`
+        INSERT INTO cities (id, name, code, state, country, type, "isPopular") VALUES
+        ('1', 'Indore', 'IDR', 'Madhya Pradesh', 'India', 'airport', TRUE),
+        ('2', 'Mumbai', 'BOM', 'Maharashtra', 'India', 'airport', TRUE),
+        ('3', 'Delhi', 'DEL', 'Delhi', 'India', 'airport', TRUE),
+        ('4', 'Bangalore', 'BLR', 'Karnataka', 'India', 'airport', TRUE),
+        ('5', 'Varanasi', 'VNS', 'Uttar Pradesh', 'India', 'airport', TRUE),
+        ('6', 'Goa', 'GOI', 'Goa', 'India', 'airport', TRUE)
+      `);
+    }
+
+    // Insert default settings if empty
+    const settingsCountRes = await pgPool.query('SELECT COUNT(*) as count FROM settings');
+    const settingsCount = parseInt(settingsCountRes.rows[0].count, 10);
+    if (settingsCount === 0) {
+      await pgPool.query(`
+        INSERT INTO settings (id, "businessName", phone, email, whatsapp, address, "gstNumber", currency, timezone, "bookingNotifications", "whatsappIntegration", "autoConfirm", "requirePhone", "defaultPassengers", "defaultClass", "cityApi") VALUES
+        ('main', 'Shivalay Travels', '+91 93409 94628', 'info@shivalay.in', '919340994628', 'Indore, Madhya Pradesh, India', 'GSTIN23AABCS1234F1Z5', 'INR', 'Asia/Kolkata', TRUE, TRUE, FALSE, TRUE, '1', 'Economy', 'open_meteo')
+      `);
+    }
+  } catch (err) {
+    console.error('Error initializing PostgreSQL tables:', err);
   }
 }
 
@@ -283,9 +463,18 @@ function writeFallbackData(data: any) {
 
 // Exportable query interface
 export async function dbQuery(sql: string, params: any[] = []): Promise<any> {
-  const myPool = await getPool();
-  if (myPool) {
-    const [results] = await myPool.query(sql, params);
+  const activeDb = await initDatabase();
+  
+  if (activeDb === 'pg' && pgPool) {
+    let pgSql = sql.replace(/`/g, '"');
+    let index = 1;
+    pgSql = pgSql.replace(/\?/g, () => `$${index++}`);
+    const res = await pgPool.query(pgSql, params);
+    return res.rows;
+  }
+  
+  if (activeDb === 'mysql' && mysqlPool) {
+    const [results] = await mysqlPool.query(sql, params);
     return results;
   }
 
@@ -293,7 +482,6 @@ export async function dbQuery(sql: string, params: any[] = []): Promise<any> {
   console.log('Querying JSON Fallback Database with SQL:', sql);
   const data = readFallbackData();
   
-  // Simple simulation of SELECT queries
   if (sql.trim().toUpperCase().startsWith('SELECT')) {
     if (sql.includes('admin_users')) return data.admin_users || [];
     if (sql.includes('bookings')) return data.bookings || [];
@@ -307,22 +495,41 @@ export async function dbQuery(sql: string, params: any[] = []): Promise<any> {
 export const db = {
   // Users
   async getUsers() {
-    const myPool = await getPool();
-    if (myPool) {
-      const [rows] = await myPool.query('SELECT * FROM admin_users');
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM admin_users ORDER BY name ASC');
+      return res.rows;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows] = await mysqlPool.query('SELECT * FROM admin_users ORDER BY name ASC');
       return rows;
     }
     return readFallbackData().admin_users || [];
   },
 
   async saveUser(user: any) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query(
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO admin_users (id, name, email, password, role, avatar, status, "lastLogin")
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         ON CONFLICT (id) DO UPDATE SET 
+           name = EXCLUDED.name, 
+           email = EXCLUDED.email, 
+           role = EXCLUDED.role, 
+           avatar = EXCLUDED.avatar, 
+           status = EXCLUDED.status, 
+           "lastLogin" = EXCLUDED."lastLogin"`,
+        [user.id, user.name, user.email, user.password || 'admin123', user.role, user.avatar, user.status, user.lastLogin]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
         `INSERT INTO admin_users (id, name, email, password, role, avatar, status, lastLogin)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE name=?, email=?, role=?, avatar=?, status=?, lastLogin=?`,
-        [user.id, user.name, user.email, user.password || 'password123', user.role, user.avatar, user.status, user.lastLogin,
+        [user.id, user.name, user.email, user.password || 'admin123', user.role, user.avatar, user.status, user.lastLogin,
          user.name, user.email, user.role, user.avatar, user.status, user.lastLogin]
       );
       return;
@@ -338,9 +545,13 @@ export const db = {
   },
 
   async deleteUser(id: string) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query('DELETE FROM admin_users WHERE id = ?', [id]);
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM admin_users WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM admin_users WHERE id = ?', [id]);
       return;
     }
     const data = readFallbackData();
@@ -350,18 +561,51 @@ export const db = {
 
   // Bookings
   async getBookings() {
-    const myPool = await getPool();
-    if (myPool) {
-      const [rows] = await myPool.query('SELECT * FROM bookings ORDER BY createdAt DESC');
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM bookings ORDER BY "createdAt" DESC');
+      return res.rows;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows] = await mysqlPool.query('SELECT * FROM bookings ORDER BY createdAt DESC');
       return rows;
     }
     return readFallbackData().bookings || [];
   },
 
   async saveBooking(booking: any) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query(
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO bookings (
+           id, "customerName", "customerPhone", "customerEmail", "fromCity", "toCity", 
+           "travelType", date, "returnDate", passengers, "classType", status, amount, 
+           "agentId", "createdAt", notes
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+         ON CONFLICT (id) DO UPDATE SET 
+           "customerName" = EXCLUDED."customerName", 
+           "customerPhone" = EXCLUDED."customerPhone", 
+           "customerEmail" = EXCLUDED."customerEmail", 
+           "fromCity" = EXCLUDED."fromCity", 
+           "toCity" = EXCLUDED."toCity", 
+           "travelType" = EXCLUDED."travelType", 
+           date = EXCLUDED.date, 
+           "returnDate" = EXCLUDED."returnDate", 
+           passengers = EXCLUDED.passengers, 
+           "classType" = EXCLUDED."classType", 
+           status = EXCLUDED.status, 
+           amount = EXCLUDED.amount, 
+           "agentId" = EXCLUDED."agentId", 
+           notes = EXCLUDED.notes`,
+        [
+          booking.id, booking.customerName, booking.customerPhone, booking.customerEmail || null, booking.fromCity, booking.toCity, booking.travelType, booking.date, booking.returnDate || null, booking.passengers, booking.classType, booking.status, booking.amount, booking.agentId || null, booking.createdAt, booking.notes || null
+        ]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
         `INSERT INTO bookings (id, customerName, customerPhone, customerEmail, fromCity, toCity, travelType, date, returnDate, passengers, classType, status, amount, agentId, createdAt, notes)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE customerName=?, customerPhone=?, customerEmail=?, fromCity=?, toCity=?, travelType=?, date=?, returnDate=?, passengers=?, classType=?, status=?, amount=?, agentId=?, notes=?`,
@@ -383,9 +627,13 @@ export const db = {
   },
 
   async deleteBooking(id: string) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query('DELETE FROM bookings WHERE id = ?', [id]);
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM bookings WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM bookings WHERE id = ?', [id]);
       return;
     }
     const data = readFallbackData();
@@ -395,18 +643,37 @@ export const db = {
 
   // Cities
   async getCities() {
-    const myPool = await getPool();
-    if (myPool) {
-      const [rows] = await myPool.query('SELECT * FROM cities');
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM cities');
+      return res.rows;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows] = await mysqlPool.query('SELECT * FROM cities');
       return rows;
     }
     return readFallbackData().cities || [];
   },
 
   async saveCity(city: any) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query(
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO cities (id, name, code, state, country, type, "isPopular")
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (id) DO UPDATE SET 
+           name = EXCLUDED.name, 
+           code = EXCLUDED.code, 
+           state = EXCLUDED.state, 
+           country = EXCLUDED.country, 
+           type = EXCLUDED.type, 
+           "isPopular" = EXCLUDED."isPopular"`,
+        [city.id, city.name, city.code, city.state, city.country || 'India', city.type, city.isPopular ? true : false]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
         `INSERT INTO cities (id, name, code, state, country, type, isPopular)
          VALUES (?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE name=?, code=?, state=?, country=?, type=?, isPopular=?`,
@@ -426,9 +693,13 @@ export const db = {
   },
 
   async deleteCity(id: string) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query('DELETE FROM cities WHERE id = ?', [id]);
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query('DELETE FROM cities WHERE id = $1', [id]);
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query('DELETE FROM cities WHERE id = ?', [id]);
       return;
     }
     const data = readFallbackData();
@@ -438,24 +709,58 @@ export const db = {
 
   // Settings
   async getSettings() {
-    const myPool = await getPool();
-    if (myPool) {
-      const [rows]: any = await myPool.query('SELECT * FROM settings WHERE id = "main"');
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      const res = await pgPool.query('SELECT * FROM settings WHERE id = $1', ['main']);
+      return res.rows[0] || null;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      const [rows]: any = await mysqlPool.query('SELECT * FROM settings WHERE id = "main"');
       return rows[0] || null;
     }
     return readFallbackData().settings || null;
   },
 
   async saveSettings(settings: any) {
-    const myPool = await getPool();
-    if (myPool) {
-      await myPool.query(
-        `INSERT INTO settings (id, businessName, phone, email, whatsapp, address, gstNumber, currency, timezone, bookingNotifications, whatsappIntegration, autoConfirm, requirePhone, defaultPassengers, defaultClass)
-         VALUES ("main", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-         ON DUPLICATE KEY UPDATE businessName=?, phone=?, email=?, whatsapp=?, address=?, gstNumber=?, currency=?, timezone=?, bookingNotifications=?, whatsappIntegration=?, autoConfirm=?, requirePhone=?, defaultPassengers=?, defaultClass=?`,
+    const activeDb = await initDatabase();
+    if (activeDb === 'pg' && pgPool) {
+      await pgPool.query(
+        `INSERT INTO settings (
+           id, "businessName", phone, email, whatsapp, address, "gstNumber", currency, 
+           timezone, "bookingNotifications", "whatsappIntegration", "autoConfirm", 
+           "requirePhone", "defaultPassengers", "defaultClass", "cityApi"
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+         ON CONFLICT (id) DO UPDATE SET 
+           "businessName" = EXCLUDED."businessName", 
+           phone = EXCLUDED.phone, 
+           email = EXCLUDED.email, 
+           whatsapp = EXCLUDED.whatsapp, 
+           address = EXCLUDED.address, 
+           "gstNumber" = EXCLUDED."gstNumber", 
+           currency = EXCLUDED.currency, 
+           timezone = EXCLUDED.timezone, 
+           "bookingNotifications" = EXCLUDED."bookingNotifications", 
+           "whatsappIntegration" = EXCLUDED."whatsappIntegration", 
+           "autoConfirm" = EXCLUDED."autoConfirm", 
+           "requirePhone" = EXCLUDED."requirePhone", 
+           "defaultPassengers" = EXCLUDED."defaultPassengers", 
+           "defaultClass" = EXCLUDED."defaultClass",
+           "cityApi" = EXCLUDED."cityApi"`,
         [
-          settings.businessName, settings.phone, settings.email, settings.whatsapp, settings.address, settings.gstNumber, settings.currency, settings.timezone, settings.bookingNotifications ? 1 : 0, settings.whatsappIntegration ? 1 : 0, settings.autoConfirm ? 1 : 0, settings.requirePhone ? 1 : 0, settings.defaultPassengers, settings.defaultClass,
-          settings.businessName, settings.phone, settings.email, settings.whatsapp, settings.address, settings.gstNumber, settings.currency, settings.timezone, settings.bookingNotifications ? 1 : 0, settings.whatsappIntegration ? 1 : 0, settings.autoConfirm ? 1 : 0, settings.requirePhone ? 1 : 0, settings.defaultPassengers, settings.defaultClass
+          'main', settings.businessName, settings.phone, settings.email, settings.whatsapp, settings.address, settings.gstNumber, settings.currency, settings.timezone, settings.bookingNotifications ? true : false, settings.whatsappIntegration ? true : false, settings.autoConfirm ? true : false, settings.requirePhone ? true : false, settings.defaultPassengers, settings.defaultClass, settings.cityApi || 'open_meteo'
+        ]
+      );
+      return;
+    }
+    if (activeDb === 'mysql' && mysqlPool) {
+      await mysqlPool.query(
+        `INSERT INTO settings (id, businessName, phone, email, whatsapp, address, gstNumber, currency, timezone, bookingNotifications, whatsappIntegration, autoConfirm, requirePhone, defaultPassengers, defaultClass, cityApi)
+         VALUES ("main", ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON DUPLICATE KEY UPDATE businessName=?, phone=?, email=?, whatsapp=?, address=?, gstNumber=?, currency=?, timezone=?, bookingNotifications=?, whatsappIntegration=?, autoConfirm=?, requirePhone=?, defaultPassengers=?, defaultClass=?, cityApi=?`,
+        [
+          settings.businessName, settings.phone, settings.email, settings.whatsapp, settings.address, settings.gstNumber, settings.currency, settings.timezone, settings.bookingNotifications ? 1 : 0, settings.whatsappIntegration ? 1 : 0, settings.autoConfirm ? 1 : 0, settings.requirePhone ? 1 : 0, settings.defaultPassengers, settings.defaultClass, settings.cityApi || 'open_meteo',
+          settings.businessName, settings.phone, settings.email, settings.whatsapp, settings.address, settings.gstNumber, settings.currency, settings.timezone, settings.bookingNotifications ? 1 : 0, settings.whatsappIntegration ? 1 : 0, settings.autoConfirm ? 1 : 0, settings.requirePhone ? 1 : 0, settings.defaultPassengers, settings.defaultClass, settings.cityApi || 'open_meteo'
         ]
       );
       return;
